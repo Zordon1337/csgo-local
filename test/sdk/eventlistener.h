@@ -22,22 +22,30 @@ public:
 		// TODO: FIX XP CALCULATION/OTHER WEIRD BUGS HERE
 		static int kills = 0;
 		static int assists = 0;
+		static int wonRounds = 0;
 
 		const char* txt = pEvent->GetName();
 		console::log(txt);
 		if (strcmp(txt, "cs_win_panel_match") == 0) {
-			int newxp = CMatchmaking::handleEndGame(kills, assists, V::STEAM_ID);
+			int newxp = CMatchmaking::handleEndGame(kills, assists, wonRounds, V::STEAM_ID);
 			V::iXP += newxp;
 			while (V::iXP >= 5000) {
 				V::iXP -= 5000;
 				V::iLevel++;
 			}
+
+			V::SaveConfig();
 			kills = 0;
 			assists = 0;
+			wonRounds = 0;
+		}
+		else if (strcmp(txt, "cs_win_panel_round") == 0) {
+			wonRounds++;
 		}
 		else if (strcmp(txt, "cs_game_disconnected") == 0) {
 			kills = 0;
 			assists = 0;
+			wonRounds = 0;
 			console::log("reset kills");
 		}
 		else {

@@ -111,9 +111,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                 }
 
 
+                V::LoadConfig();
+
                 E::g_EventListener = new EventListener;
 
                 G::g_EventManager->AddListener(E::g_EventListener, "cs_win_panel_match", false);
+                G::g_EventManager->AddListener(E::g_EventListener, "cs_win_panel_round", false);
                 G::g_EventManager->AddListener(E::g_EventListener, "cs_game_disconnected", false);
                 G::g_EventManager->AddListener(E::g_EventListener, "player_death", false);
 
@@ -127,6 +130,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                 V::PENDING_UPDATE = true;
 
                 V::STEAM_ID = G::g_SteamUser->GetSteamID().GetAccountID();
+
 
                 console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
 

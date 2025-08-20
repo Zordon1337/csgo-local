@@ -94,6 +94,7 @@ public:
 
                 SendClientHello();
 
+                V::SaveConfig();
                 {
 
                 }
@@ -164,20 +165,22 @@ public:
 
                             object.object_data().clear();
 
-                            CSOEconItem item2;
-                            item2.id().set(MEDAL_BASE_ID + 970);
-                            item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                            item2.def_index().set(970);
-                            item2.inventory().set(MEDAL_BASE_ID + 970);
-                            item2.origin().set(9);
-                            item2.quantity().set(4);
-                            item2.level().set(0);
-                            item2.flags().set(0);
-                            item2.in_use().set(false);
-                            item2.rarity().set(6);
-                            item2.quality().set(4);
+                            for (int i = 0; i < V::othermedals.size(); i++) {
+                                CSOEconItem item2;
+                                item2.id().set(MEDAL_BASE_ID + V::othermedals[i]);
+                                item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                item2.def_index().set(V::othermedals[i]);
+                                item2.inventory().set(MEDAL_BASE_ID + V::othermedals[i]);
+                                item2.origin().set(9);
+                                item2.quantity().set(4);
+                                item2.level().set(0);
+                                item2.flags().set(0);
+                                item2.in_use().set(false);
+                                item2.rarity().set(6);
+                                item2.quality().set(4);
 
-                            object.object_data().add(item2);
+                                object.object_data().add(item2);
+                            }
 
                             if (V::iServiceMedalLevel > 0) {
                                 CSOEconItem item;
@@ -202,7 +205,8 @@ public:
                         auto packet = msg.serialize();
 
 
-                        CNetworking::QueueMessage(4004, packet, 0);
+                        CNetworking::QueueMessage(4004, packet, 250);
+
                     }
 
                     {
