@@ -88,8 +88,15 @@ public:
 
                 CNetworking::QueueMessage(9172, packet, 1500);*/
 
+                V::iLevel = 1;
+                V::iXP = 0;
+                V::iServiceMedalLevel++;
+
                 SendClientHello();
 
+                {
+
+                }
                 break;
             }
         }
