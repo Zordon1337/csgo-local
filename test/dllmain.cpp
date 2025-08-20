@@ -113,7 +113,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
                 E::g_EventListener = new EventListener;
 
-                G::g_EventManager->AddListener(E::g_EventListener, "cs_win_panel_round", false);
+                G::g_EventManager->AddListener(E::g_EventListener, "cs_win_panel_match", false);
                 G::g_EventManager->AddListener(E::g_EventListener, "cs_game_disconnected", false);
                 G::g_EventManager->AddListener(E::g_EventListener, "player_death", false);
 
@@ -134,7 +134,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                     if (V::PENDING_UPDATE) {
                         CNetworking::SendClientHello();
 
-                        Sleep(1000);
                         MatchmakingGC2ClientHello msg;
 
                         msg.vac_banned().set(false);
@@ -143,7 +142,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                         msg.player_cur_xp().set(V::iXP);
                         msg.player_level().set(V::iLevel);
 
-                        CNetworking::QueueMessage(9110, msg.serialize(), 500);
+                        CNetworking::QueueMessage(9110, msg.serialize(), 2500);
                         V::PENDING_UPDATE = false;
                     }
 

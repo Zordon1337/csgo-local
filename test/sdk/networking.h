@@ -82,7 +82,7 @@ public:
                 response.defindex().set(1376);
                 response.hours().set(2);
                 response.prestigetime().set(1755626035);
-                response.upgradeid().set(1376);
+                response.upgradeid().set(1);
 
                 auto packet = response.serialize();
 
@@ -117,7 +117,7 @@ public:
             for (size_t i = 0; i < msgQueue.size(); i++) {
                 auto& msg = msgQueue[i];
 
-                if (msg.data.size() == *pcubMsgSize && msg.delay - G::g_GlobalVars->currentTime < 200 && msg.delay - G::g_GlobalVars->currentTime > -200) {
+                if (msg.data.size() == *pcubMsgSize) {
 
                     uint32_t totalSize = msg.data.size() + 8;
                     if (cubDest < totalSize)
@@ -232,7 +232,7 @@ public:
 
         for (auto& msg : msgQueue) {
             int delta = msg.delay - G::g_GlobalVars->currentTime;
-            if (delta >= -200 && delta <= 200) {
+            if (delta >= -0.2 && delta <= 0.2) {
                 *pcubMsgSize = msg.data.size();
                 return true;
             }

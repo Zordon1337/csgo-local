@@ -6,7 +6,7 @@
 namespace CMatchmaking {
 	int handleEndGame(int kills, int assists, int steamid) {
         int addXp = kills * 6 + assists * 6;
-
+        console::log(std::format("Kills: {}, Assists: {}\n OldXp: {}, OldLvl {}\n newXp: {}",kills, assists, V::iXP, V::iLevel, addXp).c_str());
         int oldXp = V::iXP;
         int oldLvl = V::iLevel;
 

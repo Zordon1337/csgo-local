@@ -25,7 +25,7 @@ public:
 
 		const char* txt = pEvent->GetName();
 		console::log(txt);
-		if (strcmp(txt, "cs_win_panel_round") == 0) {
+		if (strcmp(txt, "cs_win_panel_match") == 0) {
 			int newxp = CMatchmaking::handleEndGame(kills, assists, V::STEAM_ID);
 			V::iXP += newxp;
 			while (V::iXP >= 5000) {
