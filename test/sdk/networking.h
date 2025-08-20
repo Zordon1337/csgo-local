@@ -76,7 +76,7 @@ public:
         switch (messageType) {
 
             case 9172: {
-                // TODO: I NEED TO GET ACC WITH LEVEL 40 SINCE IDK PROPER THAT DOESN'T CRASH GAME
+                // TODO: I NEED TO GET ACC WITH LEVEL 40 SINCE IDK PROPER RESPONSE THAT DOESN'T CRASH GAME
                 /*CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin response((void*)((DWORD)pubData + 8), cubData - 8);
 
                 response.defindex().set(1376);
