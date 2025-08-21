@@ -110,7 +110,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                     G::g_EventManager = (IGameEventManager2*)EngineFactory("GAMEEVENTSMANAGER002", nullptr);
                 }
 
-
                 V::LoadConfig();
 
                 E::g_EventListener = new EventListener;
@@ -135,18 +134,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                 console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
 
                 while (true) {
+                    if (GetAsyncKeyState(VK_INSERT) & 1) {
+                        V::PENDING_UPDATE = true;
+                    }
                     if (V::PENDING_UPDATE) {
                         CNetworking::SendClientHello();
-
-                        MatchmakingGC2ClientHello msg;
-
-                        msg.vac_banned().set(false);
-
-
-                        msg.player_cur_xp().set(V::iXP);
-                        msg.player_level().set(V::iLevel);
-
-                        CNetworking::QueueMessage(9110, msg.serialize(), 2500);
                         V::PENDING_UPDATE = false;
                     }
 

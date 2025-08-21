@@ -44,6 +44,12 @@ struct CMsgClientHello : pbmsg<3> {
 	PBFIELD(3, types::Uint32, client_session_need);
 };
 
+struct PlayerCommendationInfo : pbmsg<4> {
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint32, cmd_friendly);
+	PBFIELD(2, types::Uint32, cmd_teaching);
+	PBFIELD(4, types::Uint32, cmd_leader);
+};
 struct MatchmakingGC2ClientHello : pbmsg<20> {
 	struct PlayerRankingInfo : pbmsg<6> {
 		PBMSG_CTOR;
@@ -52,12 +58,6 @@ struct MatchmakingGC2ClientHello : pbmsg<20> {
 		PBFIELD(3, types::Uint32, wins);
 		PBFIELD(4, types::Float, rank_change);
 		PBFIELD(6, types::Uint32, rank_type_id);
-	};
-	struct PlayerCommendationInfo : pbmsg<4> {
-		PBMSG_CTOR;
-		PBFIELD(1, types::Uint32, cmd_friendly);
-		PBFIELD(2, types::Uint32, cmd_teaching);
-		PBFIELD(4, types::Uint32, cmd_leader);
 	};
 
 	PBMSG_CTOR;
@@ -121,22 +121,55 @@ struct CSOEconItem : pbmsg<19> {
 	PBFIELD(19, types::Uint32, rarity);
 };
 
+struct Location : pbmsg<3> {
+	PBMSG_CTOR;
+	PBFIELD(1, types::Float, latitude);
+	PBFIELD(2, types::Float, longitude);
+	PBFIELD(3, types::Fixed64, country);
+};
+
 struct CMsgClientWelcome : pbmsg<11> {
+
 	struct SubscribedType : pbmsg<2> {
 		PBMSG_CTOR;
 		PBFIELD(1, types::Int32, type_id);
-		PBFIELD(2, CSOEconItem, object_data);
+		PBFIELD(2, types::Bytes, object_data);
 	};
 
 	struct CMsgSOCacheSubscribed : pbmsg<4> {
 		PBMSG_CTOR;
-		PBFIELD(2, SubscribedType, objects);
+		PBFIELD(2, SubscribedType, objects); // repeated
+		PBFIELD(3, types::Fixed64, version);
+		PBFIELD(4, CMsgSOIDOwner, owner_soid);
+	};
+
+	struct CMsgSOCacheSubscriptionCheck : pbmsg<3> {
+		PBMSG_CTOR;
+		PBFIELD(2, types::Int32, version);
+		PBFIELD(3, CMsgSOIDOwner, owner_soid);
+	};
+
+	struct Location : pbmsg<3> {
+		PBMSG_CTOR;
+		PBFIELD(1, types::Float, latitude);
+		PBFIELD(2, types::Float, longitude);
+		PBFIELD(3, types::String, country);
 	};
 
 	PBMSG_CTOR;
 	PBFIELD(1, types::Uint32, version);
-	PBFIELD(3, CMsgSOCacheSubscribed, outofdate_subscribed_caches);
+	PBFIELD(2, types::Bytes, game_data);
+	PBFIELD(3, CMsgSOCacheSubscribed, outofdate_subscribed_caches);    // repeated
+	PBFIELD(4, CMsgSOCacheSubscriptionCheck, uptodate_subscribed_caches); // repeated
+	PBFIELD(5, Location, location);
+	PBFIELD(6, types::Bytes, game_data2);
+	PBFIELD(7, types::Uint32, rtime32_gc_welcome_timestamp);
+	PBFIELD(8, types::Uint32, currency);
+	PBFIELD(9, types::Uint32, balance);
+	PBFIELD(10, types::String, balance_url);
+	PBFIELD(11, types::String, txn_country_code);
 };
+
 struct CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin : pbmsg<4> {
 
 	PBMSG_CTOR;
@@ -146,6 +179,14 @@ struct CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin : pbmsg<4> {
 	PBFIELD(4, types::Uint32, prestigetime);
 };
 
+
+struct CSOPersonaDataPublic : pbmsg<3> {
+
+	PBMSG_CTOR;
+	PBFIELD(1, types::Int32, player_level);
+	PBFIELD(2, PlayerCommendationInfo, commendation);
+	PBFIELD(3, types::Bool, elevated_state);
+};
 
 struct CEconItemPreviewDataBlock_Sticker : pbwrap::pbmsg<6> {
 	PBMSG_CTOR;
