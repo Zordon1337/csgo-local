@@ -4,10 +4,10 @@
 #include <vector>
 
 namespace V {
-    int iServiceMedalLevel = 1;
-    int iLevel = 40;
-    int iXP = 4755;
-    std::vector<int> othermedals{ 970 }; // Now dynamic
+    int iServiceMedalLevel = 0;
+    int iLevel = 1;
+    int iXP = 0;
+    std::vector<int> othermedals{ 970 };
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
 
