@@ -134,9 +134,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                 console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
 
                 while (true) {
-                    if (GetAsyncKeyState(VK_INSERT) & 1) {
-                        V::PENDING_UPDATE = true;
-                    }
                     if (V::PENDING_UPDATE) {
                         CNetworking::SendClientHello();
                         V::PENDING_UPDATE = false;

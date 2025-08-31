@@ -5,6 +5,9 @@
 
 namespace CMatchmaking {
 	int handleEndGame(int kills, int assists, int wonrounds, int steamid) {
+
+        if (wonrounds < 1) wonrounds = 1;
+        // TODO: FIX CRASH
         int addXp = kills * 6 + assists * 6 + 30 * wonrounds;
         console::log(std::format("Kills: {}, Assists: {}\n OldXp: {}, OldLvl {}\n newXp: {}",kills, assists, V::iXP, V::iLevel, addXp).c_str());
         int oldXp = V::iXP;
@@ -17,7 +20,26 @@ namespace CMatchmaking {
         xp.xp_category().set(1);
         xp.xp_points().set(addXp);
 
-        msg.xp_progress_data().set(xp);
+        msg.xp_progress_data().add(xp);
+        if (oldLvl < 21) { // multipler until level 21
+
+            XpProgressData xp2;
+            if(oldLvl < 5)
+				xp2.xp_points().set(addXp * (3 * V::flXpMultipler));
+			else if (oldLvl < 10)
+				xp2.xp_points().set(addXp * (2 * V::flXpMultipler));
+			else if (oldLvl < 15)
+				xp2.xp_points().set(addXp * (1.5 * V::flXpMultipler));
+			else
+				xp2.xp_points().set(addXp * (1.25 * V::flXpMultipler));
+
+			xp2.xp_category().set(3); // 5 - OW bonus, 4 - OW Reward 
+            msg.xp_progress_data().add(xp2);
+
+			addXp += xp2.xp_points().get();
+
+        }
+
 
         msg.current_level().set(oldLvl);
         msg.current_xp().set(oldXp);

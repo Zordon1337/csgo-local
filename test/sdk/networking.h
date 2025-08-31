@@ -250,43 +250,57 @@ public:
                         auto objects = cache.objects().get_all();
                         for (size_t i = 0; i < objects.size(); i++) {
                             auto object = objects[i];
-                            if (!object.type_id().has() || object.type_id().get() != 1)
+                            if (!object.type_id().has() || (object.type_id().get() != 1 && object.type_id().get() != 2))
                                 continue;
-
+                            
                             object.object_data().clear();
+                            if (object.type_id().get() == 1) {
 
-                            for (int i = 0; i < V::othermedals.size(); i++) {
-                                CSOEconItem item2;
-                                item2.id().set(MEDAL_BASE_ID + V::othermedals[i]);
-                                item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                                item2.def_index().set(V::othermedals[i]);
-                                item2.inventory().set(MEDAL_BASE_ID + V::othermedals[i]);
-                                item2.origin().set(9);
-                                item2.quantity().set(4);
-                                item2.level().set(0);
-                                item2.flags().set(0);
-                                item2.in_use().set(false);
-                                item2.rarity().set(6);
-                                item2.quality().set(4);
 
-                                object.object_data().add(item2.serialize());
+                                for (int i = 0; i < V::othermedals.size(); i++) {
+                                    CSOEconItem item2;
+                                    item2.id().set(MEDAL_BASE_ID + V::othermedals[i]);
+                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                    item2.def_index().set(V::othermedals[i]);
+                                    item2.inventory().set(MEDAL_BASE_ID + V::othermedals[i]);
+                                    item2.origin().set(9);
+                                    item2.quantity().set(4);
+                                    item2.level().set(0);
+                                    item2.flags().set(0);
+                                    item2.in_use().set(false);
+                                    item2.rarity().set(6);
+                                    item2.quality().set(4);
+
+                                    object.object_data().add(item2.serialize());
+                                }
+
+                                if (V::iServiceMedalLevel > 0) {
+                                    CSOEconItem item;
+                                    item.id().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
+                                    item.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                    item.def_index().set(1375 + V::iServiceMedalLevel);
+                                    item.inventory().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
+                                    item.origin().set(9);
+                                    item.quantity().set(4);
+                                    item.level().set(0);
+                                    item.flags().set(0);
+                                    item.in_use().set(false);
+                                    item.rarity().set(6);
+                                    item.quality().set(4);
+
+                                    object.object_data().add(item.serialize());
+                                }
                             }
+                            else {
+                                {
+                                    CSOPersonaDataPublic personaData;
+                                    personaData.elevated_state().set(true);
+                                    personaData.player_level().set(V::iLevel);
 
-                            if (V::iServiceMedalLevel > 0) {
-                                CSOEconItem item;
-                                item.id().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
-                                item.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                                item.def_index().set(1375 + V::iServiceMedalLevel);
-                                item.inventory().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
-                                item.origin().set(9);
-                                item.quantity().set(4);
-                                item.level().set(0);
-                                item.flags().set(0);
-                                item.in_use().set(false);
-                                item.rarity().set(6);
-                                item.quality().set(4);
 
-                                object.object_data().add(item.serialize());
+                                    CMsgClientWelcome::SubscribedType st;
+                                    object.object_data().set(personaData.serialize());
+                                }
                             }
                             cache.objects().set(object, i);
                         }

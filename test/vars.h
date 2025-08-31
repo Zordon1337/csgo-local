@@ -4,6 +4,8 @@
 #include <vector>
 
 namespace V {
+
+    float flXpMultipler = 2.f;
     int iServiceMedalLevel = 0;
     int iLevel = 1;
     int iXP = 0;
