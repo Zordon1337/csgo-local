@@ -25,13 +25,13 @@ namespace CMatchmaking {
 
             XpProgressData xp2;
             if(oldLvl < 5)
-				xp2.xp_points().set(addXp * (3 * V::flXpMultipler));
+				xp2.xp_points().set(addXp * static_cast<int>(3.f * V::flXpMultipler));
 			else if (oldLvl < 10)
-				xp2.xp_points().set(addXp * (2 * V::flXpMultipler));
+				xp2.xp_points().set(addXp * static_cast<int>(2.5f * V::flXpMultipler));
 			else if (oldLvl < 15)
-				xp2.xp_points().set(addXp * (1.5 * V::flXpMultipler));
+				xp2.xp_points().set(addXp * static_cast<int>(2.f * V::flXpMultipler));
 			else
-				xp2.xp_points().set(addXp * (1.25 * V::flXpMultipler));
+				xp2.xp_points().set(addXp * static_cast<int>(1.75f * V::flXpMultipler));
 
 			xp2.xp_category().set(3); // 5 - OW bonus, 4 - OW Reward 
             msg.xp_progress_data().add(xp2);
