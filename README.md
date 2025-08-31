@@ -6,7 +6,7 @@ Mod/Hack/Cheat That turns Bot Games into "MM" games with separate inventory, lev
 Current Features:
 - Getting service medal
 - Getting xp from matches
-- Saving/Load progress (WIP)
+- Saving/Load progress
 
 Notes:
 - The mod is in very early stage right now, its very unstable and not gameplay ready.
