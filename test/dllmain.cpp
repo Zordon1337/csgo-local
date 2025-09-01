@@ -161,6 +161,21 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
                 V::LoadConfig();
 
+                if (G::gameVer < 2019) {
+                    bool hasLegacy = false;
+                    for (int i = 0; i <= V::othermedals.size(); i++) {
+                        if (V::othermedals[i] == 970)
+                        {
+                            hasLegacy = true;
+                        }
+                    }
+                    if (!hasLegacy) {
+                    
+                        V::othermedals.push_back(970);
+                    }
+
+                }
+
                 E::g_EventListener = new EventListener;
 
                 G::g_EventManager->AddListener(E::g_EventListener, "cs_win_panel_match", false);

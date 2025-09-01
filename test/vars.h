@@ -9,7 +9,7 @@ namespace V {
     int iServiceMedalLevel = 0;
     int iLevel = 1;
     int iXP = 0;
-    std::vector<int> othermedals{ 970 };
+    std::vector<int> othermedals{ };
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
 
