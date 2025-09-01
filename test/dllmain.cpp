@@ -130,7 +130,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                 using CreateInterfaceFn = void* (*)(const char* name, int* returnCode);
                 CreateInterfaceFn EngineFactory = (CreateInterfaceFn)GetProcAddress(GetModuleHandleA("engine.dll"), "CreateInterface");
                 CreateInterfaceFn ClientFactory = (CreateInterfaceFn)GetProcAddress(GetModuleHandleA(G::bIsPanoramaDll ? "client_panorama.dll" : "client.dll"), "CreateInterface");
-
+                if (!ClientFactory) {
+                    ClientFactory = (CreateInterfaceFn)GetProcAddress(GetModuleHandleA("client_panorama.dll"), "CreateInterface");
+                    if(!ClientFactory)
+						MessageBoxA(NULL, "Failed to get ClientFactory\nInjected too quickly?", "Init Error", 1);
+                }
                 G::g_EventManager = (IGameEventManager2*)EngineFactory("GAMEEVENTSMANAGER002", nullptr);
                 while (!G::g_EventManager) {
 
