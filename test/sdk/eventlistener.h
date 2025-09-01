@@ -49,15 +49,15 @@ public:
 			console::log("reset kills");
 		}
 		else {
-			auto userid = pEvent->GetInt("userid");
-			auto idx = 2;
+			auto userid = G::g_EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
+			auto idx = G::g_EngineClient->GetLocalPlayerIndex();
 			auto attacker = pEvent->GetInt("attacker");
 			auto assister = pEvent->GetInt("assister");
-			if (userid != attacker && userid != idx) {
+			if (userid != attacker && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(attacker)) {
 				kills++;
 				console::log(std::format("added kill from {}", attacker).c_str());
 			}
-			else if (assister != userid && userid != idx) {
+			else if (assister != userid && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(assister)) {
 				assists++;
 				console::log(std::format("added assist from {}", assister).c_str());
 			}
