@@ -97,22 +97,6 @@ public:
                 st.object_data().add(item2.serialize());
             }
 
-            if (V::iServiceMedalLevel > 0) {
-                CSOEconItem item;
-                item.id().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
-                item.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                item.def_index().set(1375 + V::iServiceMedalLevel);
-                item.inventory().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
-                item.origin().set(9);
-                item.quantity().set(4);
-                item.level().set(0);
-                item.flags().set(0);
-                item.in_use().set(false);
-                item.rarity().set(6);
-                item.quality().set(4);
-
-                st.object_data().add(item.serialize());
-            }
         }
         {
 
@@ -151,6 +135,48 @@ public:
 
                 CNetworking::QueueMessage(9172, packet, 1500);*/
 
+                int MEDAL_ID = 1375;
+
+                switch (G::gameVer) {
+                    case 2018: MEDAL_ID = 1366; break;
+                    case 2019: MEDAL_ID = 1375; break;
+                    case 2020: MEDAL_ID = 4673; break;
+                    case 2021: MEDAL_ID = 4736; break;
+                    case 2022: MEDAL_ID = 4818; break;
+                    case 2023: MEDAL_ID = 4872; break;
+                    default: MEDAL_ID = 1331; break; // 2015 medal for unsupported builds
+                }
+
+                if (G::gameVer > 2017 && G::gameVer < 2024)
+                {
+					bool bHasMaxMedal = false;
+					for (int i = 0; i < V::othermedals.size(); i++) {
+						if (V::othermedals[i] == MEDAL_ID + 6) {
+							bHasMaxMedal = true;
+							break;
+						}
+					}
+                    int iMedalLevel = 0;
+                    for (int i = 0; i < V::othermedals.size(); i++) {
+						if (V::othermedals[i] == MEDAL_ID + i) {
+                            iMedalLevel = i;
+							break;
+						}
+                    }
+                    if (iMedalLevel > 0)
+                    {
+                        // replace old medal
+						for (int i = 0; i < V::othermedals.size(); i++) {
+							if (V::othermedals[i] == MEDAL_ID + iMedalLevel) {
+								V::othermedals[i] = MEDAL_ID + iMedalLevel + 1;
+								break;
+							}
+						}
+					}
+					else {
+						V::othermedals.push_back(MEDAL_ID + 1);
+					}
+                }
                 V::iLevel = 1;
                 V::iXP = 0;
                 V::iServiceMedalLevel++;
@@ -274,22 +300,6 @@ public:
                                     object.object_data().add(item2.serialize());
                                 }
 
-                                if (V::iServiceMedalLevel > 0) {
-                                    CSOEconItem item;
-                                    item.id().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
-                                    item.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                                    item.def_index().set(1375 + V::iServiceMedalLevel);
-                                    item.inventory().set(MEDAL_BASE_ID + 1375 + V::iServiceMedalLevel);
-                                    item.origin().set(9);
-                                    item.quantity().set(4);
-                                    item.level().set(0);
-                                    item.flags().set(0);
-                                    item.in_use().set(false);
-                                    item.rarity().set(6);
-                                    item.quality().set(4);
-
-                                    object.object_data().add(item.serialize());
-                                }
                             }
                             else {
                                 {
