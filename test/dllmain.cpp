@@ -139,6 +139,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                         V::PENDING_UPDATE = false;
                     }
 
+                    CMatchmaking::Refresh(G::g_GlobalVars->currentTime);
                     CNetworking::SyncGC();
                     Sleep(50);
                     
