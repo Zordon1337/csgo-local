@@ -14,7 +14,8 @@ namespace V {
     bool PENDING_UPDATE = false;
 
     void SaveConfig() {
-        std::ofstream ofs("config.txt");
+		system("mkdir C:\\CSGO_LOCAL");
+        std::ofstream ofs("C:\\CSGO_LOCAL\\config.txt");
         if (!ofs) return;
 
         ofs << iServiceMedalLevel << '\n';
@@ -26,7 +27,7 @@ namespace V {
     }
 
     void LoadConfig() {
-        std::ifstream ifs("config.txt");
+        std::ifstream ifs("C:\\CSGO_LOCAL\\config.txt");
         if (!ifs) {
 			SaveConfig();
             return;
