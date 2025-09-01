@@ -107,6 +107,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                     else if (strstr(G::versionString, "2018")) {
                         G::gameVer = 2018;
                     }
+                    else if (strstr(G::versionString, "2017")) {
+                        G::gameVer = 2017;
+                    }
+                    else if (strstr(G::versionString, "2016")) {
+                        G::gameVer = 2016;
+					}
                     else {
                         // not expected
                         G::gameVer = 0;

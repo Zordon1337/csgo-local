@@ -138,6 +138,8 @@ public:
                 int MEDAL_ID = 1375;
 
                 switch (G::gameVer) {
+                    case 2016: MEDAL_ID = 1338; break;
+                    case 2017: MEDAL_ID = 1356; break;
                     case 2018: MEDAL_ID = 1366; break;
                     case 2019: MEDAL_ID = 1375; break;
                     case 2020: MEDAL_ID = 4673; break;
@@ -147,7 +149,7 @@ public:
                     default: MEDAL_ID = 1331; break; // 2015 medal for unsupported builds
                 }
 
-                if (G::gameVer > 2017 && G::gameVer < 2024)
+                if (G::gameVer > 2015 && G::gameVer < 2024)
                 {
 					bool bHasMaxMedal = false;
 					for (int i = 0; i < V::othermedals.size(); i++) {
