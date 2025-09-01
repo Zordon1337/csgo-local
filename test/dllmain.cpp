@@ -130,8 +130,36 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 
                 V::STEAM_ID = G::g_SteamUser->GetSteamID().GetAccountID();
 
+                G::versionString = *(const char**)(M::PatternScan("engine.dll", "68 ? ? ? ? FF D7 83 C4 ? FF 15 ? ? ? ? 8B F0") + 1);
+                {
+                    // shit code lol
+                    if (strstr(G::versionString, "2019")) {
+                        G::gameVer = 2019;
+                    }
+                    else if (strstr(G::versionString, "2020")) {
+                        G::gameVer = 2020;
+                    }
+                    else if (strstr(G::versionString, "2021")) {
+                        G::gameVer = 2021;
+                    }
+                    else if (strstr(G::versionString, "2022")) {
+                        G::gameVer = 2022;
+                    }
+                    else if (strstr(G::versionString, "2023")) {
+                        G::gameVer = 2023;
+                    }
+                    else if (strstr(G::versionString, "2018")) {
+                        G::gameVer = 2018;
+                    }
+                    else {
+                        // not expected
+                        G::gameVer = 0;
+                        MessageBoxA(NULL, "Your Version is unsupported\r\n It might work but isn't officially supported", "CSGO-LOCAL", 0);
+                    }
+                }
 
                 console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
+                console::log(std::format("Game Version: {}", G::versionString).c_str()); // draws \n but fuck it
 
                 while (true) {
                     if (V::PENDING_UPDATE) {
