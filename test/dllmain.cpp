@@ -73,7 +73,19 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                     return -1;
                 }
 
-                G::versionString = *(const char**)(M::PatternScan("engine.dll", "68 ? ? ? ? FF D7 83 C4 ? FF 15 ? ? ? ? 8B F0") + 1);
+
+                auto offset = M::PatternScan("engine.dll", "68 ? ? ? ? FF D7 83 C4 ? FF 15 ? ? ? ? 8B F0");
+                
+				if (!offset) {
+                    offset = M::PatternScan("engine.dll", "68 ? ? ? ? FF D6 83 C4 ? 5E C3 CC CC CC 80 3D");
+                    if (!G::versionString)
+					{
+						MessageBoxA(0,"Failed to get version string", "CSGO_LOCAL", 1);
+		                return -1;
+					}
+				}
+                G::versionString = *(const char**)(offset + 1);
+
                 {
                     // shit code lol
                     if (strstr(G::versionString, "2019")) {
@@ -98,7 +110,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
                     else {
                         // not expected
                         G::gameVer = 0;
-                        MessageBoxA(NULL, "Your Version is unsupported\r\n It might work but isn't officially supported", "CSGO-LOCAL", 0);
+                        MessageBoxA(NULL, "Your Version is unsupported\r\nIt might work but isn't officially supported", "CSGO-LOCAL", 0);
                     }
                 }
 
