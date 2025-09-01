@@ -61,14 +61,14 @@ namespace CMatchmaking {
         return addXp;
 	}
 
-    void Refresh(float currTime) {
+    void Refresh(float currTime, bool bPanoramaDll) {
 		if (!bHasMessagePending)
 			return;
 		if (currTime < flUpdateTime)
 			return;
 
         using DispatchUserMessageFn = void(__cdecl*)(int msg_type, int32_t nPassthroughFlags, int size, const void* msg);
-        DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(M::PatternScan("client_panorama.dll", "55 8B EC A1 ? ? ? ? A8 ? 75 ? 83 C8 ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? 83 C4 ? B9"));
+        DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "55 8B EC A1 ? ? ? ? A8 ? 75 ? 83 C8 ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? 83 C4 ? B9"));
 
         DispatchUserMessage(65, 0, msgt.size(), msgt.c_str());
 

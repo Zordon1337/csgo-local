@@ -24,5 +24,6 @@ namespace G {
 
     const char* versionString = "";
     int gameVer = 0;
+    bool bIsPanoramaDll = false;
 
 }
