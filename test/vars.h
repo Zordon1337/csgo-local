@@ -27,7 +27,10 @@ namespace V {
 
     void LoadConfig() {
         std::ifstream ifs("config.txt");
-        if (!ifs) return;
+        if (!ifs) {
+			SaveConfig();
+            return;
+        }
 
         size_t medalCount = 0;
         ifs >> iServiceMedalLevel;
