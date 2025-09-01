@@ -7,7 +7,7 @@ Current Features:
 - Getting service medal
 - Getting xp from matches
 - Saving/Load progress
-- Multi Version (2018 up to 2023)
+- Multi Version (2016 up to 2023)
 
 Notes:
 - The mod is in very early stage right now, its very unstable and not gameplay ready.
