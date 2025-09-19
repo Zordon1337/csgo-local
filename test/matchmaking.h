@@ -72,6 +72,23 @@ namespace CMatchmaking {
 
         DispatchUserMessage(65, 0, msgt.size(), msgt.c_str());
 
+
+        CCSUsrMsg_SendPlayerItemDrops itemsend;
+
+        CEconItemPreviewDataBlock item;
+
+
+        item.accountid().set(V::STEAM_ID);
+        item.itemid().set(444);
+        item.defindex().set(9);
+        item.paintindex().set(344);
+        item.rarity().set(6);
+
+        itemsend.entity_updates().add(item);
+
+        auto msg = itemsend.serialize();
+        //DispatchUserMessage(61, 0, msg.size(), msg.c_str());
+        
 		bHasMessagePending = false;
 		msgt.clear();
     }

@@ -199,7 +199,7 @@ struct CEconItemPreviewDataBlock_Sticker : pbwrap::pbmsg<6> {
 	PBFIELD(6, types::Uint32, tint_id);
 };
 
-struct CEconItemPreviewDataBlock : pbwrap::pbmsg<19> {
+struct CEconItemPreviewDataBlock : pbwrap::pbmsg<18> {
 	PBMSG_CTOR;
 
 	PBFIELD(1, types::Uint32, accountid);
@@ -371,6 +371,15 @@ struct CCSUsrMsg_XpUpdate : pbmsg<1> {
 	PBMSG_CTOR;
 	PBFIELD(1, CMsgGCCstrike15_v2_GC2ServerNotifyXPRewarded, data);
 
+};
+struct CCSUsrMsg_SendPlayerItemFound : pbmsg<2> {
+	PBMSG_CTOR;
+	PBFIELD(1, CEconItemPreviewDataBlock, iteminfo);
+	PBFIELD(2, types::Int32, entindex);
+};
+struct CCSUsrMsg_SendPlayerItemDrops : pbmsg<1> {
+	PBMSG_CTOR;
+	PBFIELD(1, CEconItemPreviewDataBlock, entity_updates);
 };
 enum ECstrike15UserMessages {
 	CS_UM_VGUIMenu = 1,
