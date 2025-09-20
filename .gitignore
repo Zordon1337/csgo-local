@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+CSGOLocal/
+/CSGOLocal/csgo_gc.dll
+/CSGOLocal/Launcher.exe
