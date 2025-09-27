@@ -26,7 +26,10 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dist(0, 10000);
+	std::uniform_int_distribution<> distId(0, INT_MAX);
 	std::uniform_int_distribution<> dist3(0, 10);
+	std::uniform_real_distribution<float> distWear(0.f, 1.f);
+	std::uniform_int_distribution<> distPattern(0, 1000);
 
 	int iRarity = dist(gen);
 
@@ -57,12 +60,15 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 	bool isStatTrak = dist3(gen) == 1; 
 	if (isStatTrak) {
 		vPossibleItems[iItemIdx].bHasStattrack = true;
-		vPossibleItems[iItemIdx].flStattrack = rand() % 1000;
+		vPossibleItems[iItemIdx].flStattrack = 0;
 	}
 	else {
 		vPossibleItems[iItemIdx].bHasStattrack = false;
 		vPossibleItems[iItemIdx].flStattrack = 0;
 	}
+	vPossibleItems[iItemIdx].iItemId = distId(gen);
+	vPossibleItems[iItemIdx].flWear = distWear(gen);
+	vPossibleItems[iItemIdx].iPattern = distPattern(gen);
 	std::cout << "Dropped: " << vPossibleItems[iItemIdx].iDefIdx << " PaintKit: " << vPossibleItems[iItemIdx].flPaintKit << " Rarity: " << vPossibleItems[iItemIdx].iRarity << (vPossibleItems[iItemIdx].bHasStattrack ? (" Stattrack: " + std::to_string(vPossibleItems[iItemIdx].flStattrack)) : "") << std::endl;
 	return vPossibleItems[iItemIdx];
 }

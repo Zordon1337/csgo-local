@@ -7,6 +7,9 @@ struct CItem {
 	float flPaintKit;
 	bool bHasStattrack;
 	float flStattrack;
+	int iItemId;
+	float flWear;
+	int iPattern;
 };
 struct CCrate {
 	const char* szCaseName;
