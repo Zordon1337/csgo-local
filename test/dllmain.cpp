@@ -177,6 +177,11 @@ int RunLoop() {
     G::g_EventManager->AddListener(E::g_EventListener, "player_death", false);
 
     G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient014", nullptr);
+    while (!G::g_EngineClient) {
+        G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient014", nullptr);
+        if(!G::g_EngineClient)
+            G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient013", nullptr);
+    }
     void* client = ClientFactory("VClient018", nullptr);
 
     while (!client) {
@@ -190,7 +195,7 @@ int RunLoop() {
     V::PENDING_UPDATE = true;
 
     V::STEAM_ID = G::g_SteamUser->GetSteamID().GetAccountID();
-
+    CCaseOpening::CreateCrates();
 
 
     console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
@@ -200,6 +205,8 @@ int RunLoop() {
         if (V::PENDING_UPDATE) {
             CNetworking::SendClientHello();
             V::PENDING_UPDATE = false;
+
+            
         }
 
         CMatchmaking::Refresh(G::g_GlobalVars->currentTime, G::bIsPanoramaDll);

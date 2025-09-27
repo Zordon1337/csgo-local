@@ -116,7 +116,20 @@ public:
         }
         return msg;
     }
+    template<typename T>
+    inline static std::string get_4bytes(T value)
+    {
+        return std::string{ reinterpret_cast<const char*>(reinterpret_cast<void*>(&value)), 4 };
+    }
 
+    template<typename T>
+    inline static CSOEconItemAttribute make_econ_item_attribute(int def_index, T value)
+    {
+        CSOEconItemAttribute attribute;
+        attribute.def_index().set(def_index);
+        attribute.value_bytes().set(get_4bytes(value));
+        return attribute;
+    }
     static inline EGCResults __fastcall hkSendMsg(void* ecx, void* edx, uint32_t unMsgType, const void* pubData, uint32_t cubData) {
 
         uint32_t messageType = unMsgType & 0x7FFFFFFF;
@@ -217,6 +230,18 @@ public:
                 msg.txn_country_code().set("PL");
 
                 auto packet = msg.serialize();
+
+
+                
+                break;
+            }
+            case 1007: {
+				auto item = CCaseOpening::GetRandomItem(4001);
+
+                V::items.push_back(item);
+
+                V::PENDING_UPDATE = true;
+				V::iCaseResult = item.iDefIdx + item.iPaintKit;
             }
         }
         console::log(std::format("Sent packet {}", messageType).c_str());
@@ -302,6 +327,60 @@ public:
                                     object.object_data().add(item2.serialize());
                                 }
 
+                                {
+                                    CSOEconItem item2;
+                                    item2.id().set(9999999999);
+                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                    item2.def_index().set(4001);
+                                    item2.inventory().set(9999999999);
+                                    item2.origin().set(9);
+                                    item2.level().set(0);
+                                    item2.flags().set(0);
+                                    item2.in_use().set(false);
+                                    item2.rarity().set(0);
+                                    item2.quality().set(4);
+
+                                    object.object_data().add(item2.serialize());
+                                }
+                                {
+                                    CSOEconItem item2;
+                                    item2.id().set(99999999999);
+                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                    item2.def_index().set(1203);
+                                    item2.inventory().set(99999999999);
+                                    item2.origin().set(8);
+                                    item2.level().set(1);
+                                    item2.flags().set(0);
+                                    item2.in_use().set(false);
+                                    item2.rarity().set(0);
+                                    item2.quality().set(4);
+
+                                    object.object_data().add(item2.serialize());
+                                }
+
+                                for (auto item : V::items) {
+
+                                    CSOEconItem item2;
+                                    item2.id().set(item.iDefIdx + item.iPaintKit);
+                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                    item2.def_index().set(item.iDefIdx);
+                                    item2.inventory().set(item.iDefIdx + item.iPaintKit);
+                                    item2.origin().set(24);
+                                    item2.level().set(1);
+                                    item2.flags().set(0);
+                                    item2.in_use().set(false);
+                                    item2.rarity().set(item.iRarity);
+                                    item2.quality().set(0);
+
+                                    if (item.bHasStattrack) {
+                                        item2.attribute().add(make_econ_item_attribute(81, float(0)));
+                                        item2.attribute().add(make_econ_item_attribute(80, float(item.iStattrack)));
+                                    }
+                                    item2.attribute().add(make_econ_item_attribute(6, float(item.iPaintKit)));
+									std::cout << "PaintKit: " << item.iPaintKit << std::endl;
+									std::cout << "Stattrack: " << (item.bHasStattrack ? std::to_string(item.iStattrack) : "No") << std::endl;
+                                    object.object_data().add(item2.serialize());
+                                }
                             }
                             else {
                                 {
@@ -335,6 +414,17 @@ public:
                         msg.player_level().set(V::iLevel);
 
                         CNetworking::QueueMessage(9110, msg.serialize(), 0);
+                    }
+
+                    {
+                        if (V::iCaseResult > 0) {
+
+                            CMsgGCItemCustomizationNotification msg;
+                            msg.item_id().set(V::iCaseResult);
+                            msg.request().set(1007);
+                            CNetworking::QueueMessage(1090, msg.serialize(), 2000);
+                            V::iCaseResult = 0;
+                        }
                     }
 
                     break;

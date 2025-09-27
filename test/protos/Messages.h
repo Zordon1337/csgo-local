@@ -381,6 +381,11 @@ struct CCSUsrMsg_SendPlayerItemDrops : pbmsg<1> {
 	PBMSG_CTOR;
 	PBFIELD(1, CEconItemPreviewDataBlock, entity_updates);
 };
+struct CMsgGCItemCustomizationNotification : pbmsg<2> {
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint64, item_id);
+	PBFIELD(2, types::Uint32, request);
+};
 enum ECstrike15UserMessages {
 	CS_UM_VGUIMenu = 1,
 	CS_UM_Geiger = 2,

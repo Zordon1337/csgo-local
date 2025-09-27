@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CaseOpening\CCaseOpening.h" />
     <ClInclude Include="console\console.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="Minhook\MinHook.h" />
@@ -208,6 +209,7 @@
     <ClInclude Include="vars.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CaseOpening\CCaseOpening.cpp" />
     <ClCompile Include="console\console.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Minhook\Minhook\buffer.c" />

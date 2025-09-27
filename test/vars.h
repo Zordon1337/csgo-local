@@ -2,7 +2,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
-
+#include "protos/Messages.h"
+#include "CaseOpening/CCaseOpening.h"
 namespace V {
 
     float flXpMultipler = 2.f;
@@ -10,8 +11,10 @@ namespace V {
     int iLevel = 1;
     int iXP = 0;
     std::vector<int> othermedals{ };
+    std::vector<CItem> items{ };
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
+    int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
 
     void SaveConfig() {
 		system("mkdir C:\\CSGO_LOCAL");
