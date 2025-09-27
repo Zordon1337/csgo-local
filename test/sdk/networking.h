@@ -370,11 +370,11 @@ public:
                                     item2.flags().set(0);
                                     item2.in_use().set(false);
                                     item2.rarity().set(item.iRarity);
-                                    item2.quality().set(0);
-
-
-                                    item2.attribute().add(make_econ_item_attribute(81, float(0)));
-                                    item2.attribute().add(make_econ_item_attribute(80, 99999999.f)); // broken
+                                    item2.quality().set(item.iQuality);
+                                    if (item.bHasStattrack) {
+                                        item2.attribute().add(make_econ_item_attribute(81, float(0)));
+                                        item2.attribute().add(make_econ_item_attribute(80, item.flStattrack));
+                                    }
                                     item2.attribute().add(make_econ_item_attribute(6, item.flPaintKit));
                                     item2.attribute().add(make_econ_item_attribute(7, float(item.iPattern)));
                                     item2.attribute().add(make_econ_item_attribute(8, item.flWear));

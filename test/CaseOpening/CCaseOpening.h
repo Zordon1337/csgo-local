@@ -10,6 +10,7 @@ struct CItem {
 	int iItemId;
 	float flWear;
 	int iPattern;
+	int iQuality;
 };
 struct CCrate {
 	const char* szCaseName;
