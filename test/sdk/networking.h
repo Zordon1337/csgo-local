@@ -380,6 +380,38 @@ public:
                                     item2.attribute().add(make_econ_item_attribute(8, item.flWear));
                                     object.object_data().add(item2.serialize());
                                 }
+                                for (auto item : V::cases) {
+
+                                    CSOEconItem item2;
+                                    item2.id().set(item.iDefIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx)); // TODO: implement id
+                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                    item2.def_index().set(item.iDefIdx);
+                                    item2.inventory().set(item.iDefIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx));
+                                    item2.origin().set(8);
+                                    item2.level().set(1);
+                                    item2.flags().set(0);
+                                    item2.in_use().set(false);
+                                    item2.rarity().set(0);
+                                    item2.quality().set(4);
+
+                                    object.object_data().add(item2.serialize());
+                                }
+                                for (auto item : V::cases) {
+
+                                    CSOEconItem item2;
+                                    item2.id().set(item.iKeyIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx)); // TODO: implement id
+                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
+                                    item2.def_index().set(item.iKeyIdx);
+                                    item2.inventory().set(item.iKeyIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx));
+                                    item2.origin().set(8);
+                                    item2.level().set(1);
+                                    item2.flags().set(0);
+                                    item2.in_use().set(false);
+                                    item2.rarity().set(0);
+                                    item2.quality().set(4);
+
+                                    object.object_data().add(item2.serialize());
+                                }
                             }
                             else {
                                 {

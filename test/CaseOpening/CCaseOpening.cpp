@@ -1,5 +1,6 @@
 #pragma once
 #include "CCaseOpening.h"
+#include "../vars.h"
 #include <iostream>
 #include <string>
 #include <random>
@@ -89,4 +90,15 @@ bool CCaseOpening::DoesCaseHaveThisRarity(int iCaseIdx, int iRarity)
 		}
 	}
 	return false;
+}
+
+int CCaseOpening::GetAmountOfCases(int iCaseIdx)
+{
+	int i = 0;
+	for (auto& cCase : V::cases) {
+		if (cCase.iDefIdx == iCaseIdx) {
+			i++;
+		}
+	}
+	return i;
 }

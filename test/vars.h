@@ -12,6 +12,7 @@ namespace V {
     int iXP = 0;
     std::vector<int> othermedals{ };
     std::vector<CItem> items{ };
+    std::vector<CCrate> cases{ };
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
     int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages

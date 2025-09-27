@@ -58,6 +58,7 @@ namespace CMatchmaking {
         msgt = res;
         bHasMessagePending = true;
         V::PENDING_UPDATE = true;
+        V::cases.push_back(CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()]);
         return addXp;
 	}
 

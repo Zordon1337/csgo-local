@@ -19,7 +19,6 @@ public:
 
 	virtual void FireGameEvent(IGameEvent* pEvent) {
 
-		// TODO: FIX XP CALCULATION/OTHER WEIRD BUGS HERE
 		static int kills = 0;
 		static int assists = 0;
 		static int wonRounds = 0;

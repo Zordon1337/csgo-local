@@ -52,4 +52,5 @@ namespace CCaseOpening {
 	void CreateCrates();
 	CItem GetRandomItem(int iCaseIdx);
 	bool DoesCaseHaveThisRarity(int iCaseIdx, int iRarity);
+	int GetAmountOfCases(int iCaseIdx);
 }
