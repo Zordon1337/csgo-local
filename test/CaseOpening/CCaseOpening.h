@@ -4,12 +4,12 @@
 struct CItem {
 	int iDefIdx;
 	int iRarity;
-	int iPaintKit;
+	float flPaintKit;
 	bool bHasStattrack;
-	int iStattrack;
+	float flStattrack;
 };
 struct CCrate {
-	const char* sCaseName;
+	const char* szCaseName;
 	int iDefIdx;
 	int iKeyIdx;
 	int iRarity;

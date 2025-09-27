@@ -57,13 +57,13 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 	bool isStatTrak = dist3(gen) == 1; 
 	if (isStatTrak) {
 		vPossibleItems[iItemIdx].bHasStattrack = true;
-		vPossibleItems[iItemIdx].iStattrack = rand() % 1000;
+		vPossibleItems[iItemIdx].flStattrack = rand() % 1000;
 	}
 	else {
 		vPossibleItems[iItemIdx].bHasStattrack = false;
-		vPossibleItems[iItemIdx].iStattrack = 0;
+		vPossibleItems[iItemIdx].flStattrack = 0;
 	}
-	std::cout << "Dropped: " << vPossibleItems[iItemIdx].iDefIdx << " PaintKit: " << vPossibleItems[iItemIdx].iPaintKit << " Rarity: " << vPossibleItems[iItemIdx].iRarity << (vPossibleItems[iItemIdx].bHasStattrack ? (" Stattrack: " + std::to_string(vPossibleItems[iItemIdx].iStattrack)) : "") << std::endl;
+	std::cout << "Dropped: " << vPossibleItems[iItemIdx].iDefIdx << " PaintKit: " << vPossibleItems[iItemIdx].flPaintKit << " Rarity: " << vPossibleItems[iItemIdx].iRarity << (vPossibleItems[iItemIdx].bHasStattrack ? (" Stattrack: " + std::to_string(vPossibleItems[iItemIdx].flStattrack)) : "") << std::endl;
 	return vPossibleItems[iItemIdx];
 }
 

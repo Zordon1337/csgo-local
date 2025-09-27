@@ -241,7 +241,7 @@ public:
                 V::items.push_back(item);
 
                 V::PENDING_UPDATE = true;
-				V::iCaseResult = item.iDefIdx + item.iPaintKit;
+				V::iCaseResult = item.iDefIdx + item.flPaintKit;
             }
         }
         console::log(std::format("Sent packet {}", messageType).c_str());
@@ -361,10 +361,10 @@ public:
                                 for (auto item : V::items) {
 
                                     CSOEconItem item2;
-                                    item2.id().set(item.iDefIdx + item.iPaintKit);
+                                    item2.id().set(item.iDefIdx + item.flPaintKit);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
                                     item2.def_index().set(item.iDefIdx);
-                                    item2.inventory().set(item.iDefIdx + item.iPaintKit);
+                                    item2.inventory().set(item.iDefIdx + item.flPaintKit);
                                     item2.origin().set(24);
                                     item2.level().set(1);
                                     item2.flags().set(0);
@@ -374,11 +374,9 @@ public:
 
                                     if (item.bHasStattrack) {
                                         item2.attribute().add(make_econ_item_attribute(81, float(0)));
-                                        item2.attribute().add(make_econ_item_attribute(80, float(item.iStattrack)));
+                                        item2.attribute().add(make_econ_item_attribute(80, item.flStattrack));
                                     }
-                                    item2.attribute().add(make_econ_item_attribute(6, float(item.iPaintKit)));
-									std::cout << "PaintKit: " << item.iPaintKit << std::endl;
-									std::cout << "Stattrack: " << (item.bHasStattrack ? std::to_string(item.iStattrack) : "No") << std::endl;
+                                    item2.attribute().add(make_econ_item_attribute(6, item.flPaintKit));
                                     object.object_data().add(item2.serialize());
                                 }
                             }
