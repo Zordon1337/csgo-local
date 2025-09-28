@@ -201,11 +201,11 @@ int RunLoop() {
     console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
     console::log(std::format("Game Version: {}", G::gameVer).c_str());
 
-    for (int i = 0; i < 15; i++) {
+    /*for (int i = 0; i < 50; i++) {
 
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis2(0, CCaseOpening::vCrates.size());
+        std::uniform_int_distribution<> dis2(0, CCaseOpening::vCrates.size() - 1);
         CCrateOwned newcase;
         auto basecase = CCaseOpening::vCrates[dis2(gen)];
         newcase.iDefIdx = basecase.iDefIdx;
@@ -218,7 +218,7 @@ int RunLoop() {
         newcase.vItems = basecase.vItems;
 
         V::cases.push_back(newcase);
-    }
+    }*/
     while (true) {
         if (V::PENDING_UPDATE) {
             CNetworking::SendClientHello();

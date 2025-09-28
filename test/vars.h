@@ -106,9 +106,7 @@ namespace V {
 		cases.clear();
 		for (const auto& crate : j["cases"]) {
 			CCrateOwned c;
-			std::string tmp;
-			tmp = crate.value("szCaseName", "");
-			c.szCaseName = tmp.c_str();
+			c.szCaseName = crate.value("szCaseName", "").c_str();
 			c.iDefIdx = crate.value("iDefIdx", 0);
 			c.iKeyIdx = crate.value("iKeyIdx", 0);
 			c.iRarity = crate.value("iRarity", 0);
