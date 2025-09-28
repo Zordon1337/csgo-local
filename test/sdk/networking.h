@@ -70,52 +70,6 @@ public:
     using IsMessageAvailableFn = bool(__fastcall*)(void* ecx, void* edx, uint32* pcubMsgSize);
     static inline IsMessageAvailableFn oIsMessageAvailable;
 
-    static inline CMsgClientWelcome::CMsgSOCacheSubscribed BuildSoCache() {
-        CMsgClientWelcome::CMsgSOCacheSubscribed msg;
-        msg.version().set(7523377975160828514); // https://github.com/mikkokko/csgo_gc/blob/b2fe06da7eeff3d01833464a22c2d2db47a6fce0/csgo_gc/inventory.cpp#L12C39-L12C58
-        {
-            CMsgSOIDOwner soid;
-            soid.id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-            soid.owner_type().set(1);
-            msg.owner_soid().add(soid);
-
-            CMsgClientWelcome::SubscribedType st;
-            for (int i = 0; i < V::othermedals.size(); i++) {
-                CSOEconItem item2;
-                item2.id().set(MEDAL_BASE_ID + V::othermedals[i]);
-                item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                item2.def_index().set(V::othermedals[i]);
-                item2.inventory().set(MEDAL_BASE_ID + V::othermedals[i]);
-                item2.origin().set(9);
-                item2.quantity().set(4);
-                item2.level().set(0);
-                item2.flags().set(0);
-                item2.in_use().set(false);
-                item2.rarity().set(6);
-                item2.quality().set(4);
-
-                st.object_data().add(item2.serialize());
-            }
-
-        }
-        {
-
-            CMsgClientWelcome::SubscribedType st;
-            st.type_id().set(1);
-            msg.objects().add(st);
-        }
-        {
-            CSOPersonaDataPublic personaData;
-            personaData.elevated_state().set(true);
-            personaData.player_level().set(V::iLevel);
-
-
-            CMsgClientWelcome::SubscribedType st;
-            st.type_id().set(2);
-            st.object_data().set(personaData.serialize());
-        }
-        return msg;
-    }
     template<typename T>
     inline static std::string get_4bytes(T value)
     {
@@ -202,37 +156,6 @@ public:
                 {
 
                 }
-                break;
-            }
-            case 4006: {
-                CMsgClientWelcome msg;
-
-                msg.version().set(0);
-                msg.outofdate_subscribed_caches().set(BuildSoCache());
-                CMsgClientWelcome::Location loc;
-                loc.latitude().set(0.f);
-                loc.longitude().set(0.f);
-                loc.country().set("PL");
-                msg.location().set(loc);
-
-                MatchmakingGC2ClientHello msg2;
-
-                msg2.vac_banned().set(false);
-
-
-                msg2.player_cur_xp().set(V::iXP);
-                msg2.player_level().set(V::iLevel);
-
-
-                msg.game_data2().set(msg2.serialize());
-                msg.rtime32_gc_welcome_timestamp().set(static_cast<uint32_t>(time(nullptr)));
-                msg.currency().set(2);
-                msg.txn_country_code().set("PL");
-
-                auto packet = msg.serialize();
-
-
-                
                 break;
             }
             case 1007: {
@@ -363,6 +286,8 @@ public:
                                 }
                                 for (auto item : V::cases) {
 
+                                    if (item.iOCaseIdx == 0 || item.iKeyIdx == 0) // ignore cases without keys
+                                        continue;
                                     CSOEconItem item2;
                                     item2.id().set(item.iOCaseIdx);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
@@ -378,7 +303,8 @@ public:
                                     object.object_data().add(item2.serialize());
                                 }
                                 for (auto item : V::cases) {
-
+									if (item.iOCaseIdx == 0 || item.iKeyIdx == 0) // ignore cases without keys
+										continue;
                                     CSOEconItem item2;
                                     item2.id().set(item.iOKeyIdx);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());

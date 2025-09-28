@@ -201,11 +201,11 @@ int RunLoop() {
     console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
     console::log(std::format("Game Version: {}", G::gameVer).c_str());
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 15; i++) {
 
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis2(0, 2);
+        std::uniform_int_distribution<> dis2(0, CCaseOpening::vCrates.size());
         CCrateOwned newcase;
         auto basecase = CCaseOpening::vCrates[dis2(gen)];
         newcase.iDefIdx = basecase.iDefIdx;
