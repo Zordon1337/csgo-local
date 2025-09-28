@@ -195,6 +195,12 @@
     <ClInclude Include="sdk\iglobalvars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CaseOpening\CCaseOpening.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -216,6 +222,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="console\console.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaseOpening\CCaseOpening.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

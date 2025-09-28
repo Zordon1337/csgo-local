@@ -54,7 +54,7 @@ namespace CMatchmaking {
 
         auto res = msg1.serialize();
 
-        flUpdateTime = currTime + 2.f;
+        flUpdateTime = currTime + 3.f;
         msgt = res;
         bHasMessagePending = true;
         V::PENDING_UPDATE = true;

@@ -242,6 +242,8 @@ public:
 
                 V::PENDING_UPDATE = true;
 				V::iCaseResult = item.iItemId;
+				V::SaveConfig();
+				break;
             }
         }
         console::log(std::format("Sent packet {}", messageType).c_str());
