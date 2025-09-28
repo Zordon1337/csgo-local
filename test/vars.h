@@ -6,6 +6,7 @@
 #include "protos/Messages.h"
 #include "CaseOpening/CCaseOpening.h"
 #include "json/json.hpp"
+#include <random>
 namespace V {
 
     float flXpMultipler = 2.f;
@@ -14,7 +15,7 @@ namespace V {
     int iXP = 0;
     std::vector<int> othermedals{ };
     std::vector<CItem> items{ };
-    std::vector<CCrate> cases{ };
+    std::vector<CCrateOwned> cases{ };
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
     int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
@@ -51,6 +52,8 @@ namespace V {
 			jcrate["iDefIdx"] = crate.iDefIdx;
 			jcrate["iKeyIdx"] = crate.iKeyIdx;
 			jcrate["iRarity"] = crate.iRarity;
+			jcrate["iOCaseIdx"] = crate.iOCaseIdx;
+			jcrate["iOKeyIdx"] = crate.iOKeyIdx;
 			jcrate["vItems"] = nlohmann::json::array();
 			for (const auto& item : crate.vItems) {
 				jcrate["vItems"].push_back({
@@ -62,7 +65,7 @@ namespace V {
 					{"iItemId", item.iItemId},
 					{"flWear", item.flWear},
 					{"iPattern", item.iPattern},
-					{"iQuality", item.iQuality}
+					{"iQuality", item.iQuality},
 					});
 			}
 			j["cases"].push_back(jcrate);
@@ -102,13 +105,15 @@ namespace V {
 		}
 		cases.clear();
 		for (const auto& crate : j["cases"]) {
-			CCrate c;
+			CCrateOwned c;
 			std::string tmp;
 			tmp = crate.value("szCaseName", "");
 			c.szCaseName = tmp.c_str();
 			c.iDefIdx = crate.value("iDefIdx", 0);
 			c.iKeyIdx = crate.value("iKeyIdx", 0);
 			c.iRarity = crate.value("iRarity", 0);
+			c.iOCaseIdx = crate.value("iOCaseIdx", 0);
+			c.iOKeyIdx = crate.value("iOKeyIdx", 0);
 			for (const auto& item : crate["vItems"]) {
 				c.vItems.push_back(CItem{
 					item.value("iDefIdx", 0),

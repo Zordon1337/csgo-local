@@ -14,16 +14,20 @@ void CCaseOpening::CreateCrates()
 	CCaseOpening::vCrates.push_back(CCrate{ "eSports 2013 Winter Case", 4005, 1204, 1, {CItem{13, 3, 216}, CItem{3, 3, 223}, CItem{26, 3, 224}, CItem{35, 3, 225}, CItem{11, 3, 229}, CItem{36, 3, 230}, CItem{7, 4, 226}, CItem{19, 4, 228}, CItem{10, 5, 154}, CItem{9, 5, 227}, CItem{1, 5, 231}, CItem{16, 6, 215}, CItem{500, 7, -1}, CItem{500, 7, 38}, CItem{500, 7, 59}, CItem{500, 7, 44}, CItem{500, 7, 12}, CItem{500, 7, 42}, CItem{500, 7, 40}, CItem{500, 7, 43}, CItem{500, 7, 72}, CItem{500, 7, 175}, CItem{500, 7, 143}, CItem{500, 7, 5}, CItem{500, 7, 77}, CItem{505, 7, -1}, CItem{505, 7, 38}, CItem{505, 7, 12}, CItem{505, 7, 59}, CItem{505, 7, 44}, CItem{505, 7, 40}, CItem{505, 7, 143}, CItem{505, 7, 42}, CItem{505, 7, 43}, CItem{505, 7, 5}, CItem{505, 7, 72}, CItem{505, 7, 175}, CItem{505, 7, 77}, CItem{506, 7, -1}, CItem{506, 7, 38}, CItem{506, 7, 12}, CItem{506, 7, 44}, CItem{506, 7, 59}, CItem{506, 7, 43}, CItem{506, 7, 42}, CItem{506, 7, 5}, CItem{506, 7, 143}, CItem{506, 7, 40}, CItem{506, 7, 72}, CItem{506, 7, 175}, CItem{506, 7, 77}, CItem{507, 7, -1}, CItem{507, 7, 38}, CItem{507, 7, 59}, CItem{507, 7, 12}, CItem{507, 7, 44}, CItem{507, 7, 42}, CItem{507, 7, 40}, CItem{507, 7, 77}, CItem{507, 7, 43}, CItem{507, 7, 72}, CItem{507, 7, 143}, CItem{507, 7, 5}, CItem{507, 7, 175}, CItem{508, 7, -1}, CItem{508, 7, 38}, CItem{508, 7, 59}, CItem{508, 7, 12}, CItem{508, 7, 44}, CItem{508, 7, 42}, CItem{508, 7, 40}, CItem{508, 7, 43}, CItem{508, 7, 175}, CItem{508, 7, 143}, CItem{508, 7, 5}, CItem{508, 7, 77}, CItem{508, 7, 72}, } });
 }
 
+
 CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 {
-	CCrate cCase;
-	for (auto i : CCaseOpening::vCrates) {
-		if (i.iDefIdx == iCaseIdx) {
-			cCase = i;
-			break;
+	CCrateOwned cCase;
+	for (auto it = V::cases.begin(); it != V::cases.end();) {
+		if (it->iOCaseIdx == iCaseIdx) {
+			cCase = *it;
+			iCaseIdx = it->iDefIdx;
+			V::PENDING_UPDATE = true;
+		}
+		else {
+			++it;
 		}
 	}
-
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dist(0, 10000);

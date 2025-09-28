@@ -128,6 +128,11 @@ struct Location : pbmsg<3> {
 	PBFIELD(3, types::Fixed64, country);
 };
 
+struct CMsgClientToGCUnlockCrate : pbmsg<2> {
+	PBMSG_CTOR;
+	PBFIELD(1, types::Sfixed64, crate_item_id);
+	PBFIELD(2, types::Sfixed64, key_item_id);
+};
 struct CMsgClientWelcome : pbmsg<11> {
 
 	struct SubscribedType : pbmsg<2> {

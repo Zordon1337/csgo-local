@@ -236,7 +236,17 @@ public:
                 break;
             }
             case 1007: {
-				auto item = CCaseOpening::GetRandomItem(4001);
+                const uint8_t* buf = (uint8_t*)((DWORD)pubData);
+
+                uint64_t first = 0, second = 0;
+
+                std::memcpy(&first, buf + 18, 8);
+                std::memcpy(&second, buf + 26, 8);
+
+                printf("Key: %llu\n", first);
+                printf("Case: %llu\n", second);
+
+                auto item = CCaseOpening::GetRandomItem(second);
 
                 V::items.push_back(item);
 
@@ -328,38 +338,7 @@ public:
 
                                     object.object_data().add(item2.serialize());
                                 }
-
-                                {
-                                    CSOEconItem item2;
-                                    item2.id().set(9999999999);
-                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                                    item2.def_index().set(4001);
-                                    item2.inventory().set(9999999999);
-                                    item2.origin().set(9);
-                                    item2.level().set(0);
-                                    item2.flags().set(0);
-                                    item2.in_use().set(false);
-                                    item2.rarity().set(0);
-                                    item2.quality().set(4);
-
-                                    object.object_data().add(item2.serialize());
-                                }
-                                {
-                                    CSOEconItem item2;
-                                    item2.id().set(99999999999);
-                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                                    item2.def_index().set(1203);
-                                    item2.inventory().set(99999999999);
-                                    item2.origin().set(8);
-                                    item2.level().set(1);
-                                    item2.flags().set(0);
-                                    item2.in_use().set(false);
-                                    item2.rarity().set(0);
-                                    item2.quality().set(4);
-
-                                    object.object_data().add(item2.serialize());
-                                }
-
+                            
                                 for (auto item : V::items) {
 
                                     CSOEconItem item2;
@@ -385,10 +364,10 @@ public:
                                 for (auto item : V::cases) {
 
                                     CSOEconItem item2;
-                                    item2.id().set(item.iDefIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx)); // TODO: implement id
+                                    item2.id().set(item.iOCaseIdx);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
                                     item2.def_index().set(item.iDefIdx);
-                                    item2.inventory().set(item.iDefIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx));
+                                    item2.inventory().set(item.iOCaseIdx);
                                     item2.origin().set(8);
                                     item2.level().set(1);
                                     item2.flags().set(0);
@@ -401,10 +380,10 @@ public:
                                 for (auto item : V::cases) {
 
                                     CSOEconItem item2;
-                                    item2.id().set(item.iKeyIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx)); // TODO: implement id
+                                    item2.id().set(item.iOKeyIdx);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
                                     item2.def_index().set(item.iKeyIdx);
-                                    item2.inventory().set(item.iKeyIdx + CCaseOpening::GetAmountOfCases(item.iDefIdx));
+                                    item2.inventory().set(item.iOKeyIdx);
                                     item2.origin().set(8);
                                     item2.level().set(1);
                                     item2.flags().set(0);
@@ -472,7 +451,9 @@ public:
 
     static inline bool __fastcall hkIsMessageAvailable(void* ecx, void* edx, uint32* pcubMsgSize) {
         std::lock_guard<std::recursive_mutex> lock(queueMutex);
-
+        auto og = oIsMessageAvailable(ecx, edx, pcubMsgSize);
+		if (og)
+			return og;
         for (auto& msg : msgQueue) {
             int delta = msg.delay - G::g_GlobalVars->currentTime;
             if (delta >= -0.2 && delta <= 0.2) {
@@ -481,11 +462,12 @@ public:
             }
         }
 
-        return oIsMessageAvailable(ecx, edx, pcubMsgSize);
+        return og;
     }
 
 
     static inline void QueueMessage(int packetId, const std::string& data, int delay) {
+
         std::lock_guard<std::recursive_mutex> lock(queueMutex);
         msgQueue.push_back({ data, packetId, (G::g_GlobalVars->currentTime + (delay / 1000.f))});
 

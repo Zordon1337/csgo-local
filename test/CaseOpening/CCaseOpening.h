@@ -19,6 +19,15 @@ struct CCrate {
 	int iRarity;
 	std::vector<CItem> vItems;
 };
+struct CCrateOwned {
+	const char* szCaseName;
+	int iDefIdx;
+	int iKeyIdx;
+	int iOCaseIdx;
+	int iOKeyIdx;
+	int iRarity;
+	std::vector<CItem> vItems;
+};
 enum eItemQuality {
 	ITEM_QUALITY_DEFAULT,
 	ITEM_QUALITY_GENUINE,
