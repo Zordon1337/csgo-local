@@ -8,6 +8,7 @@ Current Features:
 - Getting xp from matches
 - Saving/Load progress
 - Multi Version (2016 up to 2023)
+- Case Opening & Case drops from matches
 
 Notes:
 - The mod is in very early stage right now, its very unstable and not gameplay ready.
