@@ -286,8 +286,6 @@ public:
                                 }
                                 for (auto item : V::cases) {
 
-                                    if (item.iOCaseIdx == 0 || item.iKeyIdx == 0) // ignore cases without keys
-                                        continue;
                                     CSOEconItem item2;
                                     item2.id().set(item.iOCaseIdx);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
