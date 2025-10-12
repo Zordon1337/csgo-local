@@ -78,7 +78,7 @@ namespace V {
 
     void LoadConfig() {
         std::ifstream ifs("C:\\CSGO_LOCAL\\config.txt");
-        if (!ifs) {
+        if (!ifs || sizeof(ifs) == 0) {
 			SaveConfig();
             return;
         }

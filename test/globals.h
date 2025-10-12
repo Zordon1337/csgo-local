@@ -19,6 +19,7 @@ namespace G {
     IGameEventManager2* g_EventManager = nullptr;
     IVEngineClient* g_EngineClient = nullptr;
     IGlobalVars* g_GlobalVars = nullptr;
+    void* g_VClient = nullptr;
 
 #define MEDAL_BASE_ID 10000
 

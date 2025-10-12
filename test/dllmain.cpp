@@ -182,13 +182,13 @@ int RunLoop() {
         if(!G::g_EngineClient)
             G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient013", nullptr);
     }
-    void* client = ClientFactory("VClient018", nullptr);
+    G::g_VClient = ClientFactory("VClient018", nullptr);
 
-    while (!client) {
-        client = ClientFactory("VClient018", nullptr);
-        if(!client) client = ClientFactory("VClient017", nullptr);
+    while (!G::g_VClient) {
+        G::g_VClient = ClientFactory("VClient018", nullptr);
+        if(!G::g_VClient) G::g_VClient = ClientFactory("VClient017", nullptr);
     }
-    G::g_GlobalVars = **reinterpret_cast<IGlobalVars***>((*reinterpret_cast<uintptr_t**>(client))[11] + 10);
+    G::g_GlobalVars = **reinterpret_cast<IGlobalVars***>((*reinterpret_cast<uintptr_t**>(G::g_VClient))[11] + 10);
 
     MH_EnableHook(MH_ALL_HOOKS);
 
@@ -227,7 +227,7 @@ int RunLoop() {
             
         }
 
-        CMatchmaking::Refresh(G::g_GlobalVars->currentTime, G::bIsPanoramaDll);
+        CMatchmaking::Refresh(G::g_GlobalVars->currentTime, G::bIsPanoramaDll, G::g_VClient);
         CNetworking::SyncGC();
         Sleep(50);
 

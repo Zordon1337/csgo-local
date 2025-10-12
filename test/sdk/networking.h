@@ -172,10 +172,16 @@ public:
                 auto item = CCaseOpening::GetRandomItem(second);
 
                 V::items.push_back(item);
-
-                V::PENDING_UPDATE = true;
+				
 				V::iCaseResult = item.iItemId;
 				V::SaveConfig();
+                for (int i = 0; i < V::cases.size(); i++) {
+                    if (V::cases[i].iOCaseIdx == second) {
+                        V::cases.erase(V::cases.begin() + i);
+                        break;
+                    }
+                }
+				SendClientHello();
 				break;
             }
         }
@@ -358,7 +364,7 @@ public:
                             CMsgGCItemCustomizationNotification msg;
                             msg.item_id().set(V::iCaseResult);
                             msg.request().set(1007);
-                            CNetworking::QueueMessage(1090, msg.serialize(), 2000);
+                            CNetworking::QueueMessage(1090, msg.serialize(), 4000);
                             V::iCaseResult = 0;
                         }
                     }
