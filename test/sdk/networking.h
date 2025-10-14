@@ -93,6 +93,7 @@ public:
 
             std::cout << "Equipped: " << equip.item_id().get() << " On Team: " << equip.new_class().get() << " On Slot: " << equip.new_slot().get() << "\n";
             CInventory::EquipSlot(equip.item_id().get(), equip.new_class().get(), equip.new_slot().get());
+
             break;
         }
             case 9172: {
@@ -313,7 +314,7 @@ public:
                                             CSOEconItemEquipped equip;
                                             equip.new_slot().set(54);
                                             equip.new_class().set(0);
-                                            item2.equipped_state().set(equip);
+                                            item2.equipped_state().add(equip);
                                         }
 
                                     }
@@ -322,7 +323,7 @@ public:
                                             CSOEconItemEquipped equip;
                                             equip.new_slot().set(55);
                                             equip.new_class().set(0);
-                                            item2.equipped_state().set(equip);
+                                            item2.equipped_state().add(equip);
                                         }
                                     }
                                     else {
@@ -331,13 +332,13 @@ public:
                                             CSOEconItemEquipped equip;
                                             equip.new_slot().set(slotId);
                                             equip.new_class().set(2);
-                                            item2.equipped_state().set(equip);
+                                            item2.equipped_state().add(equip);
                                         }
                                         if (CInventory::isEquipped(item.iItemId, 3, slotId)) {
                                             CSOEconItemEquipped equip;
                                             equip.new_slot().set(slotId);
                                             equip.new_class().set(3);
-                                            item2.equipped_state().set(equip);
+                                            item2.equipped_state().add(equip);
                                         }
                                     }
 
@@ -416,6 +417,7 @@ public:
                         msg.item_id().set(V::iCaseResult);
                         msg.request().set(1007);
                         CNetworking::QueueMessage(1090, msg.serialize(), 500);
+                        V::iCaseResult = 0;
                     }
                     break;
                 }

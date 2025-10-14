@@ -5,6 +5,7 @@
 #include <vector>
 #include "protos/Messages.h"
 #include "CaseOpening/CCaseOpening.h"
+#include "CaseOpening/CInventory.h"
 #include "json/json.hpp"
 #include <random>
 namespace V {
@@ -32,6 +33,10 @@ namespace V {
 		j["othermedals"] = othermedals;
 		j["items"] = nlohmann::json::array();
         for (const auto& item : items) {
+
+			bool isCtEquipped = CInventory::isEquipped(item.iItemId, 3, CInventory::GetSlotID(item.iDefIdx));
+			bool isTEquipped = CInventory::isEquipped(item.iItemId, 2, CInventory::GetSlotID(item.iDefIdx));
+			bool is0Equipped = CInventory::isEquipped(item.iItemId, 0, item.iFlag == 4 ? 55 : 54);
             j["items"].push_back({
                 {"iDefIdx", item.iDefIdx},
                 {"iRarity", item.iRarity},
@@ -42,7 +47,10 @@ namespace V {
                 {"flWear", item.flWear},
                 {"iPattern", item.iPattern},
                 {"iQuality", item.iQuality},
-                {"iFlag", item.iFlag}
+                {"iFlag", item.iFlag},
+				{"bIs0Equipped", is0Equipped},
+				{"bIsTEquipped", isTEquipped},
+				{"bIsCtEquipped", isCtEquipped}
                 });
         }
 		j["cases"] = nlohmann::json::array();
@@ -78,7 +86,7 @@ namespace V {
 			othermedals = j.value("othermedals", std::vector<int>{});
 			items.clear();
 			for (const auto& item : j["items"]) {
-				items.push_back(CItem{
+				auto item2 = CItem{
 					item.value("iDefIdx", 0),
 					item.value("iRarity", 0),
 					item.value("flPaintKit", 0.f),
@@ -89,7 +97,21 @@ namespace V {
 					item.value("iPattern", 0),
 					item.value("iQuality", 0),
 					item.value("iFlag", 0)
-					});
+				};
+
+				bool isCtEquipped = item.value("bIsCtEquipped", false);
+				bool isTEquipped = item.value("bIsTEquipped", false);
+				bool is0Equipped = item.value("bIs0Equipped", false);
+				if (isCtEquipped) CInventory::EquipSlot(item2.iItemId, 3, CInventory::GetSlotID(item2.iDefIdx));
+				if (isTEquipped) CInventory::EquipSlot(item2.iItemId, 2, CInventory::GetSlotID(item2.iDefIdx));
+				if (is0Equipped) {
+					if (item2.iFlag == 4) {
+						CInventory::EquipSlot(item2.iItemId, 0, 55);
+					} else if (item2.iFlag == 5) {
+						CInventory::EquipSlot(item2.iItemId, 0, 54);
+					}
+				}
+				items.push_back(item2);
 			}
 			cases.clear();
 			for (const auto& crate : j["cases"]) {
