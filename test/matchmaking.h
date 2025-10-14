@@ -57,20 +57,22 @@ namespace CMatchmaking {
         msgt = res;
         bHasMessagePending = true;
         V::PENDING_UPDATE = true;
-        CCrateOwned newcase;
-        auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
-		newcase.iDefIdx = basecase.iDefIdx;
-		newcase.iKeyIdx = basecase.iKeyIdx;
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(1,9999);
-		newcase.iOCaseIdx = dis(gen);
-		newcase.iOKeyIdx = dis(gen);
-        newcase.iRarity = basecase.iRarity;
-		newcase.szCaseName = basecase.szCaseName;
-		newcase.vItems = basecase.vItems;
+        for (int i = 0; i < 4; i++) {
+            CCrateOwned newcase;
+            auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
+            newcase.iDefIdx = basecase.iDefIdx;
+            newcase.iKeyIdx = basecase.iKeyIdx;
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(1, 9999);
+            newcase.iOCaseIdx = dis(gen);
+            newcase.iOKeyIdx = dis(gen);
+            newcase.iRarity = basecase.iRarity;
+            newcase.szCaseName = basecase.szCaseName;
+            newcase.vItems = basecase.vItems;
 
-        V::cases.push_back(newcase);
+            V::cases.push_back(newcase);
+        }
         return addXp;
 	}
 

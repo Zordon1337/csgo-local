@@ -56,9 +56,7 @@ public:
 
     // holy shit, this is terrible but im not going to spend any more time finding better solution
     static void SyncGC() {
-        if (oCheckForMessages &&_ecx  && _a2) {
-            oCheckForMessages(_ecx, _a2);
-        }
+        
     }
 
     using SendMsgGC = EGCResults(__fastcall*)(void* ecx, void* edx, uint32_t unMsgType, const void* pubData, uint32_t cubData);
@@ -181,7 +179,12 @@ public:
                         break;
                     }
                 }
+
+                
+
 				SendClientHello();
+
+
 				break;
             }
         }
@@ -342,7 +345,7 @@ public:
                         auto packet = msg.serialize();
 
 
-                        CNetworking::QueueMessage(4004, packet, 250);
+                        CNetworking::QueueMessage(4004, packet, 0);
 
                     }
 
@@ -355,20 +358,15 @@ public:
                         msg.player_cur_xp().set(V::iXP);
                         msg.player_level().set(V::iLevel);
 
-                        CNetworking::QueueMessage(9110, msg.serialize(), 0);
+                        CNetworking::QueueMessage(9110, msg.serialize(), 500);
                     }
 
-                    {
-                        if (V::iCaseResult > 0) {
-
-                            CMsgGCItemCustomizationNotification msg;
-                            msg.item_id().set(V::iCaseResult);
-                            msg.request().set(1007);
-                            CNetworking::QueueMessage(1090, msg.serialize(), 4000);
-                            V::iCaseResult = 0;
-                        }
+                    if (V::iCaseResult) {
+                        CMsgGCItemCustomizationNotification msg;
+                        msg.item_id().set(V::iCaseResult);
+                        msg.request().set(1007);
+                        CNetworking::QueueMessage(1090, msg.serialize(), 1000);
                     }
-
                     break;
                 }
             }
@@ -385,7 +383,7 @@ public:
 		if (og)
 			return og;
         for (auto& msg : msgQueue) {
-            int delta = msg.delay - G::g_GlobalVars->currentTime;
+            int delta = msg.delay - (float)(GetTickCount()/1000.f);
             if (delta >= -0.2 && delta <= 0.2) {
                 *pcubMsgSize = msg.data.size();
                 return true;
@@ -399,8 +397,8 @@ public:
     static inline void QueueMessage(int packetId, const std::string& data, int delay) {
 
         std::lock_guard<std::recursive_mutex> lock(queueMutex);
-        msgQueue.push_back({ data, packetId, (G::g_GlobalVars->currentTime + (delay / 1000.f))});
-
+        msgQueue.push_back({ data, packetId, (float)((GetTickCount() + delay)/1000.f)});
+        
         console::log(std::format("Added {} To Queue", packetId).c_str());
 
     }

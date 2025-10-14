@@ -54,20 +54,6 @@ namespace V {
 			jcrate["iRarity"] = crate.iRarity;
 			jcrate["iOCaseIdx"] = crate.iOCaseIdx;
 			jcrate["iOKeyIdx"] = crate.iOKeyIdx;
-			jcrate["vItems"] = nlohmann::json::array();
-			for (const auto& item : crate.vItems) {
-				jcrate["vItems"].push_back({
-					{"iDefIdx", item.iDefIdx},
-					{"iRarity", item.iRarity},
-					{"flPaintKit", item.flPaintKit},
-					{"bHasStattrack", item.bHasStattrack},
-					{"flStattrack", item.flStattrack},
-					{"iItemId", item.iItemId},
-					{"flWear", item.flWear},
-					{"iPattern", item.iPattern},
-					{"iQuality", item.iQuality},
-					});
-			}
 			j["cases"].push_back(jcrate);
 		}
 		
@@ -112,18 +98,8 @@ namespace V {
 			c.iRarity = crate.value("iRarity", 0);
 			c.iOCaseIdx = crate.value("iOCaseIdx", 0);
 			c.iOKeyIdx = crate.value("iOKeyIdx", 0);
-			for (const auto& item : crate["vItems"]) {
-				c.vItems.push_back(CItem{
-					item.value("iDefIdx", 0),
-					item.value("iRarity", 0),
-					item.value("flPaintKit", 0.f),
-					item.value("bHasStattrack", false),
-					item.value("flStattrack", 0.f),
-					item.value("iItemId", 0),
-					item.value("flWear", 0.f),
-					item.value("iPattern", 0),
-					item.value("iQuality", 0)
-					});
+			for (auto& ca : CCaseOpening::vCrates) {
+				if (ca.iDefIdx == c.iDefIdx) c.vItems = ca.vItems;
 			}
 			cases.push_back(c);
 		}
