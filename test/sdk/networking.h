@@ -317,6 +317,14 @@ public:
                                         }
 
                                     }
+                                    else if (item.iFlag == 4) {
+                                        if (CInventory::isEquipped(item.iItemId, 0, 55)) {
+                                            CSOEconItemEquipped equip;
+                                            equip.new_slot().set(55);
+                                            equip.new_class().set(0);
+                                            item2.equipped_state().set(equip);
+                                        }
+                                    }
                                     else {
                                         int slotId = CInventory::GetSlotID(item.iDefIdx);
                                         if (CInventory::isEquipped(item.iItemId, 2, slotId)) {

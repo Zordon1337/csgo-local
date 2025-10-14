@@ -208,9 +208,12 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 			vPossibleItems[iItemIdx].bHasStattrack = true; // force stattrack on mvp 
 		}
 	}
+	else if (cCase.szCaseName.find("Collectible Pins Capsule") != std::string::npos) {
+		vPossibleItems[iItemIdx].iFlag = 4;
+	}
 	else {
 
-		vPossibleItems[iItemIdx].iFlag = 1;
+		vPossibleItems[iItemIdx].iFlag = 6;
 	}
 	return vPossibleItems[iItemIdx];
 }
