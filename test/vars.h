@@ -29,6 +29,7 @@ namespace V {
     bool PENDING_UPDATE = false;
     int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
 	RecvVarProxyFn oViewModelProxy;
+	RecvVarProxyFn oMusicKitProxy;
 
     void SaveConfig() {
 		system("mkdir C:\\CSGO_LOCAL");

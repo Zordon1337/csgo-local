@@ -30,3 +30,8 @@ public:
 	NETVAR(m_nModelIndex, "CBaseAttributableItem->m_nModelIndex", int);
 	
 };
+// A1 ? ? ? ? 57 85 C0 74 08 + 1
+class CPlayerResource {
+public:
+	NETVAR(m_nMusicID, "CCSPlayerResource->m_nMusicID", uint32_t);
+};
