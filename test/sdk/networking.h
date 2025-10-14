@@ -276,7 +276,13 @@ public:
                                     CSOEconItem item2;
                                     item2.id().set(item.iItemId);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                                    item2.def_index().set(item.iDefIdx);
+                                    if (item.iFlag == 5) {
+
+                                        item2.def_index().set(1314);
+                                    }
+                                    else {
+                                        item2.def_index().set(item.iDefIdx);
+                                    }
                                     item2.inventory().set(item.iItemId);
                                     item2.origin().set(24);
                                     item2.level().set(1);
@@ -291,6 +297,10 @@ public:
                                     item2.attribute().add(make_econ_item_attribute(6, item.flPaintKit));
                                     item2.attribute().add(make_econ_item_attribute(7, float(item.iPattern)));
                                     item2.attribute().add(make_econ_item_attribute(8, item.flWear));
+                                    if (item.iFlag == 5) {
+                                        item2.attribute().add(make_econ_item_attribute(166, item.iDefIdx));
+                                        
+                                    }
                                     object.object_data().add(item2.serialize());
                                 }
                                 for (auto item : V::cases) {
@@ -345,7 +355,7 @@ public:
                         auto packet = msg.serialize();
 
 
-                        CNetworking::QueueMessage(4004, packet, 0);
+                        CNetworking::QueueMessage(4004, packet, 100);
 
                     }
 
@@ -358,14 +368,14 @@ public:
                         msg.player_cur_xp().set(V::iXP);
                         msg.player_level().set(V::iLevel);
 
-                        CNetworking::QueueMessage(9110, msg.serialize(), 500);
+                        CNetworking::QueueMessage(9110, msg.serialize(), 250);
                     }
 
                     if (V::iCaseResult) {
                         CMsgGCItemCustomizationNotification msg;
                         msg.item_id().set(V::iCaseResult);
                         msg.request().set(1007);
-                        CNetworking::QueueMessage(1090, msg.serialize(), 1000);
+                        CNetworking::QueueMessage(1090, msg.serialize(), 500);
                     }
                     break;
                 }

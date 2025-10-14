@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 struct CItem {
 	int iDefIdx;
@@ -11,21 +12,24 @@ struct CItem {
 	float flWear;
 	int iPattern;
 	int iQuality;
+	int iFlag;
 };
 struct CCrate {
-	const char* szCaseName;
+	std::string szCaseName;
 	int iDefIdx;
 	int iKeyIdx;
 	int iRarity;
+	bool bIsMusicKitBox;
 	std::vector<CItem> vItems;
 };
 struct CCrateOwned {
-	const char* szCaseName;
+	std::string szCaseName;
 	int iDefIdx;
 	int iKeyIdx;
 	int iOCaseIdx;
 	int iOKeyIdx;
 	int iRarity;
+	bool bIsMusicKitBox;
 	std::vector<CItem> vItems;
 };
 enum eItemQuality {

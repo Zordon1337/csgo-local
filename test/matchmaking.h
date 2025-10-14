@@ -5,10 +5,11 @@
 namespace CMatchmaking {
     float flUpdateTime = 0;
     bool bHasMessagePending = false;
+    int _steamid = 0;
     std::string msgt;
 
 	int handleEndGame(int kills, int assists, int wonrounds, int steamid, float currTime) {
-
+        _steamid = steamid;
         if (wonrounds < 1) wonrounds = 1;
         // TODO: FIX RANDOM CRASH
         int addXp = kills * 6 + assists * 6 + 30 * wonrounds;
@@ -56,23 +57,7 @@ namespace CMatchmaking {
         flUpdateTime = currTime + 3.f;
         msgt = res;
         bHasMessagePending = true;
-        V::PENDING_UPDATE = true;
-        for (int i = 0; i < 4; i++) {
-            CCrateOwned newcase;
-            auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
-            newcase.iDefIdx = basecase.iDefIdx;
-            newcase.iKeyIdx = basecase.iKeyIdx;
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dis(1, 9999);
-            newcase.iOCaseIdx = dis(gen);
-            newcase.iOKeyIdx = dis(gen);
-            newcase.iRarity = basecase.iRarity;
-            newcase.szCaseName = basecase.szCaseName;
-            newcase.vItems = basecase.vItems;
-
-            V::cases.push_back(newcase);
-        }
+        
         return addXp;
 	}
 
@@ -87,9 +72,48 @@ namespace CMatchmaking {
         DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(reinterpret_cast<uintptr_t**>((*(void***)g_VClient)[38]));
 
         DispatchUserMessage(g_VClient, 65, 0, msgt.size(), msgt.c_str());
+        CCSUsrMsg_SendPlayerItemDrops drops;
+        for (int i = 0; i < 4; i++) {
+            CCrateOwned newcase;
+            auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
+            {
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<> dis(0, CCaseOpening::vCrates.size());
+                basecase = CCaseOpening::vCrates[dis(gen)];
+            }
+            newcase.iDefIdx = basecase.iDefIdx;
+            newcase.iKeyIdx = basecase.iKeyIdx;
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<> dis(1, 9999);
+            newcase.iOCaseIdx = dis(gen);
+            newcase.iOKeyIdx = dis(gen);
+            newcase.iRarity = basecase.iRarity;
+            newcase.szCaseName = basecase.szCaseName;
+            newcase.vItems = basecase.vItems;
+            newcase.bIsMusicKitBox = basecase.bIsMusicKitBox;
 
-        
+            CEconItemPreviewDataBlock item;
+            item.accountid().set(_steamid);
+            item.defindex().set(newcase.iDefIdx);
+            item.rarity().set(1); 
+            item.itemid().set(newcase.iOCaseIdx);
+            item.dropreason().set(0);
+            item.customname().set("");
+            item.entindex().set(newcase.iDefIdx);
+
+
+
+            V::cases.push_back(newcase);
+            drops.entity_updates().add(item); 
+        }
+        auto s = drops.serialize();
+        DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
+
 		bHasMessagePending = false;
 		msgt.clear();
+
+        V::PENDING_UPDATE = true;
     }
 }

@@ -207,16 +207,16 @@ struct CEconItemPreviewDataBlock_Sticker : pbwrap::pbmsg<6> {
 struct CEconItemPreviewDataBlock : pbwrap::pbmsg<18> {
 	PBMSG_CTOR;
 
-	PBFIELD(1, types::Uint32, accountid);
-	PBFIELD(2, types::Uint64, itemid);
-	PBFIELD(3, types::Uint32, defindex);
-	PBFIELD(4, types::Uint32, paintindex);
-	PBFIELD(5, types::Uint32, rarity);
-	PBFIELD(6, types::Uint32, quality);
-	PBFIELD(7, types::Uint32, paintwear);
-	PBFIELD(8, types::Uint32, paintseed);
-	PBFIELD(9, types::Uint32, killeaterscoretype);
-	PBFIELD(10, types::Uint32, killeatervalue);
+	PBFIELD(1, types::Int32, accountid);
+	PBFIELD(2, types::Int64, itemid);
+	PBFIELD(3, types::Int32, defindex);
+	PBFIELD(4, types::Int32, paintindex);
+	PBFIELD(5, types::Int32, rarity);
+	PBFIELD(6, types::Int32, quality);
+	PBFIELD(7, types::Int32, paintwear);
+	PBFIELD(8, types::Int32, paintseed);
+	PBFIELD(9, types::Int32, killeaterscoretype);
+	PBFIELD(10, types::Int32, killeatervalue);
 	PBFIELD(11, types::String, customname);
 
 	PBFIELD(12, CEconItemPreviewDataBlock_Sticker, stickers); // repeated

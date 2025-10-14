@@ -151,6 +151,7 @@ int RunLoop() {
         G::g_EventManager = (IGameEventManager2*)EngineFactory("GAMEEVENTSMANAGER002", nullptr);
     }
 
+    CCaseOpening::CreateCrates();
     V::LoadConfig();
 
     if (G::gameVer < 2019) {
@@ -195,13 +196,12 @@ int RunLoop() {
     V::PENDING_UPDATE = true;
 
     V::STEAM_ID = G::g_SteamUser->GetSteamID().GetAccountID();
-    CCaseOpening::CreateCrates();
 
 
     console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
     console::log(std::format("Game Version: {}", G::gameVer).c_str());
 
-    /*for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 3; i++) {
 
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -216,9 +216,9 @@ int RunLoop() {
         newcase.iRarity = basecase.iRarity;
         newcase.szCaseName = basecase.szCaseName;
         newcase.vItems = basecase.vItems;
-
+        newcase.bIsMusicKitBox = basecase.bIsMusicKitBox;
         V::cases.push_back(newcase);
-    }*/
+    }
     while (true) {
         if (V::PENDING_UPDATE) {
             CNetworking::SendClientHello();
