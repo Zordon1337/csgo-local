@@ -317,6 +317,21 @@ public:
                                         }
 
                                     }
+                                    else {
+                                        int slotId = CInventory::GetSlotID(item.iDefIdx);
+                                        if (CInventory::isEquipped(item.iItemId, 2, slotId)) {
+                                            CSOEconItemEquipped equip;
+                                            equip.new_slot().set(slotId);
+                                            equip.new_class().set(2);
+                                            item2.equipped_state().set(equip);
+                                        }
+                                        if (CInventory::isEquipped(item.iItemId, 3, slotId)) {
+                                            CSOEconItemEquipped equip;
+                                            equip.new_slot().set(slotId);
+                                            equip.new_class().set(3);
+                                            item2.equipped_state().set(equip);
+                                        }
+                                    }
 
                                     object.object_data().add(item2.serialize());
                                 }
