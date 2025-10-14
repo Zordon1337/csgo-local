@@ -56,10 +56,10 @@ void __stdcall FrameStage(ClientFrameStage stage) {
 
                 int idx = weapon->m_iItemDefinitionIndex();
 
-                auto skin = CInventory::GetItem(local->m_iTeamNum(), CInventory::GetSlotID(idx));
-                weapon->m_iItemIDHigh() = -1; 
+                auto skin = CInventory::GetItem(local->m_iTeamNum(), CInventory::GetSlotID(idx), idx);
+                
                 weapon->m_nFallbackPaintKit() = (int)skin.flPaintKit;
-
+                weapon->m_iItemIDHigh() = -1;
 
             }
         }
