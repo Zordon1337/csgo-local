@@ -59,6 +59,9 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 auto skin = CInventory::GetItem(local->m_iTeamNum(), CInventory::GetSlotID(idx), idx);
                 
                 weapon->m_nFallbackPaintKit() = (int)skin.flPaintKit;
+                weapon->m_iEntityQuality() = (int)skin.iQuality;
+                weapon->m_flFallbackWear() = skin.flWear;
+                weapon->m_nFallbackSeed() = skin.iPattern;
                 weapon->m_iItemIDHigh() = -1;
 
             }

@@ -26,45 +26,7 @@ public:
 	NETVAR(m_iItemIDHigh, "CBaseAttributableItem->m_iItemIDHigh", int);
 	NETVAR(m_nFallbackPaintKit, "CBaseAttributableItem->m_nFallbackPaintKit", int);
 	NETVAR(m_flFallbackWear, "CBaseAttributableItem->m_flFallbackWear", float);
+	NETVAR(m_nFallbackSeed, "CBaseAttributableItem->m_nFallbackSeed", int);
 	NETVAR(m_nModelIndex, "CBaseAttributableItem->m_nModelIndex", int);
 	
-	inline int* GetItemDefinitionIndex() {
-		return (int*)((DWORD)this + 0x1148 + 0x40 + 0x194);
-	}
-
-	inline int* GetItemIDHigh() {
-		return (int*)((DWORD)this + 0x1148 + 0x40 + 0x1A8);
-	}
-
-	inline int* GetEntityQuality() {
-		return (int*)((DWORD)this + 0x1148 + 0x40 + 0x198);
-	}
-
-	inline char* GetCustomName() {
-		return (char*)((DWORD)this + 0x1148 + 0x40 + 0x224);
-	}
-
-	inline int* GetOriginalOwnerXuidLow() {
-		return (int*)((DWORD)this + 0x31C0);
-	}
-
-	inline int* GetOriginalOwnerXuidHigh() {
-		return (int*)((DWORD)this + 0x31C4);
-	}
-
-	inline int* GetFallbackPaintKit() {
-		return (int*)((DWORD)this + 0x31C8);
-	}
-
-	inline int* GetFallbackSeed() {
-		return (int*)((DWORD)this + 0x31CC);
-	}
-
-	inline float* GetFallbackWear() {
-		return (float*)((DWORD)this + 0x31D0);
-	}
-
-	inline int* GetFallbackStatTrak() {
-		return (int*)((DWORD)this + 0x31D4);
-	}
 };
