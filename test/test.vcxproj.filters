@@ -204,6 +204,12 @@
     <ClInclude Include="CaseOpening\CInventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\recv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdk\hash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

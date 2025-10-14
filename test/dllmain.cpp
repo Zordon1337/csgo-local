@@ -18,6 +18,90 @@
 
 #include "memory.h"
 #include "sdk/networking.h"
+#include "sdk/recv.h"
+enum ClientFrameStage {
+    FRAME_UNDEFINED = -1,			// (haven't run any frames yet)
+    FRAME_START,
+
+    // A network packet is being recieved
+    FRAME_NET_UPDATE_START,
+    // Data has been received and we're going to start calling PostDataUpdate
+    FRAME_NET_UPDATE_POSTDATAUPDATE_START,
+    // Data has been received and we've called PostDataUpdate on all data recipients
+    FRAME_NET_UPDATE_POSTDATAUPDATE_END,
+    // We've received all packets, we can now do interpolation, prediction, etc..
+    FRAME_NET_UPDATE_END,
+
+    // We're about to start rendering the scene
+    FRAME_RENDER_START,
+    // We've finished rendering the scene.
+    FRAME_RENDER_END
+};
+using FrameStageFn = void(__stdcall*)(ClientFrameStage stage);
+FrameStageFn oFrameStage = nullptr;
+void __stdcall FrameStage(ClientFrameStage stage) {
+    switch (stage) {
+        case FRAME_NET_UPDATE_POSTDATAUPDATE_START: {
+            // skins
+            CEntity* local = G::g_EntityList->GetEntityFromIndex(G::g_EngineClient->GetLocalPlayerIndex());
+            if (!local || local->m_lifeState() != 0 ) {
+                return;
+            }
+
+            auto weapons = local->m_hMyWeapons();
+            for (int i = 0; weapons[i]; i++) {
+
+                CBaseAttributableItem* weapon = (CBaseAttributableItem*)G::g_EntityList->GetClientEntityFromHandle(weapons[i]);
+                if (!weapon) break;
+
+                int idx = weapon->m_iItemDefinitionIndex();
+
+                auto skin = CInventory::GetItem(local->m_iTeamNum(), CInventory::GetSlotID(idx));
+                weapon->m_iItemIDHigh() = -1; 
+                weapon->m_nFallbackPaintKit() = (int)skin.flPaintKit;
+
+
+            }
+        }
+    }
+    oFrameStage(stage);
+}
+
+void Dump(const std::string_view base, RecvTable* table, const std::uint32_t offset) noexcept
+{
+    // loop through props
+    for (auto i = 0; i < table->m_nProps; ++i) {
+        const RecvProp* prop = &table->m_pProps[i];
+
+        if (!prop)
+            continue;
+
+        if (std::isdigit(prop->m_pVarName[0]))
+            continue;
+
+        if ((prop->m_pVarName) == ("baseclass"))
+            continue;
+
+        if (prop->m_pDataTable &&
+            prop->m_pDataTable->m_pNetTableName[0] == 'D')
+            Dump(base, prop->m_pDataTable, offset + prop->m_Offset);
+
+        V::netvars[hash::RunTime(std::format("{}->{}", base, prop->m_pVarName).c_str())] = offset + prop->m_Offset;
+        
+        if(strstr(prop->m_pVarName, "m_hMyWeapons"))
+            std::cout << (std::format("{}->{}", base, prop->m_pVarName)) << std::endl;
+    }
+}
+void Setup() noexcept
+{
+    auto vtables = *(void***)(G::g_VClient);
+    using GetAllClassesFn = ClientClass * (__thiscall*)(void*);
+    GetAllClassesFn oGetAllClasses = (GetAllClassesFn)vtables[8];
+
+    for (ClientClass* client = oGetAllClasses(G::g_VClient); client; client = client->m_pNext)
+        if (RecvTable* table = client->m_pRecvTable)
+            Dump(client->m_pNetworkName, table, 0);
+}
 
 int RunLoop() {
     console::init();
@@ -136,6 +220,8 @@ int RunLoop() {
         &CNetworking::hkCheckForMessages,
         reinterpret_cast<void**>(&CNetworking::oCheckForMessages));
 
+
+
     void* g_pGameEventManager = nullptr;
 
     using CreateInterfaceFn = void* (*)(const char* name, int* returnCode);
@@ -191,6 +277,10 @@ int RunLoop() {
     }
     G::g_GlobalVars = **reinterpret_cast<IGlobalVars***>((*reinterpret_cast<uintptr_t**>(G::g_VClient))[11] + 10);
 
+    G::g_EntityList = (IClientEntityList*)ClientFactory("VClientEntityList003", nullptr);
+
+    MH_CreateHook((*(void***)(G::g_VClient))[37], &FrameStage, reinterpret_cast<void**>(&oFrameStage));
+
     MH_EnableHook(MH_ALL_HOOKS);
 
     V::PENDING_UPDATE = true;
@@ -219,6 +309,10 @@ int RunLoop() {
         newcase.bIsMusicKitBox = basecase.bIsMusicKitBox;
         V::cases.push_back(newcase);
     }
+
+    
+    Setup(); // setup netvars / TODO: MOVE TO OTHER FILE
+
     while (true) {
         if (V::PENDING_UPDATE) {
             CNetworking::SendClientHello();

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "CCaseOpening.h"
 
 enum ItemDefinitionIndex
 {
@@ -74,4 +75,5 @@ namespace CInventory {
 	int GetSlotID(int definition_index);
 	bool EquipSlot(long itemId, int teamId, int newSlot);
 	bool isEquipped(long itemId, int teamId, int newSlot);
+	CItem GetItem(int teamId, int slotId, int idx);
 }

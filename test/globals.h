@@ -6,6 +6,7 @@
 #include "sdk/ivengineclient.h"
 #include "matchmaking.h"
 #include "sdk/iglobalvars.h"
+#include "sdk/icliententitylist.h"
 
 namespace G {
 
@@ -19,6 +20,7 @@ namespace G {
     IGameEventManager2* g_EventManager = nullptr;
     IVEngineClient* g_EngineClient = nullptr;
     IGlobalVars* g_GlobalVars = nullptr;
+    IClientEntityList* g_EntityList = nullptr;
     void* g_VClient = nullptr;
 
 #define MEDAL_BASE_ID 10000

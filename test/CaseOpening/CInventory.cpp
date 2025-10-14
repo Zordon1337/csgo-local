@@ -92,3 +92,12 @@ bool CInventory::EquipSlot(long itemId, int teamId, int newSlot)
 bool CInventory::isEquipped(long itemId, int teamId, int newSlot) {
 	return CInventory::Equips[newSlot][teamId] == itemId;
 }
+
+CItem CInventory::GetItem(int teamId, int slotId, int idx)
+{
+	auto itemId = CInventory::Equips[slotId][teamId];
+	for (const auto item : V::items) {
+		if (itemId == item.iItemId && item.iDefIdx == idx) return item;
+	}
+	return {};
+}

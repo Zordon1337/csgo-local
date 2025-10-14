@@ -164,6 +164,7 @@
     <ClInclude Include="protos\ProtoParse.h" />
     <ClInclude Include="sdk\centity.h" />
     <ClInclude Include="sdk\eventlistener.h" />
+    <ClInclude Include="sdk\hash.h" />
     <ClInclude Include="sdk\icliententitylist.h" />
     <ClInclude Include="sdk\igameevent.h" />
     <ClInclude Include="sdk\iglobalvars.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="matchmaking.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="sdk\networking.h" />
+    <ClInclude Include="sdk\recv.h" />
     <ClInclude Include="steamsdk\isteamapplist.h" />
     <ClInclude Include="steamsdk\isteamapps.h" />
     <ClInclude Include="steamsdk\isteamappticket.h" />

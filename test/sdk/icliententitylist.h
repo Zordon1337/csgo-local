@@ -9,4 +9,9 @@ public:
 		using Function = CEntity * (__thiscall*)(void*, int32_t);
 		return (*reinterpret_cast<Function**>(this))[3](this, index);
 	}
+	constexpr CEntity* GetClientEntityFromHandle(DWORD Handle) noexcept
+	{
+		using Function = CEntity * (__thiscall*)(void*, DWORD);
+		return (*reinterpret_cast<Function**>(this))[4](this, Handle);
+	}
 };

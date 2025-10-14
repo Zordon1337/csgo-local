@@ -7,9 +7,16 @@
 #include "CaseOpening/CCaseOpening.h"
 #include "CaseOpening/CInventory.h"
 #include "json/json.hpp"
+#include "sdk/hash.h"
 #include <random>
 namespace V {
-
+	inline std::unordered_map<uint32_t, std::uint32_t> netvars = { };
+#define NETVAR(name, var, ...) \
+	inline std::add_lvalue_reference_t<__VA_ARGS__> name() noexcept \
+	{ \
+		static const std::uint32_t offset = V::netvars[hash::CompileTime(var)]; \
+		return *reinterpret_cast<std::add_pointer_t<__VA_ARGS__>>(std::uint32_t(this) + offset); \
+	} 
     float flXpMultipler = 2.f;
     int iServiceMedalLevel = 0;
     int iLevel = 1;
@@ -20,6 +27,7 @@ namespace V {
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
     int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
+
 
     void SaveConfig() {
 		system("mkdir C:\\CSGO_LOCAL");
