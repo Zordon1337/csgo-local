@@ -5,6 +5,7 @@
 #include <mutex>
 #include <string>
 #include "globals.h"
+#include "../CaseOpening/CInventory.h"
 
 class CNetworking {
 private:
@@ -87,6 +88,13 @@ public:
         uint32_t messageType = unMsgType & 0x7FFFFFFF;
         switch (messageType) {
 
+        case 1059: {
+            CMsgAdjustItemEquippedState equip((void*)((DWORD)pubData + 8), cubData - 8);
+
+            std::cout << "Equipped: " << equip.item_id().get() << " On Team: " << equip.new_class().get() << " On Slot: " << equip.new_slot().get() << "\n";
+            CInventory::EquipSlot(equip.item_id().get(), equip.new_class().get(), equip.new_slot().get());
+            break;
+        }
             case 9172: {
                 // TODO: I NEED TO GET ACC WITH LEVEL 40 SINCE IDK PROPER RESPONSE THAT DOESN'T CRASH GAME
                 /*CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin response((void*)((DWORD)pubData + 8), cubData - 8);
@@ -233,6 +241,7 @@ public:
 
             console::log(std::format("Received packet {}", uMsgType).c_str());
             switch (uMsgType) {
+
                 case 4004: {
                     {
                         CMsgClientWelcome msg((void*)((DWORD)pubDest + 8), *pcubMsgSize - 8);
@@ -300,7 +309,15 @@ public:
                                     if (item.iFlag == 5) {
                                         item2.attribute().add(make_econ_item_attribute(166, item.iDefIdx));
                                         
+                                        if (CInventory::isEquipped(item.iItemId, 0, 54)) {
+                                            CSOEconItemEquipped equip;
+                                            equip.new_slot().set(54);
+                                            equip.new_class().set(0);
+                                            item2.equipped_state().set(equip);
+                                        }
+
                                     }
+
                                     object.object_data().add(item2.serialize());
                                 }
                                 for (auto item : V::cases) {

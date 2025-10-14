@@ -201,6 +201,9 @@
     <ClInclude Include="json\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CaseOpening\CInventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -225,6 +228,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CaseOpening\CCaseOpening.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CaseOpening\CInventory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

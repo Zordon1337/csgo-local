@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CaseOpening\CCaseOpening.h" />
+    <ClInclude Include="CaseOpening\CInventory.h" />
     <ClInclude Include="console\console.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="json\json.hpp" />
@@ -211,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CaseOpening\CCaseOpening.cpp" />
+    <ClCompile Include="CaseOpening\CInventory.cpp" />
     <ClCompile Include="console\console.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Minhook\Minhook\buffer.c" />

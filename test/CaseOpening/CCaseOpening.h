@@ -8,7 +8,7 @@ struct CItem {
 	float flPaintKit;
 	bool bHasStattrack;
 	float flStattrack;
-	int iItemId;
+	long iItemId;
 	float flWear;
 	int iPattern;
 	int iQuality;
