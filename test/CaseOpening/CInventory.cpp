@@ -106,3 +106,11 @@ CItem CInventory::GetItem(int teamId, int slotId, int idx)
 	}
 	return {};
 }
+
+ItemDefinitionIndex CInventory::GetKnifeEquipped(int teamId) {
+	auto itemId = CInventory::Equips[0][teamId];
+	for (const auto item : V::items) {
+		if (itemId == item.iItemId) return (ItemDefinitionIndex)item.iDefIdx;
+	}
+	return teamId == 2 ? ItemDefinitionIndex::WEAPON_KNIFE_T : ItemDefinitionIndex::WEAPON_KNIFE;
+}

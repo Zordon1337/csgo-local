@@ -9,6 +9,7 @@
 #include "json/json.hpp"
 #include "sdk/hash.h"
 #include <random>
+#include "sdk/recv.h"
 namespace V {
 	inline std::unordered_map<uint32_t, std::uint32_t> netvars = { };
 #define NETVAR(name, var, ...) \
@@ -27,7 +28,7 @@ namespace V {
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
     int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
-
+	RecvVarProxyFn oViewModelProxy;
 
     void SaveConfig() {
 		system("mkdir C:\\CSGO_LOCAL");

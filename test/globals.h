@@ -7,6 +7,7 @@
 #include "matchmaking.h"
 #include "sdk/iglobalvars.h"
 #include "sdk/icliententitylist.h"
+#include "sdk/IVModelInfoClient.h"
 
 namespace G {
 
@@ -21,6 +22,7 @@ namespace G {
     IVEngineClient* g_EngineClient = nullptr;
     IGlobalVars* g_GlobalVars = nullptr;
     IClientEntityList* g_EntityList = nullptr;
+    IVModelInfoClient* g_modelinfo = nullptr;
     void* g_VClient = nullptr;
 
 #define MEDAL_BASE_ID 10000

@@ -171,6 +171,7 @@
     <ClInclude Include="sdk\ivengineclient.h" />
     <ClInclude Include="matchmaking.h" />
     <ClInclude Include="memory.h" />
+    <ClInclude Include="sdk\IVModelInfoClient.h" />
     <ClInclude Include="sdk\networking.h" />
     <ClInclude Include="sdk\recv.h" />
     <ClInclude Include="steamsdk\isteamapplist.h" />

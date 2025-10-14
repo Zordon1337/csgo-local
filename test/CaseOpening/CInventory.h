@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "CCaseOpening.h"
+#include <unordered_map>
 
 enum ItemDefinitionIndex : int {
 	WEAPON_NONE = 0,
@@ -97,4 +98,36 @@ namespace CInventory {
 	bool EquipSlot(long itemId, int teamId, int newSlot);
 	bool isEquipped(long itemId, int teamId, int newSlot);
 	CItem GetItem(int teamId, int slotId, int idx);
+	ItemDefinitionIndex GetKnifeEquipped(int teamId);
+
+	const std::unordered_map<ItemDefinitionIndex, const char*> knifeModels = {
+		{WEAPON_KNIFE_CSS,"models/weapons/v_knife_css.mdl"},
+		{ WEAPON_KNIFE_CORD, "models/weapons/v_knife_cord.mdl" },
+		{WEAPON_KNIFE_WIDOWMAKER ,"models/weapons/v_knife_widowmaker.mdl"},
+		{ WEAPON_KNIFE_GYPSY_JACKKNIFE,"models/weapons/v_knife_gypsy_jackknife.mdl" },
+		{ WEAPON_KNIFE_URSUS, "models/weapons/v_knife_ursus.mdl" },
+		{ WEAPON_KNIFE_PUSH ,"models/weapons/v_knife_push.mdl" },
+		{ WEAPON_KNIFE_SURVIVAL_BOWIE,"models/weapons/v_knife_survival_bowie.mdl" },
+		{ WEAPON_KNIFE_BUTTERFLY ,"models/weapons/v_knife_butterfly.mdl" },
+		{ WEAPON_KNIFE_FALCHION,"models/weapons/v_knife_falchion_advanced.mdl" },
+		{ WEAPON_KNIFE_TACTICAL,"models/weapons/v_knife_tactical.mdl" },
+		{ WEAPON_KNIFE_M9_BAYONET,"models/weapons/v_knife_m9_bay.mdl" },
+		{ WEAPON_KNIFE_KARAMBIT,"models/weapons/v_knife_karam.mdl" },
+		{ WEAPON_KNIFE_GUT,"models/weapons/v_knife_gut.mdl" },
+		{ WEAPON_KNIFE_FLIP, "models/weapons/v_knife_flip.mdl" },
+		{ WEAPON_KNIFE_BAYONET, "models/weapons/v_knife_bayonet.mdl" },
+		{ WEAPON_KNIFE_CANIS ,"models/weapons/v_knife_canis.mdl" },
+		{ (ItemDefinitionIndex)0 ,"models/weapons/v_knife_skeleton.mdl" }
+	};
+	const char* FindKnifeModel(ItemDefinitionIndex idx) {
+		if (ItemDefinitionIndex::WEAPON_KNIFE == idx || ItemDefinitionIndex::WEAPON_KNIFE_T == idx) {
+			return idx == ItemDefinitionIndex::WEAPON_KNIFE ? "models/weapons/v_knife_default_ct.mdl" : "models/weapons/v_knife_default_t.mdl";
+		}
+		if (knifeModels.find(idx) != knifeModels.end()) {
+			return knifeModels.find(idx)->second;
+		}
+		else {
+			return "";
+		}
+	}
 }

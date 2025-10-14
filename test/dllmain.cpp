@@ -19,6 +19,7 @@
 #include "memory.h"
 #include "sdk/networking.h"
 #include "sdk/recv.h"
+#include "vars.h"
 enum ClientFrameStage {
     FRAME_UNDEFINED = -1,			// (haven't run any frames yet)
     FRAME_START,
@@ -57,7 +58,25 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 int idx = weapon->m_iItemDefinitionIndex();
 
                 auto skin = CInventory::GetItem(local->m_iTeamNum(), CInventory::GetSlotID(idx), idx);
-                
+                switch (idx) {
+                case WEAPON_KNIFE_T: {
+                    weapon->m_iItemDefinitionIndex() = CInventory::GetKnifeEquipped(2);
+                    weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
+                    skin = CInventory::GetItem(2, 0, weapon->m_iItemDefinitionIndex());
+                    break;
+                }
+                case WEAPON_KNIFE: {
+                    weapon->m_iItemDefinitionIndex() = CInventory::GetKnifeEquipped(3);
+                    weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
+                    skin = CInventory::GetItem(3, 0, weapon->m_iItemDefinitionIndex());
+
+                    break;
+                }
+                default: {
+
+                    break;
+                }
+                }
                 weapon->m_nFallbackPaintKit() = (int)skin.flPaintKit;
                 weapon->m_iEntityQuality() = (int)skin.iQuality;
                 weapon->m_flFallbackWear() = skin.flWear;
@@ -70,11 +89,32 @@ void __stdcall FrameStage(ClientFrameStage stage) {
     oFrameStage(stage);
 }
 
-void Dump(const std::string_view base, RecvTable* table, const std::uint32_t offset) noexcept
+void ViewModelIndexProxy(const CRecvProxyData* data, void* struc, void* Out) {
+
+    auto dat = const_cast<CRecvProxyData*>(data);
+
+
+    auto iCustomCtKnife = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel(CInventory::GetKnifeEquipped(3)));
+    auto iCustomTKnife = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel(CInventory::GetKnifeEquipped(2)));
+    auto iOrginalCtKnife = G::g_modelinfo->GetModelIndex("models/weapons/v_knife_default_ct.mdl");
+    auto iOrginalTKnife = G::g_modelinfo->GetModelIndex("models/weapons/v_knife_default_t.mdl");
+
+    if (dat->m_Value.m_Int == iOrginalCtKnife) {
+        dat->m_Value.m_Int = iCustomCtKnife;
+    }
+    if (dat->m_Value.m_Int == iOrginalTKnife) {
+        dat->m_Value.m_Int = iCustomTKnife;
+    }
+
+
+
+    V::oViewModelProxy(data, struc, Out);
+}
+void Dump(const char* base, RecvTable* table, const std::uint32_t offset) noexcept
 {
     // loop through props
     for (auto i = 0; i < table->m_nProps; ++i) {
-        const RecvProp* prop = &table->m_pProps[i];
+        RecvProp* prop = &table->m_pProps[i];
 
         if (!prop)
             continue;
@@ -91,8 +131,11 @@ void Dump(const std::string_view base, RecvTable* table, const std::uint32_t off
 
         V::netvars[hash::RunTime(std::format("{}->{}", base, prop->m_pVarName).c_str())] = offset + prop->m_Offset;
         
-        if(strstr(prop->m_pVarName, "m_hMyWeapons"))
-            std::cout << (std::format("{}->{}", base, prop->m_pVarName)) << std::endl;
+        if (strcmp(prop->m_pVarName, "m_nModelIndex") || strcmp(base, "CBaseViewModel"))
+            continue;
+
+        V::oViewModelProxy = prop->m_ProxyFn;
+        prop->m_ProxyFn = (RecvVarProxyFn)ViewModelIndexProxy;
     }
 }
 void Setup() noexcept
@@ -281,6 +324,7 @@ int RunLoop() {
     G::g_GlobalVars = **reinterpret_cast<IGlobalVars***>((*reinterpret_cast<uintptr_t**>(G::g_VClient))[11] + 10);
 
     G::g_EntityList = (IClientEntityList*)ClientFactory("VClientEntityList003", nullptr);
+    G::g_modelinfo = (IVModelInfoClient*)EngineFactory("VModelInfoClient004", nullptr);
 
     MH_CreateHook((*(void***)(G::g_VClient))[37], &FrameStage, reinterpret_cast<void**>(&oFrameStage));
 
