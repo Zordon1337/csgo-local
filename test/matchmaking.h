@@ -1,7 +1,7 @@
 #include "vars.h"
 #include "protos/Messages.h"
 #include "memory.h"
-
+#include "console/console.h"
 namespace CMatchmaking {
     float flUpdateTime = 0;
     bool bHasMessagePending = false;

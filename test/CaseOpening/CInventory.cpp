@@ -1,5 +1,5 @@
 #include "CInventory.h"
-#include "../vars.h"
+#include "../sdk/networking.h"
 int CInventory::GetSlotID(int definition_index)
 {
 	switch (definition_index)
@@ -85,7 +85,7 @@ int CInventory::GetSlotID(int definition_index)
 bool CInventory::EquipSlot(long itemId, int teamId, int newSlot)
 {
 	CInventory::Equips[newSlot][teamId] = itemId;
-	V::PENDING_UPDATE = true;
+
 	return true;
 }
 

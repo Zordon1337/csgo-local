@@ -158,7 +158,9 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 
 	int iRarity = dist(gen);
 
-	if (iRarity < 7992)               // 79.92%
+	/*
+	* old chances, aka close to csgo. replaced with increased ones due to the project being "too simple"
+		if (iRarity < 7992)               // 79.92%
 		iRarity = ITEM_RARITY_RARE;       // Mil-Spec (blue)
 	else if (iRarity < 9590)          // +15.98%
 		iRarity = ITEM_RARITY_MYTHICAL;   // Restricted (purple)
@@ -168,7 +170,17 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 		iRarity = ITEM_RARITY_ANCIENT;    // Covert (red)
 	else                           // ~0.26%
 		iRarity = ITEM_RARITY_IMMORTAL;   // Exceedingly Rare (gold)
-
+	*/
+	if (iRarity < 7863)
+		iRarity = ITEM_RARITY_RARE;
+	else if (iRarity < 9435)
+		iRarity = ITEM_RARITY_MYTHICAL;
+	else if (iRarity < 9750)
+		iRarity = ITEM_RARITY_LEGENDARY;
+	else if (iRarity < 9900)
+		iRarity = ITEM_RARITY_ANCIENT;
+	else
+		iRarity = ITEM_RARITY_IMMORTAL;
 	while (iRarity >= ITEM_RARITY_RARE &&
 		!CCaseOpening::DoesCaseHaveThisRarity(iCaseIdx, iRarity)) {
 		iRarity--;

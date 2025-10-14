@@ -4,8 +4,9 @@
 #include <queue>
 #include <mutex>
 #include <string>
-#include "globals.h"
+#include "../globals.h"
 #include "../CaseOpening/CInventory.h"
+#include "../console/console.h"
 
 class CNetworking {
 private:
@@ -94,6 +95,7 @@ public:
             std::cout << "Equipped: " << equip.item_id().get() << " On Team: " << equip.new_class().get() << " On Slot: " << equip.new_slot().get() << "\n";
             CInventory::EquipSlot(equip.item_id().get(), equip.new_class().get(), equip.new_slot().get());
 
+            V::SaveConfig();
             break;
         }
             case 9172: {
