@@ -89,7 +89,7 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 weapon->m_iItemIDHigh() = -1;
 
             }
-            static CPlayerResource* g_player_resource = GetPlayerResourcePointer();
+            CPlayerResource* g_player_resource = GetPlayerResourcePointer();
 
             // V::netvars[hash::CompileTime(var)]
             auto offset = V::netvars[hash::CompileTime("CCSPlayerResource->m_nMusicID")];
@@ -126,18 +126,6 @@ void ViewModelIndexProxy(const CRecvProxyData* data, void* struc, void* Out) {
 
     V::oViewModelProxy(data, struc, Out);
 }
-void MusicKitProxy(const CRecvProxyData* data, void* struc, void* Out) {
-
-    auto dat = const_cast<CRecvProxyData*>(data);
-
-
-    dat->m_Value.m_Int = 5;
-
-    std::cout << "t\n";
-
-
-    V::oMusicKitProxy(dat, struc, Out);
-}
 void Dump(const char* base, RecvTable* table, const std::uint32_t offset) noexcept
 {
     // loop through props
@@ -159,10 +147,6 @@ void Dump(const char* base, RecvTable* table, const std::uint32_t offset) noexce
 
         V::netvars[hash::RunTime(std::format("{}->{}", base, prop->m_pVarName).c_str())] = offset + prop->m_Offset;
         
-        if (!strcmp(prop->m_pVarName, "m_nMusicID")) {
-            V::oMusicKitProxy = prop->m_ProxyFn;
-            prop->m_ProxyFn = (RecvVarProxyFn)MusicKitProxy;
-        }
 
         if (strcmp(prop->m_pVarName, "m_nModelIndex") || strcmp(base, "CBaseViewModel"))
             continue;
