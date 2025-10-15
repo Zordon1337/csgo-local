@@ -40,7 +40,7 @@ enum ClientFrameStage {
 };
 CPlayerResource* GetPlayerResourcePointer()
 {
-    static auto uAddress = M::PatternScan("client.dll", "8B 3D ? ? ? ? 85 FF 0F 84 ? ? ? ? 81 C7") + 2;
+    static auto uAddress = M::PatternScan(G::bIsPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 3D ? ? ? ? 85 FF 0F 84 ? ? ? ? 81 C7") + 2;
     return **reinterpret_cast<CPlayerResource***>(uAddress);
 }
 using FrameStageFn = void(__stdcall*)(ClientFrameStage stage);
@@ -230,7 +230,6 @@ int RunLoop() {
         // shit code lol
         if (strstr(G::versionString, "2019")) {
             G::gameVer = 2019;
-            G::bIsPanoramaDll = true;
         }
         else if (strstr(G::versionString, "2020")) {
             G::gameVer = 2020;
@@ -259,7 +258,12 @@ int RunLoop() {
             MessageBoxA(NULL, "Your Version is unsupported\r\nIt might work but isn't officially supported", "CSGO-LOCAL", 0);
         }
     }
-
+    if (GetModuleHandleA("client.dll") != nullptr)
+        G::bIsPanoramaDll = false;
+    else if (GetModuleHandleA("client_panorama.dll"))
+        G::bIsPanoramaDll = true;
+    else
+        console::log("error occurred in initialization, SEE dllmain.cpp");
     MH_Initialize();
 
     auto vt = *(void***)G::g_GameCoordinator;
