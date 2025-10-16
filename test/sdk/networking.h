@@ -100,16 +100,7 @@ public:
         }
             case 9172: {
                 // TODO: I NEED TO GET ACC WITH LEVEL 40 SINCE IDK PROPER RESPONSE THAT DOESN'T CRASH GAME
-                CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin response((void*)((DWORD)pubData + 8), cubData - 8);
-
-                response.defindex().set(1376);
-                response.hours().set(2);
-                response.prestigetime().set(1755626035);
-                response.upgradeid().set(1);
-
-                auto packet = response.serialize();
-
-                CNetworking::QueueMessage(9172, packet, 2000);
+                
 
                 int MEDAL_ID = 1375;
 
@@ -124,6 +115,18 @@ public:
                     case 2023: MEDAL_ID = 4872; break;
                     default: MEDAL_ID = 1331; break; // 2015 medal for unsupported builds
                 }
+
+                CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin response((void*)((DWORD)pubData + 8), cubData - 8);
+
+                response.defindex().set(MEDAL_ID);
+                response.hours().set(2);
+                response.prestigetime().set(1755626035);
+                response.upgradeid().set(1);
+                
+
+                auto packet = response.serialize();
+
+                CNetworking::QueueMessage(9172, packet, 2000);
 
                 if (G::gameVer > 2015 && G::gameVer < 2024)
                 {
