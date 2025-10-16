@@ -213,6 +213,9 @@
     <ClInclude Include="sdk\IVModelInfoClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sdk\IMemAlloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

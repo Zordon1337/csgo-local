@@ -168,6 +168,7 @@
     <ClInclude Include="sdk\icliententitylist.h" />
     <ClInclude Include="sdk\igameevent.h" />
     <ClInclude Include="sdk\iglobalvars.h" />
+    <ClInclude Include="sdk\IMemAlloc.h" />
     <ClInclude Include="sdk\ivengineclient.h" />
     <ClInclude Include="matchmaking.h" />
     <ClInclude Include="memory.h" />

@@ -346,6 +346,7 @@ int RunLoop() {
 
     G::g_EntityList = (IClientEntityList*)ClientFactory("VClientEntityList003", nullptr);
     G::g_modelinfo = (IVModelInfoClient*)EngineFactory("VModelInfoClient004", nullptr);
+    G::g_MemAlloc = *(IMemAlloc**)(GetProcAddress(GetModuleHandleA("tier0.dll"), "g_pMemAlloc"));
 
     MH_CreateHook((*(void***)(G::g_VClient))[37], &FrameStage, reinterpret_cast<void**>(&oFrameStage));
 
@@ -359,27 +360,29 @@ int RunLoop() {
     console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
     console::log(std::format("Game Version: {}", G::gameVer).c_str());
 
-    for (int i = 0; i < 3; i++) {
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis2(0, CCaseOpening::vCrates.size() - 1);
-        CCrateOwned newcase;
-        auto basecase = CCaseOpening::vCrates[dis2(gen)];
-        newcase.iDefIdx = basecase.iDefIdx;
-        newcase.iKeyIdx = basecase.iKeyIdx;
-        std::uniform_int_distribution<> dis(1, 9999);
-        newcase.iOCaseIdx = dis(gen);
-        newcase.iOKeyIdx = dis(gen);
-        newcase.iRarity = basecase.iRarity;
-        newcase.szCaseName = basecase.szCaseName;
-        newcase.vItems = basecase.vItems;
-        newcase.bIsMusicKitBox = basecase.bIsMusicKitBox;
-        V::cases.push_back(newcase);
-    }
+   
 
     
     Setup(); // setup netvars / TODO: MOVE TO OTHER FILE
+    bool bSaveRequired = false;
+    for (auto medal : V::othermedals) {
+        CItem item;
+
+        item.bHasStattrack = false;
+        item.flPaintKit = 0;
+        item.flStattrack = 0;
+        item.flWear = 0;
+        item.iDefIdx = medal;
+        item.iItemId = rand() % 10000;
+        item.iPattern = 0;
+        item.iFlag = 0;
+        item.iQuality = 4;
+        item.iRarity = 6;
+        V::items.push_back(item);
+        V::othermedals[medal] = NULL;
+        bSaveRequired = true;
+    }
+    if (bSaveRequired) V::SaveConfig();
 
     while (true) {
         if (V::PENDING_UPDATE) {

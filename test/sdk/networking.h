@@ -128,15 +128,15 @@ public:
                 if (G::gameVer > 2015 && G::gameVer < 2024)
                 {
 					bool bHasMaxMedal = false;
-					for (int i = 0; i < V::othermedals.size(); i++) {
-						if (V::othermedals[i] == MEDAL_ID + 6) {
+					for (int i = 0; i < V::items.size(); i++) {
+						if (V::items[i].iDefIdx == MEDAL_ID + 6) {
 							bHasMaxMedal = true;
 							break;
 						}
 					}
                     int iMedalLevel = 0;
-                    for (int i = 0; i < V::othermedals.size(); i++) {
-						if (V::othermedals[i] == MEDAL_ID + i) {
+                    for (int i = 0; i < V::items.size(); i++) {
+						if (V::items[i].iDefIdx == MEDAL_ID + i) {
                             iMedalLevel = i;
 							break;
 						}
@@ -144,15 +144,26 @@ public:
                     if (iMedalLevel > 0)
                     {
                         // replace old medal
-						for (int i = 0; i < V::othermedals.size(); i++) {
-							if (V::othermedals[i] == MEDAL_ID + iMedalLevel) {
-								V::othermedals[i] = MEDAL_ID + iMedalLevel + 1;
+						for (int i = 0; i < V::items.size(); i++) {
+							if (V::items[i].iDefIdx == MEDAL_ID + iMedalLevel) {
+                                V::items[i].iDefIdx = MEDAL_ID + iMedalLevel + 1; // should change id too tho
 								break;
 							}
 						}
 					}
 					else {
-						V::othermedals.push_back(MEDAL_ID + 1);
+                        CItem item;
+                        item.iDefIdx = MEDAL_ID + 1;
+                        item.bHasStattrack = false;
+                        item.flPaintKit = 0;
+                        item.flStattrack = 0;
+                        item.flWear = 0;
+                        item.iItemId = rand() % 10000;
+                        item.iPattern = 0;
+                        item.iFlag = 0;
+                        item.iQuality = 4;
+                        item.iRarity = 6;
+                        V::items.push_back(item);
 					}
                 }
                 V::iLevel = 1;
@@ -266,7 +277,7 @@ public:
                             if (object.type_id().get() == 1) {
 
 
-                                for (int i = 0; i < V::othermedals.size(); i++) {
+                                /*for (int i = 0; i < V::othermedals.size(); i++) {
                                     CSOEconItem item2;
                                     item2.id().set(MEDAL_BASE_ID + V::othermedals[i]);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
@@ -281,7 +292,7 @@ public:
                                     item2.quality().set(4);
 
                                     object.object_data().add(item2.serialize());
-                                }
+                                }*/
                             
                                 for (auto item : V::items) {
 
@@ -398,7 +409,7 @@ public:
                         auto packet = msg.serialize();
 
 
-                        CNetworking::QueueMessage(4004, packet, 100);
+                        CNetworking::QueueMessage(4004, packet, 0);
 
                     }
 
@@ -421,6 +432,7 @@ public:
                         CNetworking::QueueMessage(1090, msg.serialize(), 500);
                         V::iCaseResult = 0;
                     }
+                    
                     break;
                 }
             }

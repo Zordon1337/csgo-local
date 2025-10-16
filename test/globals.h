@@ -8,6 +8,7 @@
 #include "sdk/iglobalvars.h"
 #include "sdk/icliententitylist.h"
 #include "sdk/IVModelInfoClient.h"
+#include "sdk/IMemAlloc.h"
 
 namespace G {
 
@@ -23,6 +24,7 @@ namespace G {
     IGlobalVars* g_GlobalVars = nullptr;
     IClientEntityList* g_EntityList = nullptr;
     IVModelInfoClient* g_modelinfo = nullptr;
+    IMemAlloc* g_MemAlloc = nullptr;
     void* g_VClient = nullptr;
 
 #define MEDAL_BASE_ID 10000
