@@ -191,7 +191,15 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 		if (item.iRarity == iRarity) vPossibleItems.push_back(item);
 	}
 
-	if (vPossibleItems.size() <= 0) return CItem{ 0,0,0,false,0 };
+	while (vPossibleItems.size() <= 0) {
+		if (iRarity > 7) {
+			iRarity = ITEM_RARITY_COMMON;
+		}
+		for (const auto& item : cCase.vItems) {
+			if (item.iRarity == iRarity) vPossibleItems.push_back(item);
+		}
+		iRarity++;
+	}
 	std::uniform_int_distribution<> dist2(0, vPossibleItems.size() - 1);
 	int iItemIdx = dist2(gen);
 	bool isStatTrak = dist3(gen) == 1; 

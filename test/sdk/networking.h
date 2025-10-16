@@ -100,7 +100,7 @@ public:
         }
             case 9172: {
                 // TODO: I NEED TO GET ACC WITH LEVEL 40 SINCE IDK PROPER RESPONSE THAT DOESN'T CRASH GAME
-                /*CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin response((void*)((DWORD)pubData + 8), cubData - 8);
+                CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin response((void*)((DWORD)pubData + 8), cubData - 8);
 
                 response.defindex().set(1376);
                 response.hours().set(2);
@@ -109,7 +109,7 @@ public:
 
                 auto packet = response.serialize();
 
-                CNetworking::QueueMessage(9172, packet, 1500);*/
+                CNetworking::QueueMessage(9172, packet, 2000);
 
                 int MEDAL_ID = 1375;
 
@@ -295,7 +295,7 @@ public:
                                 }*/
                             
                                 for (auto item : V::items) {
-
+                                    
                                     CSOEconItem item2;
                                     item2.id().set(item.iItemId);
                                     item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());

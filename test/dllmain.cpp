@@ -352,7 +352,6 @@ int RunLoop() {
 
     MH_EnableHook(MH_ALL_HOOKS);
 
-    V::PENDING_UPDATE = true;
 
     V::STEAM_ID = G::g_SteamUser->GetSteamID().GetAccountID();
 
@@ -382,7 +381,20 @@ int RunLoop() {
         V::othermedals[medal] = NULL;
         bSaveRequired = true;
     }
+    for (auto it = V::items.begin(); it != V::items.end();) {
+        if (it->iDefIdx == 0) {
+            it = V::items.erase(it);
+            bSaveRequired = true;
+        }
+        else {
+            ++it;
+        }
+    }
     if (bSaveRequired) V::SaveConfig();
+
+
+
+    V::PENDING_UPDATE = true;
 
     while (true) {
         if (V::PENDING_UPDATE) {
