@@ -13,6 +13,7 @@ public:
 		return reinterpret_cast<UINT*>(reinterpret_cast<uintptr_t>(this) + 0x2DF8);
 	}
 	NETVAR(m_hMyWeapons, "CBaseCombatCharacter->m_hMyWeapons", std::array<unsigned long, 48>);
+	NETVAR(m_hActiveWeapon, "CBaseCombatCharacter->m_hActiveWeapon", unsigned long); 
 	NETVAR(m_lifeState, "CCSPlayer->m_lifeState", byte);
 	NETVAR(m_iHealth, "CCSPlayer->m_iHealth", int);
 	NETVAR(m_iTeamNum, "CCSPlayer->m_iTeamNum", int);

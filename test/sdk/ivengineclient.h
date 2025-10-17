@@ -15,4 +15,9 @@ public:
         using Function = std::int32_t(__thiscall*)(void*, int);
         return (*reinterpret_cast<Function**>(this))[9](this, userid);
     }
+    constexpr void ClientCmd(const char* szCmdString)
+    {
+        using Function = void(__thiscall*)(void*, const char*);
+        return (*reinterpret_cast<Function**>(this))[7](this, szCmdString);
+    }
 };

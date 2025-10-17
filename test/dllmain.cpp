@@ -324,6 +324,7 @@ int RunLoop() {
         if(!G::g_EngineClient)
             G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient013", nullptr);
     }
+    G::g_EngineClient->ClientCmd("developer 1");
     G::g_VClient = ClientFactory("VClient018", nullptr);
 
     while (!G::g_VClient) {
@@ -384,6 +385,9 @@ int RunLoop() {
 
 
     V::PENDING_UPDATE = true;
+
+
+
 
     while (true) {
         if (V::PENDING_UPDATE) {

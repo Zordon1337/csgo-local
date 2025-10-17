@@ -64,6 +64,20 @@ public:
 			auto assister = pEvent->GetInt("assister");
 			if (userid != attacker && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(attacker)) {
 				kills++;
+				CEntity* local = G::g_EntityList->GetEntityFromIndex(idx);
+				if (!local || local->m_lifeState() != 0) {
+					return;
+				}
+
+				auto weapon = (CBaseAttributableItem*)local->m_hActiveWeapon();
+				auto& wp = CInventory::GetItemPtr(
+					local->m_iTeamNum(),
+					CInventory::GetSlotID(weapon->m_iItemDefinitionIndex()),
+					weapon->m_iItemDefinitionIndex()
+				);
+				if (wp.bHasStattrack) {
+					wp.flStattrack++;
+				}
 				console::log(std::format("added kill from {}", attacker).c_str());
 			}
 			else if (assister != userid && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(assister)) {

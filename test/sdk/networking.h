@@ -279,23 +279,6 @@ public:
                             object.object_data().clear();
                             if (object.type_id().get() == 1) {
 
-
-                                /*for (int i = 0; i < V::othermedals.size(); i++) {
-                                    CSOEconItem item2;
-                                    item2.id().set(MEDAL_BASE_ID + V::othermedals[i]);
-                                    item2.account_id().set(G::g_SteamUser->GetSteamID().GetAccountID());
-                                    item2.def_index().set(V::othermedals[i]);
-                                    item2.inventory().set(MEDAL_BASE_ID + V::othermedals[i]);
-                                    item2.origin().set(9);
-                                    item2.quantity().set(4);
-                                    item2.level().set(0);
-                                    item2.flags().set(0);
-                                    item2.in_use().set(false);
-                                    item2.rarity().set(6);
-                                    item2.quality().set(4);
-
-                                    object.object_data().add(item2.serialize());
-                                }*/
                             
                                 for (auto item : V::items) {
                                     
@@ -397,26 +380,16 @@ public:
 
                                     object.object_data().add(item2.serialize());
                                 }
+                                cache.objects().set(object, i);
                             }
-                            else {
-                                {
-                                    CSOPersonaDataPublic personaData;
-                                    personaData.elevated_state().set(true);
-                                    personaData.player_level().set(V::iLevel);
-
-
-                                    CMsgClientWelcome::SubscribedType st;
-                                    object.object_data().set(personaData.serialize());
-                                }
-                            }
-                            cache.objects().set(object, i);
                         }
 
                         msg.outofdate_subscribed_caches().set(cache);
                         auto packet = msg.serialize();
 
 
-                        CNetworking::QueueMessage(4004, packet, 0);
+                        memcpy((void*)((DWORD)pubDest + 8), (void*)packet.data(), packet.size());
+                        *pcubMsgSize = packet.size() + 8;
 
                     }
 
