@@ -88,6 +88,8 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 weapon->m_nFallbackSeed() = skin.iPattern;
                 if (skin.bHasStattrack) {
                     weapon->m_nFallbackStatTrak() = skin.flStattrack;
+                    weapon->m_iEntityQuality() = 2;
+                    if(skin.iRarity == 6) weapon->m_iEntityQuality() = 3;
                 }
                 weapon->m_iAccountID() = G::g_SteamUser->GetSteamID().GetAccountID();
                 weapon->m_iItemIDHigh() = -1;
@@ -324,7 +326,6 @@ int RunLoop() {
         if(!G::g_EngineClient)
             G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient013", nullptr);
     }
-    G::g_EngineClient->ClientCmd("developer 1");
     G::g_VClient = ClientFactory("VClient018", nullptr);
 
     while (!G::g_VClient) {

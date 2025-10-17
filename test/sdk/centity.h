@@ -12,6 +12,15 @@ public:
 	inline UINT* getWeapons() {
 		return reinterpret_cast<UINT*>(reinterpret_cast<uintptr_t>(this) + 0x2DF8);
 	}
+
+	inline void OnDataChanged(int updateType) {
+		using FunctionFn = void(__thiscall*)(void*, int);
+		return (*reinterpret_cast<FunctionFn**>(reinterpret_cast<uintptr_t>(this) + 0x8))[5](
+			reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(this) + 0x8),
+			updateType
+			);
+
+	}
 	NETVAR(m_hMyWeapons, "CBaseCombatCharacter->m_hMyWeapons", std::array<unsigned long, 48>);
 	NETVAR(m_hActiveWeapon, "CBaseCombatCharacter->m_hActiveWeapon", unsigned long); 
 	NETVAR(m_lifeState, "CCSPlayer->m_lifeState", byte);
@@ -31,7 +40,22 @@ public:
 	NETVAR(m_nModelIndex, "CBaseAttributableItem->m_nModelIndex", int);
 	NETVAR(m_nFallbackStatTrak, "CBaseAttributableItem->m_nFallbackStatTrak", int);
 	NETVAR(m_iAccountID, "CBaseAttributableItem->m_iAccountID", int);
-	
+	inline void OnDataChanged(int updateType) {
+		using FunctionFn = void(__thiscall*)(void*, int);
+		return (*reinterpret_cast<FunctionFn**>(reinterpret_cast<uintptr_t>(this) + 0x8))[5](
+			reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(this) + 0x8),
+			updateType
+			);
+
+	}
+	inline void PostDataUpdate(int updateType) {
+		using FunctionFn = void(__thiscall*)(void*, int);
+		return (*reinterpret_cast<FunctionFn**>(reinterpret_cast<uintptr_t>(this) + 0x8))[7](
+			reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(this) + 0x8),
+			updateType
+			);
+
+	}
 };
 // A1 ? ? ? ? 57 85 C0 74 08 + 1
 class CPlayerResource {

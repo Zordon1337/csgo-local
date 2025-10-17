@@ -107,6 +107,14 @@ CItem CInventory::GetItem(int teamId, int slotId, int idx)
 	return {};
 }
 
+CItem& CInventory::GetItemByIdPtr(long itemId)
+{
+	for (CItem& item : V::items) {
+		if (itemId == item.iItemId) return item;
+	}
+	CItem item = {};
+	return item;
+}
 CItem& CInventory::GetItemPtr(int teamId, int slotId, int idx)
 {
 	auto itemId = CInventory::Equips[slotId][teamId];

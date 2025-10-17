@@ -62,6 +62,7 @@ public:
 			auto idx = G::g_EngineClient->GetLocalPlayerIndex();
 			auto attacker = pEvent->GetInt("attacker");
 			auto assister = pEvent->GetInt("assister");
+			auto weapon_itemid = pEvent->GetInt("weapon_itemid");
 			if (userid != attacker && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(attacker)) {
 				kills++;
 				CEntity* local = G::g_EntityList->GetEntityFromIndex(idx);
@@ -69,14 +70,25 @@ public:
 					return;
 				}
 
-				auto weapon = (CBaseAttributableItem*)local->m_hActiveWeapon();
+				auto weapon = (CBaseAttributableItem*)G::g_EntityList->GetClientEntityFromHandle(local->m_hActiveWeapon());
+				if (!weapon)
+					return;
+
+				console::log(std::format("{}", local->m_iTeamNum()).c_str());
+				console::log(std::format("{}", weapon->m_iItemDefinitionIndex()).c_str());
+				console::log(std::format("{}", CInventory::GetSlotID(weapon->m_iItemDefinitionIndex()) ).c_str());
 				auto& wp = CInventory::GetItemPtr(
 					local->m_iTeamNum(),
 					CInventory::GetSlotID(weapon->m_iItemDefinitionIndex()),
 					weapon->m_iItemDefinitionIndex()
 				);
+
+				console::log(std::format("weapon id {} defidx {}", wp.iItemId, wp.iDefIdx).c_str());
 				if (wp.bHasStattrack) {
 					wp.flStattrack++;
+					weapon->OnDataChanged(5);
+					weapon->OnDataChanged(0);
+					weapon->PostDataUpdate(0);
 				}
 				console::log(std::format("added kill from {}", attacker).c_str());
 			}
