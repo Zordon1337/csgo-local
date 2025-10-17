@@ -317,7 +317,7 @@ public:
                                     item2.rarity().set(item.iRarity);
                                     item2.quality().set(item.iQuality);
                                     if (item.bHasStattrack) {
-                                        item2.attribute().add(make_econ_item_attribute(81, float(0)));
+                                        item2.attribute().add(make_econ_item_attribute(81, 0));
                                         item2.attribute().add(make_econ_item_attribute(80, item.flStattrack));
                                     }
                                     item2.attribute().add(make_econ_item_attribute(6, item.flPaintKit));

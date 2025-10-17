@@ -283,9 +283,6 @@ int RunLoop() {
         &CNetworking::hkRetrieveMessage,
         reinterpret_cast<void**>(&CNetworking::oRetrieveMessage)
     );
-    MH_CreateHook(M::PatternScan(G::bIsPanoramaDll ? "client_panorama.dll" : "client.dll", "55 8B EC 83 E4 ? 83 EC ? 53 8B D9 56 57 8B 4B ? 85 C9"),
-        &CNetworking::hkCheckForMessages,
-        reinterpret_cast<void**>(&CNetworking::oCheckForMessages));
 
 
 
@@ -348,7 +345,8 @@ int RunLoop() {
     G::g_modelinfo = (IVModelInfoClient*)EngineFactory("VModelInfoClient004", nullptr);
     G::g_MemAlloc = *(IMemAlloc**)(GetProcAddress(GetModuleHandleA("tier0.dll"), "g_pMemAlloc"));
 
-    MH_CreateHook((*(void***)(G::g_VClient))[37], &FrameStage, reinterpret_cast<void**>(&oFrameStage));
+    MH_CreateHook((*(void***)(G::g_VClient))[(G::gameVer > 2018 || (G::gameVer == 2018 && G::bIsPanoramaDll)) ? 37 : 36], &FrameStage, reinterpret_cast<void**>(&oFrameStage));
+
 
     MH_EnableHook(MH_ALL_HOOKS);
 
@@ -404,9 +402,9 @@ int RunLoop() {
             
         }
 
-        CMatchmaking::Refresh(G::g_GlobalVars->currentTime, G::bIsPanoramaDll, G::g_VClient);
+        CMatchmaking::Refresh(G::g_GlobalVars->currentTime, G::bIsPanoramaDll, G::g_VClient, G::gameVer);
         CNetworking::SyncGC();
-        Sleep(50);
+        Sleep(1);
 
     }
 }
