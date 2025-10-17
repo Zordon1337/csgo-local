@@ -98,6 +98,7 @@ namespace CInventory {
 	bool EquipSlot(long itemId, int teamId, int newSlot);
 	bool isEquipped(long itemId, int teamId, int newSlot);
 	CItem GetItem(int teamId, int slotId, int idx);
+	CItem& GetItemPtr(int teamId, int slotId, int idx);
 	int GetCurrentMusicKit();
 	ItemDefinitionIndex GetKnifeEquipped(int teamId);
 

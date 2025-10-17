@@ -28,6 +28,8 @@ public:
 	NETVAR(m_flFallbackWear, "CBaseAttributableItem->m_flFallbackWear", float);
 	NETVAR(m_nFallbackSeed, "CBaseAttributableItem->m_nFallbackSeed", int);
 	NETVAR(m_nModelIndex, "CBaseAttributableItem->m_nModelIndex", int);
+	NETVAR(m_nFallbackStatTrak, "CBaseAttributableItem->m_nFallbackStatTrak", int);
+	NETVAR(m_iAccountID, "CBaseAttributableItem->m_iAccountID", int);
 	
 };
 // A1 ? ? ? ? 57 85 C0 74 08 + 1

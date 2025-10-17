@@ -315,10 +315,14 @@ public:
                                     item2.flags().set(0);
                                     item2.in_use().set(false);
                                     item2.rarity().set(item.iRarity);
-                                    item2.quality().set(item.iQuality);
+                                    item2.quality().set(0);
                                     if (item.bHasStattrack) {
                                         item2.attribute().add(make_econ_item_attribute(81, 0));
-                                        item2.attribute().add(make_econ_item_attribute(80, item.flStattrack));
+                                        item2.attribute().add(make_econ_item_attribute(80, (int)item.flStattrack));
+                                        item2.quality().set(2);
+                                        if (item.iRarity == 6) {
+                                            item2.quality().set(3);
+                                        }
                                     }
                                     item2.attribute().add(make_econ_item_attribute(6, item.flPaintKit));
                                     item2.attribute().add(make_econ_item_attribute(7, float(item.iPattern)));

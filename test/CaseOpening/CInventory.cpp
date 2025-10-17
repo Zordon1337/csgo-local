@@ -107,6 +107,17 @@ CItem CInventory::GetItem(int teamId, int slotId, int idx)
 	return {};
 }
 
+CItem& CInventory::GetItemPtr(int teamId, int slotId, int idx)
+{
+	auto itemId = CInventory::Equips[slotId][teamId];
+	for (CItem& item : V::items) {
+		if (itemId == item.iItemId && item.iDefIdx == idx) return item;
+	}
+	CItem item = {};
+	return item; 
+}
+
+
 int CInventory::GetCurrentMusicKit() {
 	auto itemId = CInventory::Equips[54][0];
 	for (const auto item : V::items) {

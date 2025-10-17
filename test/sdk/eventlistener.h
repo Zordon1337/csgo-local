@@ -46,6 +46,16 @@ public:
 			assists = 0;
 			wonRounds = 0;
 			console::log("reset kills");
+			V::SaveConfig();
+		}
+		else if (strcmp(txt, "round_mvp") == 0) {
+			auto& it = CInventory::GetItemPtr(0, 54, CInventory::GetCurrentMusicKit());
+			auto userid = G::g_EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
+			auto idx = G::g_EngineClient->GetLocalPlayerIndex();
+			if (it.bHasStattrack && idx == userid) {
+				it.flStattrack++;
+				pEvent->SetInt("musickitmvps", it.flStattrack);
+			}
 		}
 		else {
 			auto userid = G::g_EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));

@@ -86,6 +86,10 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 weapon->m_iEntityQuality() = (int)skin.iQuality;
                 weapon->m_flFallbackWear() = skin.flWear;
                 weapon->m_nFallbackSeed() = skin.iPattern;
+                if (skin.bHasStattrack) {
+                    weapon->m_nFallbackStatTrak() = skin.flStattrack;
+                }
+                weapon->m_iAccountID() = G::g_SteamUser->GetSteamID().GetAccountID();
                 weapon->m_iItemIDHigh() = -1;
 
             }
@@ -304,21 +308,7 @@ int RunLoop() {
     CCaseOpening::CreateCrates();
     V::LoadConfig();
 
-    if (G::gameVer < 2019) {
-        bool hasLegacy = false;
-        for (int i = 0; i <= V::othermedals.size(); i++) {
-            if (V::othermedals.size() <= 0) break;
-            if (V::othermedals[i] == 970)
-            {
-                hasLegacy = true;
-            }
-        }
-        if (!hasLegacy) {
-
-            V::othermedals.push_back(970);
-        }
-
-    }
+    
 
     E::g_EventListener = new EventListener;
 
@@ -326,6 +316,7 @@ int RunLoop() {
     G::g_EventManager->AddListener(E::g_EventListener, "cs_win_panel_round", false);
     G::g_EventManager->AddListener(E::g_EventListener, "cs_game_disconnected", false);
     G::g_EventManager->AddListener(E::g_EventListener, "player_death", false);
+    G::g_EventManager->AddListener(E::g_EventListener, "round_mvp", false);
 
     G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient014", nullptr);
     while (!G::g_EngineClient) {
