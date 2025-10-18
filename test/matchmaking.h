@@ -112,7 +112,23 @@ namespace CMatchmaking {
         auto s = drops.serialize();
         DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
         
+        // i could instead just implement convars, but why when you can just do it 10x more unsafe but faster!!!
+        auto GetGameMode = M::PatternScan("client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? C3 8B 01 FF 60 ? CC CC E8"); 
+        if (GetGameMode) {
+            // for now, the pattern is only for panorama, i need to get it for scaleform too
+            switch (reinterpret_cast<int(__thiscall*)(void*)>(GetGameMode)(GetGameMode)){ // don't touch works :tf:
+                case 1: {
+                    console::log("Competetive");
+                    break;
+                }
+                case 2: {
 
+                    console::log("Wingman");
+                    break;
+                }
+            }
+
+        }
 
 		bHasMessagePending = false;
 		msgt.clear();
