@@ -414,6 +414,21 @@ struct CMsgGCItemCustomizationNotification : pbmsg<2> {
 	PBFIELD(1, types::Uint64, item_id);
 	PBFIELD(2, types::Uint32, request);
 };
+struct CCSUsrMsg_ServerRankUpdate : pbmsg<1> {
+	struct RankUpdate : pbmsg<6> {
+
+		PBMSG_CTOR;
+		PBFIELD(1, types::Int32, account_id);
+		PBFIELD(2, types::Int32, rank_old);
+		PBFIELD(3, types::Int32, rank_new);
+		PBFIELD(4, types::Int32, num_wins);
+		PBFIELD(5, types::Float, rank_change);
+		PBFIELD(6, types::Int32, rank_type_id);
+	};
+	PBMSG_CTOR;
+	PBFIELD(1, RankUpdate, rank_update);
+
+};
 enum ECstrike15UserMessages {
 	CS_UM_VGUIMenu = 1,
 	CS_UM_Geiger = 2,

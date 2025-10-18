@@ -113,20 +113,37 @@ namespace CMatchmaking {
         DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
         
         // i could instead just implement convars, but why when you can just do it 10x more unsafe but faster!!!
-        auto GetGameMode = M::PatternScan("client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? C3 8B 01 FF 60 ? CC CC E8"); 
+        static auto GetGameMode = M::PatternScan("client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? C3 8B 01 FF 60 ? CC CC E8"); 
         if (GetGameMode) {
+
+            CCSUsrMsg_ServerRankUpdate rank;
+            CCSUsrMsg_ServerRankUpdate::RankUpdate rankupd;
+
             // for now, the pattern is only for panorama, i need to get it for scaleform too
             switch (reinterpret_cast<int(__thiscall*)(void*)>(GetGameMode)(GetGameMode)){ // don't touch works :tf:
                 case 1: {
-                    console::log("Competetive");
+                    rankupd.account_id().set(V::STEAM_ID);
+                    rankupd.num_wins().set(++V::Ranks::Competetive::iWins);
+                    rankupd.rank_new().set(V::Ranks::Competetive::iCurrentRank);
+                    rankupd.rank_old().set(V::Ranks::Competetive::iCurrentRank);
+                    rankupd.rank_type_id().set(6);
                     break;
                 }
                 case 2: {
 
-                    console::log("Wingman");
+                    rankupd.account_id().set(V::STEAM_ID);
+                    rankupd.num_wins().set(++V::Ranks::Wingman::iWins);
+                    rankupd.rank_new().set(V::Ranks::Wingman::iCurrentRank);
+                    rankupd.rank_old().set(V::Ranks::Wingman::iCurrentRank);
+                    rankupd.rank_type_id().set(7);
+
                     break;
                 }
             }
+            rank.rank_update().set(rankupd);
+            auto pk = rank.serialize();
+            DispatchUserMessage(g_VClient, 52, 0, pk.size(), pk.c_str());
+
 
         }
 
