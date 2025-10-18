@@ -229,6 +229,17 @@ struct CEconItemPreviewDataBlock : pbwrap::pbmsg<18> {
 	PBFIELD(18, types::Int32, entindex);
 };
 
+struct CSOAccountSeasonalOperation : pbwrap::pbmsg<7> {
+
+	PBFIELD(1, types::Uint32, season_value);
+	PBFIELD(2, types::Uint32, tier_unlocked);
+	PBFIELD(3, types::Uint32, premium_tiers);
+	PBFIELD(4, types::Uint32, mission_id);
+	PBFIELD(5, types::Uint32, missions_completed);
+	PBFIELD(6, types::Uint32, redeemable_balance);
+	PBFIELD(7, types::Uint32, season_pass_time);
+};
+
 struct CMsgItemAcknowledged : pbmsg<1> {
 	PBMSG_CTOR;
 	PBFIELD(1, CEconItemPreviewDataBlock, iteminfo);
