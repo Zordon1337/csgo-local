@@ -258,7 +258,7 @@ public:
 
             console::log(std::format("Received packet {}", uMsgType).c_str());
             switch (uMsgType) {
-
+                
                 case 4004: {
                     {
                         CMsgClientWelcome msg((void*)((DWORD)pubDest + 8), *pcubMsgSize - 8);
@@ -273,13 +273,13 @@ public:
                         auto objects = cache.objects().get_all();
                         for (size_t i = 0; i < objects.size(); i++) {
                             auto object = objects[i];
-                            if (!object.type_id().has() || (object.type_id().get() != 1 && object.type_id().get() != 2))
+                            if (!object.type_id().has())
                                 continue;
-                            
-                            object.object_data().clear();
-                            if (object.type_id().get() == 1) {
+                            int id = object.type_id().get();
 
-                            
+                            if (id == 1) {
+
+                                object.object_data().clear();
                                 for (auto item : V::items) {
                                     
                                     CSOEconItem item2;
@@ -382,8 +382,42 @@ public:
                                 }
                                 cache.objects().set(object, i);
                             }
-                        }
+                            if (id == 2) {
 
+                                CSOPersonaDataPublic persona;
+                                const std::string& data = object.object_data().get();
+                                persona.parse(const_cast<uint8_t*>(
+                                    reinterpret_cast<const uint8_t*>(data.data())),
+                                    data.size());
+                                
+                                persona.player_level().set(V::iLevel);
+                                object.object_data().set(persona.serialize());
+                                cache.objects().set(object, i);
+                            }
+                            if (id == 40) {
+                                CSOAccountSeasonalOperation season;
+                                const std::string& data = object.object_data().get();
+                                season.parse(const_cast<uint8_t*>(
+                                    reinterpret_cast<const uint8_t*>(data.data())),
+                                    data.size());
+                                season.tier_unlocked().set(100);
+                                season.redeemable_balance().set(-1337);
+                                object.object_data().set(season.serialize());
+                                cache.objects().set(object, i);
+
+                            }
+                            if (id == 46) {
+                                CSOQuestProgress season;
+                                const std::string& data = object.object_data().get();
+                                season.parse(const_cast<uint8_t*>(
+                                    reinterpret_cast<const uint8_t*>(data.data())),
+                                    data.size());
+                                object.object_data().set(season.serialize());
+                                cache.objects().set(object, i);
+
+                            }
+                            
+                        } 
                         msg.outofdate_subscribed_caches().set(cache);
                         auto packet = msg.serialize();
 

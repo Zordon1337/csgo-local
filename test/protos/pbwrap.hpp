@@ -714,6 +714,13 @@ namespace pbwrap
             const auto value = fv_.get(hdr.field, index);
             return Type::get(value);
         }
+        
+        auto safeget(size_t index = 0) const -> type
+        {
+            if (!fv_.has(hdr.field, index)) return 0;
+            const auto value = fv_.get(hdr.field, index);
+            return Type::get(value);
+        }
 
     private:
         using base::field<Field, Type>::hdr;
