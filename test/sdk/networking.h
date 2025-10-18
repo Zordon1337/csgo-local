@@ -258,7 +258,9 @@ public:
 
             console::log(std::format("Received packet {}", uMsgType).c_str());
             switch (uMsgType) {
-                
+                case 9194: {
+                    break;
+                }
                 case 4004: {
                     {
                         CMsgClientWelcome msg((void*)((DWORD)pubDest + 8), *pcubMsgSize - 8);
@@ -444,6 +446,22 @@ public:
                         V::iCaseResult = 0;
                     }
                     
+
+                    CMsgGCCStrike15_v2_ClientGCRankUpdate rank;
+                    MatchmakingGC2ClientHello::PlayerRankingInfo rankinfo;
+                    rankinfo.account_id().set(V::STEAM_ID);
+                    rankinfo.rank_type_id().set(7);
+                    rankinfo.rank_id().set(V::Ranks::Wingman::iCurrentRank);
+                    rankinfo.wins().set(V::Ranks::Wingman::iWins);
+
+                    rank.ranking().add(rankinfo);
+                    rankinfo.account_id().set(V::STEAM_ID);
+                    rankinfo.rank_type_id().set(6);
+                    rankinfo.rank_id().set(V::Ranks::Competetive::iCurrentRank);
+                    rankinfo.wins().set(V::Ranks::Competetive::iWins);
+
+                    rank.ranking().add(rankinfo);
+                    CNetworking::QueueMessage(9194, rank.serialize(), 100);
                     break;
                 }
             }

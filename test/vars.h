@@ -28,8 +28,24 @@ namespace V {
     int STEAM_ID = 0;
     bool PENDING_UPDATE = false;
     int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
+	namespace Ranks::Wingman {
+		int iCurrentRank = 18;
+		int iWins = 344;
+		int iLosses = 1;
+		int iWinStreak = 0;
+		int iLossStreak = 0;
+		int iElo = 0; // iWinStreak/iLossStreak * 25
+	}
+	namespace Ranks::Competetive {
+		int iCurrentRank = 17;
+		int iWins = 166;
+		int iLosses = 1;
+		int WinStreak = 2;
+		int iLossStreak = 0;
+		int iElo = 0;
+
+	}
 	RecvVarProxyFn oViewModelProxy;
-	RecvVarProxyFn oMusicKitProxy;
 
     void SaveConfig() {
 		system("mkdir C:\\CSGO_LOCAL");
