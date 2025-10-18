@@ -45,7 +45,6 @@ public:
 			kills = 0;
 			assists = 0;
 			wonRounds = 0;
-			console::log("reset kills");
 			V::SaveConfig();
 		}
 		else if (strcmp(txt, "round_mvp") == 0) {
@@ -74,27 +73,23 @@ public:
 				if (!weapon)
 					return;
 
-				console::log(std::format("{}", local->m_iTeamNum()).c_str());
-				console::log(std::format("{}", weapon->m_iItemDefinitionIndex()).c_str());
-				console::log(std::format("{}", CInventory::GetSlotID(weapon->m_iItemDefinitionIndex()) ).c_str());
 				auto& wp = CInventory::GetItemPtr(
 					local->m_iTeamNum(),
 					CInventory::GetSlotID(weapon->m_iItemDefinitionIndex()),
 					weapon->m_iItemDefinitionIndex()
 				);
 
-				console::log(std::format("weapon id {} defidx {}", wp.iItemId, wp.iDefIdx).c_str());
 				if (wp.bHasStattrack) {
 					wp.flStattrack++;
 					weapon->OnDataChanged(5);
 					weapon->OnDataChanged(0);
 					weapon->PostDataUpdate(0);
 				}
-				console::log(std::format("added kill from {}", attacker).c_str());
+				//console::log(std::format("added kill from {}", attacker).c_str());
 			}
 			else if (assister != userid && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(assister)) {
 				assists++;
-				console::log(std::format("added assist from {}", assister).c_str());
+				//console::log(std::format("added assist from {}", assister).c_str());
 			}
 		}
 	};
