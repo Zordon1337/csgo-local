@@ -183,6 +183,12 @@ struct CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin : pbmsg<4> {
 	PBFIELD(3, types::Uint32, hours);
 	PBFIELD(4, types::Uint32, prestigetime);
 };
+struct CMsgGCCstrike15_v2_ClientRequestNewMission : pbmsg<2> {
+
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint32, mission_id);
+	PBFIELD(2, types::Uint32, campaign_id);
+};
 
 
 struct CSOPersonaDataPublic : pbmsg<3> {
@@ -227,6 +233,23 @@ struct CEconItemPreviewDataBlock : pbwrap::pbmsg<18> {
 	PBFIELD(16, types::Uint32, dropreason);
 	PBFIELD(17, types::Uint32, musicindex);
 	PBFIELD(18, types::Int32, entindex);
+};
+
+struct CSOAccountSeasonalOperation : pbwrap::pbmsg<7> {
+
+	PBFIELD(1, types::Uint32, season_value);
+	PBFIELD(2, types::Uint32, tier_unlocked);
+	PBFIELD(3, types::Uint32, premium_tiers);
+	PBFIELD(4, types::Uint32, mission_id);
+	PBFIELD(5, types::Uint32, missions_completed);
+	PBFIELD(6, types::Uint32, redeemable_balance);
+	PBFIELD(7, types::Uint32, season_pass_time);
+};
+struct CSOQuestProgress : pbwrap::pbmsg<3> {
+
+	PBFIELD(1, types::Uint32, questid);
+	PBFIELD(2, types::Uint32, points_remaining);
+	PBFIELD(3, types::Uint32, bonus_points);
 };
 
 struct CMsgItemAcknowledged : pbmsg<1> {
