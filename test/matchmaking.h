@@ -249,7 +249,7 @@ namespace CMatchmaking {
         }
         
         // i could instead just implement convars, but why when you can just do it 10x more unsafe but faster!!!
-        static auto GetGameMode = M::PatternScan("client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? C3 8B 01 FF 60 ? CC CC E8"); 
+        static auto GetGameMode = M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? C3 8B 01 FF 60 ? CC CC E8");
         if (GetGameMode) {
 
             CCSUsrMsg_ServerRankUpdate rank;
