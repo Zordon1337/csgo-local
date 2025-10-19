@@ -9,6 +9,7 @@ namespace CMatchmaking {
     std::string msgt;
     int _wonRounds = -1;
     int _lostRounds = -1;
+    bool bShouldDrop = false;
 	int handleEndGame(int kills, int assists, int wonrounds, int lostRounds, int steamid, float currTime) {
         _steamid = steamid;
         if (wonrounds < 1) wonrounds = 1;
@@ -49,6 +50,9 @@ namespace CMatchmaking {
 
         msg.current_level().set(oldLvl);
         msg.current_xp().set(oldXp);
+        if(oldXp + addXp >= 5000) {
+            bShouldDrop = true;
+        }
         CCSUsrMsg_XpUpdate msg1;
 
         msg1.data().set(msg);
@@ -202,45 +206,47 @@ namespace CMatchmaking {
         DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(reinterpret_cast<uintptr_t**>((*(void***)g_VClient)[(GameVer > 2018 || (GameVer == 2018 && bPanoramaDll)) ? 38 : 37]));
 
         DispatchUserMessage(g_VClient, 65, 0, msgt.size(), msgt.c_str());
-        CCSUsrMsg_SendPlayerItemDrops drops;
-        for (int i = 0; i < 4; i++) {
-            CCrateOwned newcase;
-            auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
-            {
+        if (bShouldDrop) {
+            CCSUsrMsg_SendPlayerItemDrops drops;
+            for (int i = 0; i <= 2; i++) {
+                CCrateOwned newcase;
+                auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
+                {
+                    std::random_device rd;
+                    std::mt19937 gen(rd());
+                    std::uniform_int_distribution<> dis(0, CCaseOpening::vCrates.size());
+                    basecase = CCaseOpening::vCrates[dis(gen)];
+                }
+                newcase.iDefIdx = basecase.iDefIdx;
+                newcase.iKeyIdx = basecase.iKeyIdx;
                 std::random_device rd;
                 std::mt19937 gen(rd());
-                std::uniform_int_distribution<> dis(0, CCaseOpening::vCrates.size());
-                basecase = CCaseOpening::vCrates[dis(gen)];
+                std::uniform_int_distribution<> dis(1, 9999);
+                newcase.iOCaseIdx = dis(gen);
+                newcase.iOKeyIdx = dis(gen);
+                newcase.iRarity = basecase.iRarity;
+                newcase.szCaseName = basecase.szCaseName;
+                newcase.vItems = basecase.vItems;
+                newcase.bIsMusicKitBox = basecase.bIsMusicKitBox;
+
+                CEconItemPreviewDataBlock item;
+                item.accountid().set(_steamid);
+                item.defindex().set(newcase.iDefIdx);
+                item.rarity().set(1);
+                item.itemid().set(newcase.iOCaseIdx);
+                item.dropreason().set(0);
+                item.customname().set("");
+                item.entindex().set(newcase.iDefIdx);
+
+
+
+                V::cases.push_back(newcase);
+                drops.entity_updates().add(item);
             }
-            newcase.iDefIdx = basecase.iDefIdx;
-            newcase.iKeyIdx = basecase.iKeyIdx;
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::uniform_int_distribution<> dis(1, 9999);
-            newcase.iOCaseIdx = dis(gen);
-            newcase.iOKeyIdx = dis(gen);
-            newcase.iRarity = basecase.iRarity;
-            newcase.szCaseName = basecase.szCaseName;
-            newcase.vItems = basecase.vItems;
-            newcase.bIsMusicKitBox = basecase.bIsMusicKitBox;
-
-            CEconItemPreviewDataBlock item;
-            item.accountid().set(_steamid);
-            item.defindex().set(newcase.iDefIdx);
-            item.rarity().set(1); 
-            item.itemid().set(newcase.iOCaseIdx);
-            item.dropreason().set(0);
-            item.customname().set("");
-            item.entindex().set(newcase.iDefIdx);
-
-
-
-            V::cases.push_back(newcase);
-            drops.entity_updates().add(item); 
+            bShouldDrop = false;
+            auto s = drops.serialize();
+            DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
         }
-
-        auto s = drops.serialize();
-        DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
         
         // i could instead just implement convars, but why when you can just do it 10x more unsafe but faster!!!
         static auto GetGameMode = M::PatternScan("client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? C3 8B 01 FF 60 ? CC CC E8"); 
