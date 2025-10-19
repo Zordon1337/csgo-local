@@ -99,7 +99,9 @@ public:
 
 				if (wp.bHasStattrack) {
 					wp.flStattrack++;
+					weapon->m_nFallbackStatTrak() = wp.flStattrack;
 					weapon->OnDataChanged(5);
+					weapon->PostDataUpdate(5);
 					weapon->OnDataChanged(0);
 					weapon->PostDataUpdate(0);
 				}
