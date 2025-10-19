@@ -208,7 +208,7 @@ namespace CMatchmaking {
         DispatchUserMessage(g_VClient, 65, 0, msgt.size(), msgt.c_str());
         if (bShouldDrop) {
             CCSUsrMsg_SendPlayerItemDrops drops;
-            for (int i = 0; i <= 2; i++) {
+            for (int i = 0; i < 2; i++) {
                 CCrateOwned newcase;
                 auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
                 {
