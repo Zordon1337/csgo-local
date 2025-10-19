@@ -38,14 +38,16 @@ public:
 			kills = 0;
 			assists = 0;
 			wonRounds = 0;
+			lostRounds = 0;
 		}
 		else if (strcmp(txt, "cs_win_panel_round") == 0) {
-			wonRounds++;
+
 		}
 		else if (strcmp(txt, "cs_game_disconnected") == 0) {
 			kills = 0;
 			assists = 0;
 			wonRounds = 0;
+			lostRounds = 0;
 			V::SaveConfig();
 		}
 		else if (strcmp(txt, "round_mvp") == 0) {
