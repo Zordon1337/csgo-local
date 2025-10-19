@@ -35,6 +35,7 @@ Plans:
 - Rewrite
 - Skins visible for other users
 - Operations
+- POC Matchmaking
 
 Notes:
 - The mod is in very early stage right now, its very unstable and not gameplay ready.
