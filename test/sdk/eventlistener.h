@@ -22,11 +22,12 @@ public:
 		static int kills = 0;
 		static int assists = 0;
 		static int wonRounds = 0;
+		static int lostRounds = 0;
 
 		const char* txt = pEvent->GetName();
 		console::log(txt);
 		if (strcmp(txt, "cs_win_panel_match") == 0) {
-			int newxp = CMatchmaking::handleEndGame(kills, assists, wonRounds, V::STEAM_ID, G::g_GlobalVars->currentTime);
+			int newxp = CMatchmaking::handleEndGame(kills, assists, wonRounds, lostRounds, V::STEAM_ID, G::g_GlobalVars->currentTime);
 			V::iXP += newxp;
 			while (V::iXP >= 5000) {
 				V::iXP -= 5000;
@@ -54,6 +55,21 @@ public:
 			if (it.bHasStattrack && idx == userid) {
 				it.flStattrack++;
 				pEvent->SetInt("musickitmvps", it.flStattrack);
+			}
+		}
+		else if (strcmp(txt, "round_end") == 0) {
+			auto winner = pEvent->GetInt("winner");
+
+			if (winner == 3 || winner == 2) {
+				// we dont want to add loss when spectator wins lol=
+				auto idx = G::g_EntityList->GetEntityFromIndex(G::g_EngineClient->GetLocalPlayerIndex());
+				if (idx->m_iTeamNum() == winner) {
+					wonRounds++;
+				}
+				else {
+
+					lostRounds++;
+				}
 			}
 		}
 		else {

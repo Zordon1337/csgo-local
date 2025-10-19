@@ -29,20 +29,20 @@ namespace V {
     bool PENDING_UPDATE = false;
     int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
 	namespace Ranks::Wingman {
-		int iCurrentRank = 18;
-		int iWins = 344;
-		int iLosses = 1;
-		int iWinStreak = 0;
+		int iCurrentRank = 0;
+		int iWins = 8;
+		int iLosses = 2;
+		int iWinStreak = 2;
 		int iLossStreak = 0;
-		int iElo = 0; // iWinStreak/iLossStreak * 25
+		int iElo = 100; // iWinStreak/iLossStreak * 25
 	}
 	namespace Ranks::Competetive {
-		int iCurrentRank = 17;
-		int iWins = 166;
-		int iLosses = 1;
-		int WinStreak = 2;
+		int iCurrentRank = 0;
+		int iWins = 8;
+		int iLosses = 2;
+		int iWinStreak = 2;
 		int iLossStreak = 0;
-		int iElo = 0;
+		int iElo = 100;
 
 	}
 	RecvVarProxyFn oViewModelProxy;

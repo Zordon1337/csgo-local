@@ -319,6 +319,7 @@ int RunLoop() {
     G::g_EventManager->AddListener(E::g_EventListener, "cs_game_disconnected", false);
     G::g_EventManager->AddListener(E::g_EventListener, "player_death", false);
     G::g_EventManager->AddListener(E::g_EventListener, "round_mvp", false);
+    G::g_EventManager->AddListener(E::g_EventListener, "round_end", false);
 
     G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient014", nullptr);
     while (!G::g_EngineClient) {

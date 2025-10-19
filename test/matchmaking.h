@@ -7,8 +7,9 @@ namespace CMatchmaking {
     bool bHasMessagePending = false;
     int _steamid = 0;
     std::string msgt;
-
-	int handleEndGame(int kills, int assists, int wonrounds, int steamid, float currTime) {
+    int _wonRounds = -1;
+    int _lostRounds = -1;
+	int handleEndGame(int kills, int assists, int wonrounds, int lostRounds, int steamid, float currTime) {
         _steamid = steamid;
         if (wonrounds < 1) wonrounds = 1;
         // TODO: FIX RANDOM CRASH
@@ -57,10 +58,139 @@ namespace CMatchmaking {
         flUpdateTime = currTime + 3.f;
         msgt = res;
         bHasMessagePending = true;
+        _wonRounds = wonrounds;
+        _lostRounds = lostRounds;
         
         return addXp;
 	}
+    void UpdateRank(int gameMode) {
+        switch (gameMode) {
+            case 2: {
+                int& ogRank = V::Ranks::Wingman::iCurrentRank;
+                int& winStreak = V::Ranks::Wingman::iWinStreak;
+                int& lossStreak = V::Ranks::Wingman::iLossStreak;
+                int& elo = V::Ranks::Wingman::iElo;
 
+                int wins = _wonRounds;
+                int losses = _lostRounds;
+
+                if (wins > losses) {
+                    winStreak++;
+                    lossStreak = 0;
+                    elo += winStreak * 25;
+                    V::Ranks::Wingman::iWins++;
+                }
+                else {
+                    lossStreak++;
+                    winStreak = 0;
+                    elo -= lossStreak * 25;
+                    V::Ranks::Wingman::iLosses++;
+                }
+
+                if (V::Ranks::Wingman::iWins < 10) break;
+                if (elo < 400)
+                    ogRank = 1; // Silver I
+                else if (elo < 700)
+                    ogRank = 2; // Silver II
+                else if (elo < 1000)
+                    ogRank = 3; // Silver III
+                else if (elo < 1300)
+                    ogRank = 4; // Silver IV
+                else if (elo < 1500)
+                    ogRank = 5; // Silver Elite
+                else if (elo < 1700)
+                    ogRank = 6; // Silver Elite Master
+                else if (elo < 1900)
+                    ogRank = 7; // Gold Nova I
+                else if (elo < 2100)
+                    ogRank = 8; // Gold Nova II
+                else if (elo < 2300)
+                    ogRank = 9; // Gold Nova III
+                else if (elo < 2500)
+                    ogRank = 10; // Gold Nova Master
+                else if (elo < 2700)
+                    ogRank = 11; // Master Guardian I
+                else if (elo < 2900)
+                    ogRank = 12; // Master Guardian II
+                else if (elo < 3100)
+                    ogRank = 13; // MGE
+                else if (elo < 3300)
+                    ogRank = 14; // DMG
+                else if (elo < 3500)
+                    ogRank = 15; // Legendary Eagle
+                else if (elo < 3700)
+                    ogRank = 16; // LEM
+                else if (elo < 3900)
+                    ogRank = 17; // Supreme
+                else
+                    ogRank = 18; // Global Elite
+
+                break;
+            }
+            case 1: {
+
+                int& ogRank = V::Ranks::Competetive::iCurrentRank;
+                int& winStreak = V::Ranks::Competetive::iWinStreak;
+                int& lossStreak = V::Ranks::Competetive::iLossStreak;
+                int& elo = V::Ranks::Competetive::iElo;
+
+                int wins = _wonRounds;
+                int losses = _lostRounds;
+
+                if (wins > losses) {
+                    winStreak++;
+                    lossStreak = 0;
+                    elo += winStreak * 25;
+                    V::Ranks::Competetive::iWins++;
+                }
+                else {
+                    lossStreak++;
+                    winStreak = 0;
+                    elo -= lossStreak * 25;
+                    V::Ranks::Competetive::iLosses++;
+                }
+                if (V::Ranks::Competetive::iWins < 10) break;
+                if (elo < 400)
+                    ogRank = 1; // Silver I
+                else if (elo < 700)
+                    ogRank = 2; // Silver II
+                else if (elo < 1000)
+                    ogRank = 3; // Silver III
+                else if (elo < 1300)
+                    ogRank = 4; // Silver IV
+                else if (elo < 1500)
+                    ogRank = 5; // Silver Elite
+                else if (elo < 1700)
+                    ogRank = 6; // Silver Elite Master
+                else if (elo < 1900)
+                    ogRank = 7; // Gold Nova I
+                else if (elo < 2100)
+                    ogRank = 8; // Gold Nova II
+                else if (elo < 2300)
+                    ogRank = 9; // Gold Nova III
+                else if (elo < 2500)
+                    ogRank = 10; // Gold Nova Master
+                else if (elo < 2700)
+                    ogRank = 11; // Master Guardian I
+                else if (elo < 2900)
+                    ogRank = 12; // Master Guardian II
+                else if (elo < 3100)
+                    ogRank = 13; // MGE
+                else if (elo < 3300)
+                    ogRank = 14; // DMG
+                else if (elo < 3500)
+                    ogRank = 15; // Legendary Eagle
+                else if (elo < 3700)
+                    ogRank = 16; // LEM
+                else if (elo < 3900)
+                    ogRank = 17; // Supreme
+                else
+                    ogRank = 18; // Global Elite
+                break;
+
+            }
+        }
+    }
     void Refresh(float currTime, bool bPanoramaDll, void* g_VClient, int GameVer) {
 		if (!bHasMessagePending)
 			return;
@@ -123,18 +253,20 @@ namespace CMatchmaking {
             switch (reinterpret_cast<int(__thiscall*)(void*)>(GetGameMode)(GetGameMode)){ // don't touch works :tf:
                 case 1: {
                     rankupd.account_id().set(V::STEAM_ID);
-                    rankupd.num_wins().set(++V::Ranks::Competetive::iWins);
-                    rankupd.rank_new().set(V::Ranks::Competetive::iCurrentRank);
                     rankupd.rank_old().set(V::Ranks::Competetive::iCurrentRank);
+                    UpdateRank(1);
+                    rankupd.rank_new().set(V::Ranks::Competetive::iCurrentRank);
+                    rankupd.num_wins().set(V::Ranks::Competetive::iWins);
                     rankupd.rank_type_id().set(6);
                     break;
                 }
                 case 2: {
 
                     rankupd.account_id().set(V::STEAM_ID);
-                    rankupd.num_wins().set(++V::Ranks::Wingman::iWins);
-                    rankupd.rank_new().set(V::Ranks::Wingman::iCurrentRank);
                     rankupd.rank_old().set(V::Ranks::Wingman::iCurrentRank);
+                    UpdateRank(2);
+                    rankupd.rank_new().set(V::Ranks::Wingman::iCurrentRank);
+                    rankupd.num_wins().set(V::Ranks::Wingman::iWins);
                     rankupd.rank_type_id().set(7);
 
                     break;
