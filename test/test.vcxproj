@@ -151,6 +151,7 @@
     <ClInclude Include="console\console.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="json\json.hpp" />
+    <ClInclude Include="memory.h" />
     <ClInclude Include="Minhook\MinHook.h" />
     <ClInclude Include="Minhook\Minhook\buffer.h" />
     <ClInclude Include="Minhook\Minhook\hde\hde32.h" />
@@ -171,7 +172,6 @@
     <ClInclude Include="sdk\IMemAlloc.h" />
     <ClInclude Include="sdk\ivengineclient.h" />
     <ClInclude Include="matchmaking.h" />
-    <ClInclude Include="memory.h" />
     <ClInclude Include="sdk\IVModelInfoClient.h" />
     <ClInclude Include="sdk\networking.h" />
     <ClInclude Include="sdk\recv.h" />

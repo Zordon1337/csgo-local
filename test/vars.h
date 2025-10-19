@@ -57,6 +57,18 @@ namespace V {
 		j["iLevel"] = iLevel;
 		j["iXP"] = iXP;
 		j["othermedals"] = othermedals;
+		j["V::Ranks::Wingman::iCurrentRank"] = V::Ranks::Wingman::iCurrentRank;
+		j["V::Ranks::Wingman::iElo"] = V::Ranks::Wingman::iElo;
+		j["V::Ranks::Wingman::iLosses"] = V::Ranks::Wingman::iLosses;
+		j["V::Ranks::Wingman::iLossStreak"] = V::Ranks::Wingman::iLossStreak;
+		j["V::Ranks::Wingman::iWins"] = V::Ranks::Wingman::iWins;
+		j["V::Ranks::Wingman::iWinStreak"] = V::Ranks::Wingman::iWinStreak;
+		j["V::Ranks::Competetive::iCurrentRank"] = V::Ranks::Competetive::iCurrentRank;
+		j["V::Ranks::Competetive::iElo"] = V::Ranks::Competetive::iElo;
+		j["V::Ranks::Competetive::iLosses"] = V::Ranks::Competetive::iLosses;
+		j["V::Ranks::Competetive::iLossStreak"] = V::Ranks::Competetive::iLossStreak;
+		j["V::Ranks::Competetive::iWins"] = V::Ranks::Competetive::iWins;
+		j["V::Ranks::Competetive::iWinStreak"] = V::Ranks::Competetive::iWinStreak;
 		j["items"] = nlohmann::json::array();
         for (const auto& item : items) {
 
@@ -109,6 +121,18 @@ namespace V {
 			iServiceMedalLevel = j.value("iServiceMedalLevel", 0);
 			iLevel = j.value("iLevel", 1);
 			iXP = j.value("iXP", 0);
+			V::Ranks::Wingman::iCurrentRank = j.value("V::Ranks::Wingman::iCurrentRank", 0);
+			V::Ranks::Wingman::iElo = j.value("V::Ranks::Wingman::iElo", 0);
+			V::Ranks::Wingman::iLosses = j.value("V::Ranks::Wingman::iLosses", 0);
+			V::Ranks::Wingman::iLossStreak = j.value("V::Ranks::Wingman::iLossStreak", 0);
+			V::Ranks::Wingman::iWins = j.value("V::Ranks::Wingman::iWins", 0);
+			V::Ranks::Wingman::iWinStreak = j.value("V::Ranks::Wingman::iWinStreak", 0);
+			V::Ranks::Competetive::iCurrentRank = j.value("V::Ranks::Competetive::iCurrentRank", 0);
+			V::Ranks::Competetive::iElo = j.value("V::Ranks::Competetive::iElo", 0);
+			V::Ranks::Competetive::iLosses = j.value("V::Ranks::Competetive::iLosses", 0);
+			V::Ranks::Competetive::iLossStreak = j.value("V::Ranks::Competetive::iLossStreak", 0);
+			V::Ranks::Competetive::iWins = j.value("V::Ranks::Competetive::iWins", 0);
+			V::Ranks::Competetive::iWinStreak = j.value("V::Ranks::Competetive::iWinStreak", 0);
 			othermedals = j.value("othermedals", std::vector<int>{});
 			items.clear();
 			for (const auto& item : j["items"]) {
