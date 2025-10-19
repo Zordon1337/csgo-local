@@ -19,8 +19,6 @@ Supported Versions:
 Late 2018 - Tested, Stable
 - Scaleform Builds -
 2015-2018 - Very unstable for now, not recommended
-
-
 ```
 
 Current Features:
