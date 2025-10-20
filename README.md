@@ -37,6 +37,4 @@ Plans:
 - Operations
 - POC Matchmaking
 
-Notes:
-- The mod is in very early stage right now, its very unstable and not gameplay ready.
-- The service medal claiming doesn't work like in csgo, skips the entire menu of claiming and just gives it to player.
+
