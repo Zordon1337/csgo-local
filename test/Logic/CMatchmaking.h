@@ -150,13 +150,19 @@ namespace CMatchmaking {
                 if (wins > losses) {
                     winStreak++;
                     lossStreak = 0;
-                    elo += winStreak * 25;
+                    int nElo = winStreak * 25;
+                    if (nElo > 200)
+                        nElo = 200;
+                    elo += nElo;
                     V::Ranks::Competetive::iWins++;
                 }
                 else {
                     lossStreak++;
                     winStreak = 0;
-                    elo -= lossStreak * 25;
+                    int nElo = lossStreak * 25;
+                    if (nElo < -200)
+                        nElo = -200;
+                    elo -= nElo;
                     V::Ranks::Competetive::iLosses++;
                 }
                 if (V::Ranks::Competetive::iWins < 10) break;
