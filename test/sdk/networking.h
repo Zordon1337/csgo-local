@@ -1,11 +1,11 @@
 #pragma once
-#include "../protos/ProtoParse.h"
-#include "../protos/Messages.h"
+#include "proto/ProtoParse.h"
+#include "proto/Messages.h"
 #include <queue>
 #include <mutex>
 #include <string>
 #include "../globals.h"
-#include "../CaseOpening/CInventory.h"
+#include "../Logic/CInventory.h"
 #include "../console/console.h"
 
 class CNetworking {
@@ -401,6 +401,8 @@ public:
                                     data.size());
                                 season.tier_unlocked().set(100);
                                 season.redeemable_balance().set(-1337);
+                                season.season_pass_time().set(1);
+                                season.premium_tiers().set(1);
                                 object.object_data().set(season.serialize());
                                 cache.objects().set(object, i);
 

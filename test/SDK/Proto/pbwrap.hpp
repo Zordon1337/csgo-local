@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <tuple>
-#include "../protos/ProtoParse.h"
+#include "ProtoParse.h"
 #include <stdexcept>
 #define PBFIELD(number, type, name) \
   pbfield<number, type> name() const { \

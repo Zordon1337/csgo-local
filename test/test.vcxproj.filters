@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="protos\Messages.h">
+    <ClInclude Include="SDK\Proto\Messages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="protos\pbwrap.hpp">
+    <ClInclude Include="SDK\Proto\pbwrap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="protos\ProtoParse.h">
+    <ClInclude Include="SDK\Proto\ProtoParse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Minhook\Minhook\hde\hde32.h">
@@ -48,115 +48,115 @@
     <ClInclude Include="Minhook\MinHook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamapplist.h">
+    <ClInclude Include="SDK\steamsdk\isteamapplist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamapps.h">
+    <ClInclude Include="SDK\steamsdk\isteamapps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamappticket.h">
+    <ClInclude Include="SDK\steamsdk\isteamappticket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamclient.h">
+    <ClInclude Include="SDK\steamsdk\isteamclient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamcontroller.h">
+    <ClInclude Include="SDK\steamsdk\isteamcontroller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamfriends.h">
+    <ClInclude Include="SDK\steamsdk\isteamfriends.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamgamecoordinator.h">
+    <ClInclude Include="SDK\steamsdk\isteamgamecoordinator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamgameserver.h">
+    <ClInclude Include="SDK\steamsdk\isteamgameserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamgameserverstats.h">
+    <ClInclude Include="SDK\steamsdk\isteamgameserverstats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamhtmlsurface.h">
+    <ClInclude Include="SDK\steamsdk\isteamhtmlsurface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamhttp.h">
+    <ClInclude Include="SDK\steamsdk\isteamhttp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteaminventory.h">
+    <ClInclude Include="SDK\steamsdk\isteaminventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteammasterserverupdater.h">
+    <ClInclude Include="SDK\steamsdk\isteammasterserverupdater.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteammatchmaking.h">
+    <ClInclude Include="SDK\steamsdk\isteammatchmaking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteammusic.h">
+    <ClInclude Include="SDK\steamsdk\isteammusic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteammusicremote.h">
+    <ClInclude Include="SDK\steamsdk\isteammusicremote.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamnetworking.h">
+    <ClInclude Include="SDK\steamsdk\isteamnetworking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamparentalsettings.h">
+    <ClInclude Include="SDK\steamsdk\isteamparentalsettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamps3overlayrenderer.h">
+    <ClInclude Include="SDK\steamsdk\isteamps3overlayrenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamremotestorage.h">
+    <ClInclude Include="SDK\steamsdk\isteamremotestorage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamscreenshots.h">
+    <ClInclude Include="SDK\steamsdk\isteamscreenshots.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamugc.h">
+    <ClInclude Include="SDK\steamsdk\isteamugc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamuser.h">
+    <ClInclude Include="SDK\steamsdk\isteamuser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamuserstats.h">
+    <ClInclude Include="SDK\steamsdk\isteamuserstats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamutils.h">
+    <ClInclude Include="SDK\steamsdk\isteamutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\isteamvideo.h">
+    <ClInclude Include="SDK\steamsdk\isteamvideo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\matchmakingtypes.h">
+    <ClInclude Include="SDK\steamsdk\matchmakingtypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steam_api.h">
+    <ClInclude Include="SDK\steamsdk\steam_api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steam_api_flat.h">
+    <ClInclude Include="SDK\steamsdk\steam_api_flat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steam_api_internal.h">
+    <ClInclude Include="SDK\steamsdk\steam_api_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steam_gameserver.h">
+    <ClInclude Include="SDK\steamsdk\steam_gameserver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steamclientpublic.h">
+    <ClInclude Include="SDK\steamsdk\steamclientpublic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steamencryptedappticket.h">
+    <ClInclude Include="SDK\steamsdk\steamencryptedappticket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steamhttpenums.h">
+    <ClInclude Include="SDK\steamsdk\steamhttpenums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steamps3params.h">
+    <ClInclude Include="SDK\steamsdk\steamps3params.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steamtypes.h">
+    <ClInclude Include="SDK\steamsdk\steamtypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="steamsdk\steamuniverse.h">
+    <ClInclude Include="SDK\steamsdk\steamuniverse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="globals.h">
@@ -165,52 +165,52 @@
     <ClInclude Include="console\console.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\networking.h">
+    <ClInclude Include="SDK\networking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\igameevent.h">
+    <ClInclude Include="SDK\igameevent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\ivengineclient.h">
+    <ClInclude Include="SDK\ivengineclient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\icliententitylist.h">
+    <ClInclude Include="SDK\icliententitylist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\centity.h">
+    <ClInclude Include="SDK\centity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="matchmaking.h">
+    <ClInclude Include="Logic\CMatchmaking.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\eventlistener.h">
+    <ClInclude Include="SDK\eventlistener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\iglobalvars.h">
+    <ClInclude Include="SDK\iglobalvars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CaseOpening\CCaseOpening.h">
+    <ClInclude Include="Logic\CCaseOpening.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="json\json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CaseOpening\CInventory.h">
+    <ClInclude Include="Logic\CInventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\recv.h">
+    <ClInclude Include="SDK\recv.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\hash.h">
+    <ClInclude Include="SDK\hash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\IVModelInfoClient.h">
+    <ClInclude Include="SDK\IVModelInfoClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sdk\IMemAlloc.h">
+    <ClInclude Include="SDK\IMemAlloc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="memory.h">
@@ -239,10 +239,10 @@
     <ClCompile Include="console\console.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CaseOpening\CCaseOpening.cpp">
+    <ClCompile Include="Logic\CCaseOpening.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CaseOpening\CInventory.cpp">
+    <ClCompile Include="Logic\CInventory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

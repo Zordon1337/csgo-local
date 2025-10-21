@@ -1,5 +1,5 @@
 #include "vars.h"
-#include "protos/Messages.h"
+#include "../SDK/proto/Messages.h"
 #include "memory.h"
 #include "console/console.h"
 namespace CMatchmaking {
@@ -202,13 +202,12 @@ namespace CMatchmaking {
 			return;
 
         using DispatchUserMessageFn = bool(__thiscall*)(void*, int msg_type, int32_t nPassthroughFlags, int size, const void* msg);
-        //DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "55 8B EC A1 ? ? ? ? A8 ? 75 ? 83 C8 ? A3 ? ? ? ? E8 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? 83 C4 ? B9"));
         DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(reinterpret_cast<uintptr_t**>((*(void***)g_VClient)[(GameVer > 2018 || (GameVer == 2018 && bPanoramaDll)) ? 38 : 37]));
 
         DispatchUserMessage(g_VClient, 65, 0, msgt.size(), msgt.c_str());
         if (bShouldDrop) {
             CCSUsrMsg_SendPlayerItemDrops drops;
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 5; i++) {
                 CCrateOwned newcase;
                 auto basecase = CCaseOpening::vCrates[rand() % CCaseOpening::vCrates.size()];
                 {

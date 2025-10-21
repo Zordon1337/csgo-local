@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "protos/Messages.h"
-#include "CaseOpening/CCaseOpening.h"
-#include "CaseOpening/CInventory.h"
+#include "sdk/proto/Messages.h"
+#include "Logic/CCaseOpening.h"
+#include "Logic/CInventory.h"
 #include "json/json.hpp"
 #include "sdk/hash.h"
 #include <random>

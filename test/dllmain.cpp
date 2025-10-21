@@ -6,8 +6,8 @@
 #include <string>
 #include <iostream>
 
-#include "protos/ProtoParse.h"
-#include "protos/Messages.h"
+#include "SDK/Proto/ProtoParse.h"
+#include "SDK/Proto/Messages.h"
 
 #include "sdk/eventlistener.h"
 #include "sdk/igameevent.h"

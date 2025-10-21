@@ -1,14 +1,15 @@
 #pragma once
-#include "steamsdk/isteamgamecoordinator.h"
-#include "steamsdk/isteammatchmaking.h"
-#include "steamsdk/isteamuser.h"
-#include "sdk/igameevent.h"
-#include "sdk/ivengineclient.h"
-#include "matchmaking.h"
-#include "sdk/iglobalvars.h"
-#include "sdk/icliententitylist.h"
-#include "sdk/IVModelInfoClient.h"
-#include "sdk/IMemAlloc.h"
+#include "SDK/steamsdk/isteamgamecoordinator.h"
+#include "SDK/steamsdk/isteammatchmaking.h"
+#include "SDK/steamsdk/isteamuser.h"
+#include "SDK/igameevent.h"
+#include "SDK/ivengineclient.h"
+#include "SDK/iglobalvars.h"
+#include "SDK/icliententitylist.h"
+#include "SDK/IVModelInfoClient.h"
+#include "SDK/IMemAlloc.h"
+
+#include "Logic/CMatchmaking.h"
 
 namespace G {
 
