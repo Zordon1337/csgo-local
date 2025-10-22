@@ -339,7 +339,7 @@ int RunLoop() {
         vt[1],
         &CNetworking::hkIsMessageAvailable,
         reinterpret_cast<void**>(&CNetworking::oIsMessageAvailable)
-    );
+    );  
     auto res2 = MH_CreateHook(
         vt[2],
         &CNetworking::hkRetrieveMessage,

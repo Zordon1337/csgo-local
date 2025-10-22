@@ -266,38 +266,46 @@ namespace CMatchmaking {
             // in 2022/2023 the function changed a bit
             GetGameMode = M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? F3 0F 10 05 ? ? ? ? 0F 2E 05 ? ? ? ? 8B 0D ? ? ? ? 9F F6 C4 ? 7A ? 39 0D ? ? ? ? 75 ? A1 ? ? ? ? 33 05 ? ? ? ? A9 ? ? ? ? 74 ? 8B 15 ? ? ? ? 85 D2 74 ? 8B 02 8B CA 68 ? ? ? ? FF 90 ? ? ? ? 8B 0D ? ? ? ? 81 F1 ? ? ? ? 8B C1 C3 8B 01 FF 60 ? E8");
         }
-        if (GetGameMode) {
+        static auto GetGameType = M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? CC CC 8B");
+        if (!GetGameType) {
+            // in 2022/2023 the function changed a bit
+            GetGameType = M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? F3 0F 10 05 ? ? ? ? 0F 2E 05 ? ? ? ? 8B 0D ? ? ? ? 9F F6 C4 ? 7A ? 39 0D ? ? ? ? 75 ? A1 ? ? ? ? 33 05 ? ? ? ? A9 ? ? ? ? 74 ? 8B 15 ? ? ? ? 85 D2 74 ? 8B 02 8B CA 68 ? ? ? ? FF 90 ? ? ? ? 8B 0D ? ? ? ? 81 F1 ? ? ? ? 8B C1 C3 8B 01 FF 60 ? 8B 0D ? ? ? ? 81 F9");
+        }
+        if (GetGameMode && GetGameType) {
 
             CCSUsrMsg_ServerRankUpdate rank;
             CCSUsrMsg_ServerRankUpdate::RankUpdate rankupd;
+            if (reinterpret_cast<int(__thiscall*)(void*)>(GetGameType)(GetGameType) == 0) // could be just !func, just for transparency
+            {
 
-            // for now, the pattern is only for panorama, i need to get it for scaleform too
-            switch (reinterpret_cast<int(__thiscall*)(void*)>(GetGameMode)(GetGameMode)){ // don't touch works :tf:
-                case 1: {
-                    rankupd.account_id().set(V::STEAM_ID);
-                    rankupd.rank_old().set(V::Ranks::Competetive::iCurrentRank);
-                    UpdateRank(1);
-                    rankupd.rank_new().set(V::Ranks::Competetive::iCurrentRank);
-                    rankupd.num_wins().set(V::Ranks::Competetive::iWins);
-                    rankupd.rank_type_id().set(6);
-                    break;
+                // for now, the pattern is only for panorama, i need to get it for scaleform too
+                switch (reinterpret_cast<int(__thiscall*)(void*)>(GetGameMode)(GetGameMode)) { // don't touch works :tf:
+                    case 1: {
+                        rankupd.account_id().set(V::STEAM_ID);
+                        rankupd.rank_old().set(V::Ranks::Competetive::iCurrentRank);
+                        UpdateRank(1);
+                        rankupd.rank_new().set(V::Ranks::Competetive::iCurrentRank);
+                        rankupd.num_wins().set(V::Ranks::Competetive::iWins);
+                        rankupd.rank_type_id().set(6);
+                        break;
+                    }
+                    case 2: {
+
+                        rankupd.account_id().set(V::STEAM_ID);
+                        rankupd.rank_old().set(V::Ranks::Wingman::iCurrentRank);
+                        UpdateRank(2);
+                        rankupd.rank_new().set(V::Ranks::Wingman::iCurrentRank);
+                        rankupd.num_wins().set(V::Ranks::Wingman::iWins);
+                        rankupd.rank_type_id().set(7);
+                        break;
+                    }
                 }
-                case 2: {
+                rank.rank_update().set(rankupd);
+                auto pk = rank.serialize();
+                DispatchUserMessage(g_VClient, 52, 0, pk.size(), pk.c_str());
 
-                    rankupd.account_id().set(V::STEAM_ID);
-                    rankupd.rank_old().set(V::Ranks::Wingman::iCurrentRank);
-                    UpdateRank(2);
-                    rankupd.rank_new().set(V::Ranks::Wingman::iCurrentRank);
-                    rankupd.num_wins().set(V::Ranks::Wingman::iWins);
-                    rankupd.rank_type_id().set(7);
-
-                    break;
-                }
             }
-            rank.rank_update().set(rankupd);
-            auto pk = rank.serialize();
-            DispatchUserMessage(g_VClient, 52, 0, pk.size(), pk.c_str());
-
+                
 
         }
 
