@@ -1,7 +1,7 @@
-#include "vars.h"
+#include "../vars.h"
 #include "../SDK/proto/Messages.h"
 #include "memory.h"
-#include "console/console.h"
+#include "../console/console.h"
 namespace CMatchmaking {
     float flUpdateTime = 0;
     bool bHasMessagePending = false;
@@ -254,13 +254,18 @@ namespace CMatchmaking {
                 V::cases.push_back(newcase);
                 drops.entity_updates().add(item);
             }
-            bShouldDrop = false;
             auto s = drops.serialize();
             DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
+            bShouldDrop = false;
         }
         
         // i could instead just implement convars, but why when you can just do it 10x more unsafe but faster!!!
-        static auto GetGameMode = M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? 35 ? ? ? ? C3 8B 01 FF 60 ? CC CC E8");
+        
+        static auto GetGameMode = M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? CC CC E8");
+        if (!GetGameMode) {
+            // in 2022/2023 the function changed a bit
+            GetGameMode = M::PatternScan(bPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? F3 0F 10 05 ? ? ? ? 0F 2E 05 ? ? ? ? 8B 0D ? ? ? ? 9F F6 C4 ? 7A ? 39 0D ? ? ? ? 75 ? A1 ? ? ? ? 33 05 ? ? ? ? A9 ? ? ? ? 74 ? 8B 15 ? ? ? ? 85 D2 74 ? 8B 02 8B CA 68 ? ? ? ? FF 90 ? ? ? ? 8B 0D ? ? ? ? 81 F1 ? ? ? ? 8B C1 C3 8B 01 FF 60 ? E8");
+        }
         if (GetGameMode) {
 
             CCSUsrMsg_ServerRankUpdate rank;

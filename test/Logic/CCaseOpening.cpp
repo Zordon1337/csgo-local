@@ -254,7 +254,110 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 	}
 	return vPossibleItems[iItemIdx];
 }
+CItem CCaseOpening::GetRandomItem2(int iCaseIdx)
+{
+	CCrate cCase;
+	for (auto it = CCaseOpening::vCrates.begin(); it != CCaseOpening::vCrates.end();) {
+		if (it->iDefIdx == iCaseIdx) {
+			cCase = *it;
+			break;
+		}
+		else {
+			++it;
+		}
+	}
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dist(0, 10000);
+	std::uniform_int_distribution<> distId(0, INT_MAX);
+	std::uniform_int_distribution<> dist3(0, 10);
+	std::uniform_real_distribution<float> distWear(0.f, 1.f);
+	std::uniform_int_distribution<> distPattern(0, 1000);
 
+	int iRarity = dist(gen);
+
+	/*
+	* old chances, aka close to csgo. replaced with increased ones due to the project being "too simple"
+		if (iRarity < 7992)               // 79.92%
+		iRarity = ITEM_RARITY_RARE;       // Mil-Spec (blue)
+	else if (iRarity < 9590)          // +15.98%
+		iRarity = ITEM_RARITY_MYTHICAL;   // Restricted (purple)
+	else if (iRarity < 9910)          // +3.20%
+		iRarity = ITEM_RARITY_LEGENDARY;  // Classified (pink)
+	else if (iRarity < 9974)          // +0.64%
+		iRarity = ITEM_RARITY_ANCIENT;    // Covert (red)
+	else                           // ~0.26%
+		iRarity = ITEM_RARITY_IMMORTAL;   // Exceedingly Rare (gold)
+	*/
+	if (iRarity < 7863)
+		iRarity = ITEM_RARITY_RARE;
+	else if (iRarity < 9435)
+		iRarity = ITEM_RARITY_MYTHICAL;
+	else if (iRarity < 9750)
+		iRarity = ITEM_RARITY_LEGENDARY;
+	else if (iRarity < 9900)
+		iRarity = ITEM_RARITY_ANCIENT;
+	else
+		iRarity = ITEM_RARITY_IMMORTAL;
+	while (iRarity >= ITEM_RARITY_RARE &&
+		!CCaseOpening::DoesCaseHaveThisRarity(iCaseIdx, iRarity)) {
+		iRarity--;
+	}
+	std::vector<CItem> vPossibleItems;
+
+	for (const auto& item : cCase.vItems) {
+		if (item.iRarity == iRarity) vPossibleItems.push_back(item);
+	}
+
+	while (vPossibleItems.size() <= 0) {
+
+		iRarity++;
+		if (iRarity > 7) {
+			iRarity = ITEM_RARITY_COMMON;
+		}
+		for (const auto& item : cCase.vItems) {
+			if (item.iRarity == iRarity) vPossibleItems.push_back(item);
+			break;
+		}
+	}
+	std::uniform_int_distribution<> dist2(0, vPossibleItems.size() - 1);
+	int iItemIdx = dist2(gen);
+	bool isStatTrak = dist3(gen) == 1;
+	if (isStatTrak) {
+		vPossibleItems[iItemIdx].bHasStattrack = true;
+		vPossibleItems[iItemIdx].flStattrack = 0;
+	}
+	else {
+		vPossibleItems[iItemIdx].bHasStattrack = false;
+		vPossibleItems[iItemIdx].flStattrack = 0;
+	}
+	vPossibleItems[iItemIdx].iItemId = distId(gen);
+	vPossibleItems[iItemIdx].flWear = distWear(gen);
+	vPossibleItems[iItemIdx].iPattern = distPattern(gen);
+
+	if (iRarity == 7) {
+		vPossibleItems[iItemIdx].iQuality = (ITEM_QUALITY_UNUSUAL);
+		vPossibleItems[iItemIdx].iRarity = (ITEM_RARITY_ANCIENT);
+	}
+	else {
+		vPossibleItems[iItemIdx].iQuality = 0;
+	}
+	if (cCase.bIsMusicKitBox) {
+		vPossibleItems[iItemIdx].iFlag = 5;
+		if (cCase.szCaseName.find("StatTrak™") != std::string::npos) {
+			vPossibleItems[iItemIdx].bHasStattrack = true; // force stattrack on mvp 
+			vPossibleItems[iItemIdx].flStattrack = 0; // force stattrack on mvp 
+		}
+	}
+	else if (cCase.szCaseName.find("Collectible Pins Capsule") != std::string::npos) {
+		vPossibleItems[iItemIdx].iFlag = 4;
+	}
+	else {
+
+		vPossibleItems[iItemIdx].iFlag = 6;
+	}
+	return vPossibleItems[iItemIdx];
+}
 bool CCaseOpening::DoesCaseHaveThisRarity(int iCaseIdx, int iRarity)
 {
 	for (auto& cCase : CCaseOpening::vCrates) {

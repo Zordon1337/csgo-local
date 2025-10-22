@@ -20,6 +20,7 @@
 #include "sdk/networking.h"
 #include "sdk/recv.h"
 #include "vars.h"
+#include "Logic/CCaseOpening.h"
 enum ClientFrameStage {
     FRAME_UNDEFINED = -1,			// (haven't run any frames yet)
     FRAME_START,
@@ -49,8 +50,11 @@ void __stdcall FrameStage(ClientFrameStage stage) {
     switch (stage) {
         case FRAME_NET_UPDATE_POSTDATAUPDATE_START: {
             // skins
+
+
+
             CEntity* local = G::g_EntityList->GetEntityFromIndex(G::g_EngineClient->GetLocalPlayerIndex());
-            if (!local || local->m_lifeState() != 0 ) {
+            if (!local || local->m_lifeState() != 0) {
                 return;
             }
 
@@ -89,23 +93,75 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 if (skin.bHasStattrack) {
                     weapon->m_nFallbackStatTrak() = skin.flStattrack;
                     weapon->m_iEntityQuality() = 2;
-                    if(skin.iRarity == 6) weapon->m_iEntityQuality() = 3;
+                    if (skin.iRarity == 6) weapon->m_iEntityQuality() = 3;
                 }
                 weapon->m_iAccountID() = G::g_SteamUser->GetSteamID().GetAccountID();
                 weapon->m_iItemIDHigh() = -1;
 
             }
+            /*
+                i was just testing if its possible to sync skins, it is
+            
+            for (int i = 0; i < 64; i++) {
+                CEntity* local = G::g_EntityList->GetEntityFromIndex(i);
+                if (!local || local->m_lifeState() != 0) {
+                    return;
+                }
+
+                auto weapons = local->m_hMyWeapons();
+                for (int i = 0; weapons[i]; i++) {
+
+                    CBaseAttributableItem* weapon = (CBaseAttributableItem*)G::g_EntityList->GetClientEntityFromHandle(weapons[i]);
+                    if (!weapon) break;
+
+                    int idx = weapon->m_iItemDefinitionIndex();
+
+                    auto skin = CInventory::GetItem(local->m_iTeamNum(), CInventory::GetSlotID(idx), idx);
+                    switch (idx) {
+                    case WEAPON_KNIFE_T: {
+                        weapon->m_iItemDefinitionIndex() = CInventory::GetKnifeEquipped(2);
+                        weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
+                        skin = CInventory::GetItem(2, 0, weapon->m_iItemDefinitionIndex());
+                        break;
+                    }
+                    case WEAPON_KNIFE: {
+                        weapon->m_iItemDefinitionIndex() = CInventory::GetKnifeEquipped(3);
+                        weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
+                        skin = CInventory::GetItem(3, 0, weapon->m_iItemDefinitionIndex());
+
+                        break;
+                    }
+                    default: {
+
+                        break;
+                    }
+                    }
+                    weapon->m_nFallbackPaintKit() = (int)skin.flPaintKit;
+                    weapon->m_iEntityQuality() = (int)skin.iQuality;
+                    weapon->m_flFallbackWear() = skin.flWear;
+                    weapon->m_nFallbackSeed() = skin.iPattern;
+                    if (skin.bHasStattrack) {
+                        weapon->m_nFallbackStatTrak() = skin.flStattrack;
+                        weapon->m_iEntityQuality() = 2;
+                        if (skin.iRarity == 6) weapon->m_iEntityQuality() = 3;
+                    }
+                    weapon->m_iAccountID() = G::g_SteamUser->GetSteamID().GetAccountID();
+                    weapon->m_iItemIDHigh() = -1;
+
+                }
+            }*/
             CPlayerResource* g_player_resource = GetPlayerResourcePointer();
 
             // V::netvars[hash::CompileTime(var)]
             auto offset = V::netvars[hash::CompileTime("CCSPlayerResource->m_nMusicID")];
             int playerIndex = G::g_EngineClient->GetLocalPlayerIndex();
 
+
             int* musicID = reinterpret_cast<int*>(
                 reinterpret_cast<uintptr_t>(g_player_resource) + offset + playerIndex * 4
                 );
-
-            *musicID = CInventory::GetCurrentMusicKit();
+            if (musicID != nullptr)
+                *musicID = CInventory::GetCurrentMusicKit();
         }
     }
     oFrameStage(stage);
@@ -383,8 +439,6 @@ int RunLoop() {
         }
     }
     if (bSaveRequired) V::SaveConfig();
-
-
 
     V::PENDING_UPDATE = true;
 

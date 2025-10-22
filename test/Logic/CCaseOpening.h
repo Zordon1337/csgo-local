@@ -64,6 +64,7 @@ namespace CCaseOpening {
 	std::vector<CCrate> vCrates;
 	void CreateCrates();
 	CItem GetRandomItem(int iCaseIdx);
+	CItem GetRandomItem2(int iCaseIdx);
 	bool DoesCaseHaveThisRarity(int iCaseIdx, int iRarity);
 	int GetAmountOfCases(int iCaseIdx);
 }
