@@ -133,6 +133,46 @@ struct CMsgClientToGCUnlockCrate : pbmsg<2> {
 	PBFIELD(1, types::Sfixed64, crate_item_id);
 	PBFIELD(2, types::Sfixed64, key_item_id);
 };
+
+struct GlobalStatistics : pbmsg<15> {
+
+	PBMSG_CTOR;
+};
+
+
+struct CMsgGCCStrike15_v2_MatchmakingGC2ClientUpdate : pbmsg<17> {
+
+	struct Note : pbmsg<4> {
+
+		PBMSG_CTOR;
+		PBFIELD(1, types::Int32, types);
+		PBFIELD(2, types::Int32, region_id);
+		PBFIELD(3, types::Float, region_r);
+		PBFIELD(4, types::Float, distance);
+	};
+	struct IpAddressMask : pbmsg<6> {
+
+		PBMSG_CTOR;
+	};
+	PBMSG_CTOR;
+	PBFIELD(1, types::Int32, matchmaking);
+	PBFIELD(2, types::Uint32, waiting_account_id_sessions);
+	PBFIELD(3, types::String, error);
+	PBFIELD(6, types::Uint32, ongoingmatch_account_id_sessions);
+	PBFIELD(7, GlobalStatistics, global_stats);
+	PBFIELD(8, types::Uint32, failping_account_id_sessions);
+	PBFIELD(9, types::Uint32, penalty_account_id_sessions);
+	PBFIELD(10, types::Uint32, failready_account_id_sessions);
+	PBFIELD(11, types::Uint32, vacbanned_account_id_sessions);
+	PBFIELD(12, CMsgGCCStrike15_v2_MatchmakingGC2ClientUpdate::IpAddressMask, server_ipaddress_mask);
+	PBFIELD(13, CMsgGCCStrike15_v2_MatchmakingGC2ClientUpdate::Note, notes);
+	PBFIELD(14, types::Uint32, penalty_account_id_sessions_green);
+	PBFIELD(15, types::Uint32, insufficientlevel_sessions);
+	PBFIELD(16, types::Uint32, vsncheck_account_id_sessions);
+	PBFIELD(17, types::Uint32, launcher_mismatch_sessions);
+
+
+};
 struct CMsgClientWelcome : pbmsg<11> {
 
 	struct SubscribedType : pbmsg<2> {

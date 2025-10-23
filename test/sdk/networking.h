@@ -258,7 +258,9 @@ public:
 
             console::log(std::format("Received packet {}", uMsgType).c_str());
             switch (uMsgType) {
-                case 9194: {
+                case 9104: {
+
+                    *pcubMsgSize = 0;
                     break;
                 }
                 case 4004: {
@@ -267,9 +269,10 @@ public:
                         if (!msg.outofdate_subscribed_caches().has())
                             break;
 
+                        msg.version().set(2000524);
                         auto cache = msg.outofdate_subscribed_caches().get();
 
-
+                        cache.version().set(2000524);
 
 
                         auto objects = cache.objects().get_all();
