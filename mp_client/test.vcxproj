@@ -160,6 +160,7 @@
     <ClInclude Include="Minhook\Minhook\hde\table32.h" />
     <ClInclude Include="Minhook\Minhook\hde\table64.h" />
     <ClInclude Include="Minhook\Minhook\trampoline.h" />
+    <ClInclude Include="SDK\http.h" />
     <ClInclude Include="SDK\Proto\Messages.h" />
     <ClInclude Include="SDK\Proto\pbwrap.hpp" />
     <ClInclude Include="SDK\Proto\ProtoParse.h" />

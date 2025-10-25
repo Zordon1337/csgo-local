@@ -1,5 +1,6 @@
 #include "CInventory.h"
 #include "../sdk/networking.h"
+#include "../SDK/http.h"
 int CInventory::GetSlotID(int definition_index)
 {
 	switch (definition_index)
@@ -90,7 +91,7 @@ int CInventory::GetSlotID(int definition_index)
 bool CInventory::EquipSlot(long itemId, int teamId, int newSlot)
 {
 	CInventory::Equips[newSlot][teamId] = itemId;
-
+	http::SendEquipToServer(itemId, teamId, newSlot, CInventory::GetItemPtr(teamId, newSlot, CInventory::GetItem(teamId, newSlot, 0).iDefIdx));
 	return true;
 }
 

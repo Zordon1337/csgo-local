@@ -363,5 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 CSGOLocal/
-/CSGOLocal/csgo_gc.dll
-/CSGOLocal/Launcher.exe
+/CSGOLocal/*
+*.exp

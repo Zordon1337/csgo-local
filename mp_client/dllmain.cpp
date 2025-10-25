@@ -21,6 +21,7 @@
 #include "sdk/recv.h"
 #include "vars.h"
 #include "Logic/CCaseOpening.h"
+#include "SDK/http.h"
 enum ClientFrameStage {
     FRAME_UNDEFINED = -1,			// (haven't run any frames yet)
     FRAME_START,
@@ -52,11 +53,13 @@ void __stdcall FrameStage(ClientFrameStage stage) {
             // skins
 
 
-
             CEntity* local = G::g_EntityList->GetEntityFromIndex(G::g_EngineClient->GetLocalPlayerIndex());
             if (!local || local->m_lifeState() != 0) {
                 return;
             }
+
+            PlayerInfo plrinfo{};
+            if (!G::g_EngineClient->GetPlayerInfo(G::g_EngineClient->GetLocalPlayerIndex(), &plrinfo)) return;
 
             auto weapons = local->m_hMyWeapons();
             for (int i = 0; weapons[i]; i++) {
@@ -99,16 +102,32 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 weapon->m_iItemIDHigh() = -1;
 
             }
-            /*
-                i was just testing if its possible to sync skins, it is
             
             for (int i = 0; i < 64; i++) {
-                CEntity* local = G::g_EntityList->GetEntityFromIndex(i);
-                if (!local || local->m_lifeState() != 0) {
-                    return;
+                CEntity* player = G::g_EntityList->GetEntityFromIndex(i);
+                if (!player || player->m_lifeState() != 0 || player == local) {
+                    continue;
                 }
-
-                auto weapons = local->m_hMyWeapons();
+                PlayerInfo plrinfo{};
+                if (!G::g_EngineClient->GetPlayerInfo(i, &plrinfo)) continue;
+				if (plrinfo.fakeplayer) continue;
+				if (plrinfo.iSteamID < 1) continue;
+                CInventory::CRemoteInventory inv;
+                bool foundInventory = false;
+                for (int i = 0; i < CInventory::remoteInventories.size(); i++) {
+					if (CInventory::remoteInventories[i].steamID == plrinfo.iSteamID) {
+                        inv = CInventory::remoteInventories[i]; foundInventory = true;
+						break;
+					}
+                }
+                if (!foundInventory) {
+					inv = http::getRemoteInventory(plrinfo.iSteamID);
+					for (int i = 0; i < inv.equips.size(); i++) {
+						console::log(std::format("got remote equip: slotid {} teamid {} itemid {}", inv.equips[i].slotId, inv.equips[i].teamId, inv.equips[i].item.iItemId).c_str());
+					}
+                    inv.steamID = plrinfo.iSteamID;
+                }
+                auto weapons = player->m_hMyWeapons();
                 for (int i = 0; weapons[i]; i++) {
 
                     CBaseAttributableItem* weapon = (CBaseAttributableItem*)G::g_EntityList->GetClientEntityFromHandle(weapons[i]);
@@ -116,18 +135,18 @@ void __stdcall FrameStage(ClientFrameStage stage) {
 
                     int idx = weapon->m_iItemDefinitionIndex();
 
-                    auto skin = CInventory::GetItem(local->m_iTeamNum(), CInventory::GetSlotID(idx), idx);
+                    auto skin = inv.getEquip(CInventory::GetSlotID(idx), player->m_iTeamNum());
                     switch (idx) {
                     case WEAPON_KNIFE_T: {
-                        weapon->m_iItemDefinitionIndex() = CInventory::GetKnifeEquipped(2);
+						weapon->m_iItemDefinitionIndex() = inv.getEquip(0, 2).iDefIdx;
                         weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
-                        skin = CInventory::GetItem(2, 0, weapon->m_iItemDefinitionIndex());
+                        skin = inv.getEquip(0, 2);
                         break;
                     }
                     case WEAPON_KNIFE: {
-                        weapon->m_iItemDefinitionIndex() = CInventory::GetKnifeEquipped(3);
+                        weapon->m_iItemDefinitionIndex() = inv.getEquip(0, 3).iDefIdx;
                         weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
-                        skin = CInventory::GetItem(3, 0, weapon->m_iItemDefinitionIndex());
+                        skin = inv.getEquip(0, 3);
 
                         break;
                     }
@@ -145,11 +164,11 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                         weapon->m_iEntityQuality() = 2;
                         if (skin.iRarity == 6) weapon->m_iEntityQuality() = 3;
                     }
-                    weapon->m_iAccountID() = G::g_SteamUser->GetSteamID().GetAccountID();
+                    weapon->m_iAccountID() = 
                     weapon->m_iItemIDHigh() = -1;
 
                 }
-            }*/
+            }
             CPlayerResource* g_player_resource = GetPlayerResourcePointer();
 
             // V::netvars[hash::CompileTime(var)]

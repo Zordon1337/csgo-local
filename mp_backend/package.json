@@ -1,0 +1,14 @@
+{
+  "name": "mp_backend",
+  "version": "1.0.0",
+  "description": "backend for CSGOLocal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ZRD",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

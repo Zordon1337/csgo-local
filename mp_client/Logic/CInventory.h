@@ -92,6 +92,37 @@ enum ItemDefinitionIndex : int {
 	GLOVE_HYDRA = 5035
 };
 namespace CInventory {
+	class CRemoteEquip {
+	public:
+		int slotId;
+		int teamId;
+		CItem item;
+	};
+	class CRemoteInventory {
+		
+	public:
+		int steamID;
+
+		std::vector<CRemoteEquip> equips;
+		CItem getEquip(int slotId, int teamId) {
+			for (const auto& equip : equips) {
+				if (equip.slotId == slotId && equip.teamId == teamId) {
+					return equip.item;
+				}
+			}
+		}
+		void setEquip(int slotId, int teamId, const CItem& item) {
+			for (auto& equip : equips) {
+				if (equip.slotId == slotId && equip.teamId == teamId) {
+					equip.item = item;
+					return;
+				}
+			}
+			equips.push_back({ slotId, teamId, item });
+		}
+
+	};
+	std::vector< CRemoteInventory> remoteInventories;
 	long Equips[255][255];
 	// https://github.com/0TheSpy/Seaside/blob/12dd1b6d82a4c1035cde6ebcd3ec5f4f8fe73e1e/SpyCustom/inventory_changer.h#L316C1-L397C2
 	int GetSlotID(int definition_index);
