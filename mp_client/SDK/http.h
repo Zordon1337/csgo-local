@@ -13,7 +13,7 @@ namespace http {
             WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
         if (!hSession) return result;
 
-        HINTERNET hConnect = WinHttpConnect(hSession, url.c_str(), INTERNET_DEFAULT_HTTP_PORT, 0);
+        HINTERNET hConnect = WinHttpConnect(hSession, url.c_str(), 3000, 0);
         HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"GET", path.c_str(), NULL,
             WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
 
@@ -36,23 +36,21 @@ namespace http {
         WinHttpCloseHandle(hSession);
         return result;
     }
-    bool SendEquipToServer(long itemId, int teamId, int slotId, const CItem& item) {
-        std::ostringstream oss;
-        oss << "{"
-            << "\"userId\":" << V::STEAM_ID << ","
-            << "\"defIdx\":" << item.iDefIdx << ","
-            << "\"slotId\":" << slotId << ","
-            << "\"teamId\":" << teamId << ","
-            << "\"paintKit\":" << item.flPaintKit << ","
-            << "\"hasStattack\":" << (item.bHasStattrack ? "true" : "false") << ","
-            << "\"stattrack\":" << item.flStattrack << ","
-            << "\"wear\":" << item.flWear << ","
-            << "\"pattern\":" << item.iPattern << ","
-            << "\"quality\":" << item.iQuality
-            << "}";
+    bool SendEquipToServer(long itemId, int teamId, int slotId, const CItem item) {
+        nlohmann::json j;
+        j["userId"] = V::STEAM_ID;
+        j["defIdx"] = item.iDefIdx;
+        j["slotId"] = slotId;
+        j["teamId"] = teamId;
+        j["paintKit"] = item.flPaintKit;
+        j["hasStattack"] = item.bHasStattrack;
+        j["stattrack"] = item.flStattrack;
+        j["wear"] = item.flWear;
+        j["pattern"] = item.iPattern;
+        j["quality"] = item.iQuality;
 
-        std::string jsonBody = oss.str();
-
+        std::string jsonBody = j.dump();
+        console::log(jsonBody.c_str());
         HINTERNET hSession = WinHttpOpen(L"EquipClient/1.0",
             WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
             WINHTTP_NO_PROXY_NAME,
@@ -117,21 +115,10 @@ namespace http {
         WinHttpCloseHandle(hSession);
         return bResults;
     }
-    /*
-    * let userEquips = [
-    { userId: 0, defIdx: 0, slotId: 0, teamId: 0, paintKit: 0, hasStattack: false, stattrack: -1, wear: 0, pattern: 0, quality: 0 },
-    ]
 
-    app.get("/get_user_equips", (req, res) => {
-        let userId = parseInt(req.query.userId);
-        let equips = userEquips.filter(e => e.userId === userId);
-        res.json(equips);
-    });
-
-    */
     CInventory::CRemoteInventory getRemoteInventory(int SteamId) {
 		console::log(std::format("[equip-client] Fetching remote inventory for {}...", SteamId).c_str());
-        auto res = http::Get(L"http://127.0.0.1", L"/get_user_equips?userId=" + std::to_wstring(SteamId));
+        auto res = http::Get(L"127.0.0.1", L"/get_user_equips?userId=" + std::to_wstring(SteamId));
 		CInventory::CRemoteInventory inventory;
 		try {
 			auto json = nlohmann::json::parse(res);
@@ -149,9 +136,10 @@ namespace http {
 				inventory.equips.push_back(remoteItem);
 			}
 		}
-		catch (...) {
-			console::log("[equip-client] Failed to parse inventory JSON response");
-		}
+        catch (const std::exception& e) {
+            console::log(std::format("[equip-client] JSON parse failed: {}", e.what()).c_str());
+        }
+
 		return inventory;
     }
 }

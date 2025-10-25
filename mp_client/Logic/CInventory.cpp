@@ -90,8 +90,20 @@ int CInventory::GetSlotID(int definition_index)
 }
 bool CInventory::EquipSlot(long itemId, int teamId, int newSlot)
 {
+	if (!V::MainInit) {
+		CInventory::CRemoteEquip equip;
+		equip.item.iItemId = itemId;
+		equip.teamId = teamId;
+		equip.slotId = newSlot;
+
+
+		V::pendingEquipSlots.push_back(equip);
+		return false;
+	}
 	CInventory::Equips[newSlot][teamId] = itemId;
-	http::SendEquipToServer(itemId, teamId, newSlot, CInventory::GetItemPtr(teamId, newSlot, CInventory::GetItem(teamId, newSlot, 0).iDefIdx));
+	auto item = CInventory::GetItemById(itemId);
+
+	http::SendEquipToServer(itemId, teamId, newSlot, item);
 	return true;
 }
 
@@ -115,6 +127,14 @@ CItem& CInventory::GetItemByIdPtr(long itemId)
 	}
 	CItem item = {};
 	return item;
+}
+
+CItem CInventory::GetItemById(long itemId)
+{
+	for (CItem& item : V::items) {
+		if (itemId == item.iItemId) return item;
+	}
+	return {};
 }
 CItem& CInventory::GetItemPtr(int teamId, int slotId, int idx)
 {

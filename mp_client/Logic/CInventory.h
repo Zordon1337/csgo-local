@@ -110,6 +110,7 @@ namespace CInventory {
 					return equip.item;
 				}
 			}
+			return {-1};
 		}
 		void setEquip(int slotId, int teamId, const CItem& item) {
 			for (auto& equip : equips) {
@@ -130,6 +131,7 @@ namespace CInventory {
 	bool isEquipped(long itemId, int teamId, int newSlot);
 	CItem GetItem(int teamId, int slotId, int idx);
 	CItem& GetItemByIdPtr(long itemId);
+	CItem GetItemById(long itemId);
 	CItem& GetItemPtr(int teamId, int slotId, int idx);
 	int GetCurrentMusicKit();
 	ItemDefinitionIndex GetKnifeEquipped(int teamId);

@@ -22,12 +22,14 @@ let userEquips = [
 app.get("/get_user_equips", (req, res) => {
     let userId = parseInt(req.query.userId);
     let equips = userEquips.filter(e => e.userId === userId);
+    console.log(`Get equips for user ${userId}:`, equips);
     res.json(equips);
 });
 
 app.post("/set_user_equip", exp.json(), (req, res) => {
     let equip = req.body;
-    let index = userEquips.findIndex(e => e.userId === equip.userId && e.slotId === equip.slotId);
+    console.log("Set equip:", equip);
+    let index = userEquips.findIndex(e => e.userId === equip.userId && e.slotId === equip.slotId && e.teamId === equip.teamId);
     if (index !== -1) {
         userEquips[index] = equip;
     } else {

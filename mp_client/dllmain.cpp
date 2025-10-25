@@ -51,9 +51,80 @@ void __stdcall FrameStage(ClientFrameStage stage) {
     switch (stage) {
         case FRAME_NET_UPDATE_POSTDATAUPDATE_START: {
             // skins
-
-
             CEntity* local = G::g_EntityList->GetEntityFromIndex(G::g_EngineClient->GetLocalPlayerIndex());
+
+            
+            for (int i = 0; i < 64; i++) {
+                CEntity* player = G::g_EntityList->GetEntityFromIndex(i);
+                if (!player || player->m_lifeState() != 0 || player == local) {
+                    continue;
+                }
+                PlayerInfo plrinfo{};
+                if (!G::g_EngineClient->GetPlayerInfo(i, &plrinfo)) continue;
+				if (plrinfo.fakeplayer) continue;
+				if (plrinfo.iSteamID < 1) continue;
+                CInventory::CRemoteInventory inv;
+                bool foundInventory = false;
+                for (int i = 0; i < CInventory::remoteInventories.size(); i++) {
+					if (CInventory::remoteInventories[i].steamID == plrinfo.iSteamID) {
+                        inv = CInventory::remoteInventories[i]; foundInventory = true;
+						break;
+					}
+                }
+                if (!foundInventory) {
+					inv = http::getRemoteInventory(plrinfo.iSteamID);
+					for (int i = 0; i < inv.equips.size(); i++) {
+						console::log(std::format("got remote equip: slotid {} teamid {} itemid {}", inv.equips[i].slotId, inv.equips[i].teamId, inv.equips[i].item.iItemId).c_str());
+					}
+                    inv.steamID = plrinfo.iSteamID;
+
+					CInventory::remoteInventories.push_back(inv);
+                }
+                auto weapons = player->m_hMyWeapons();
+                for (int i = 0; weapons[i]; i++) {
+
+                    CBaseAttributableItem* weapon = (CBaseAttributableItem*)G::g_EntityList->GetClientEntityFromHandle(weapons[i]);
+                    if (!weapon) continue;
+
+                    int idx = weapon->m_iItemDefinitionIndex();
+
+                    auto skin = inv.getEquip(CInventory::GetSlotID(idx), player->m_iTeamNum());
+					if (skin.iDefIdx == -1)
+						continue;
+                    switch (idx) {
+                    case WEAPON_KNIFE_T: {
+						weapon->m_iItemDefinitionIndex() = inv.getEquip(0, 2).iDefIdx;
+                        weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
+                        skin = inv.getEquip(0, 2);
+                        continue;
+                    }
+                    case WEAPON_KNIFE: {
+                        weapon->m_iItemDefinitionIndex() = inv.getEquip(0, 3).iDefIdx;
+                        weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
+                        skin = inv.getEquip(0, 3);
+                        continue;
+                    }
+                    default: {
+
+                        break;
+                    }
+                    }
+                    weapon->m_nFallbackPaintKit() = (int)skin.flPaintKit;
+                    weapon->m_iEntityQuality() = (int)skin.iQuality;
+                    weapon->m_flFallbackWear() = skin.flWear;
+                    weapon->m_nFallbackSeed() = skin.iPattern;
+                    if (skin.bHasStattrack) {
+                        weapon->m_nFallbackStatTrak() = skin.flStattrack;
+                        weapon->m_iEntityQuality() = 2;
+                        if (skin.iRarity == 6) weapon->m_iEntityQuality() = 3;
+                    }
+                    weapon->m_iAccountID() = 
+                    weapon->m_iItemIDHigh() = -1;
+
+                }
+            }
+
+
             if (!local || local->m_lifeState() != 0) {
                 return;
             }
@@ -102,73 +173,7 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 weapon->m_iItemIDHigh() = -1;
 
             }
-            
-            for (int i = 0; i < 64; i++) {
-                CEntity* player = G::g_EntityList->GetEntityFromIndex(i);
-                if (!player || player->m_lifeState() != 0 || player == local) {
-                    continue;
-                }
-                PlayerInfo plrinfo{};
-                if (!G::g_EngineClient->GetPlayerInfo(i, &plrinfo)) continue;
-				if (plrinfo.fakeplayer) continue;
-				if (plrinfo.iSteamID < 1) continue;
-                CInventory::CRemoteInventory inv;
-                bool foundInventory = false;
-                for (int i = 0; i < CInventory::remoteInventories.size(); i++) {
-					if (CInventory::remoteInventories[i].steamID == plrinfo.iSteamID) {
-                        inv = CInventory::remoteInventories[i]; foundInventory = true;
-						break;
-					}
-                }
-                if (!foundInventory) {
-					inv = http::getRemoteInventory(plrinfo.iSteamID);
-					for (int i = 0; i < inv.equips.size(); i++) {
-						console::log(std::format("got remote equip: slotid {} teamid {} itemid {}", inv.equips[i].slotId, inv.equips[i].teamId, inv.equips[i].item.iItemId).c_str());
-					}
-                    inv.steamID = plrinfo.iSteamID;
-                }
-                auto weapons = player->m_hMyWeapons();
-                for (int i = 0; weapons[i]; i++) {
 
-                    CBaseAttributableItem* weapon = (CBaseAttributableItem*)G::g_EntityList->GetClientEntityFromHandle(weapons[i]);
-                    if (!weapon) break;
-
-                    int idx = weapon->m_iItemDefinitionIndex();
-
-                    auto skin = inv.getEquip(CInventory::GetSlotID(idx), player->m_iTeamNum());
-                    switch (idx) {
-                    case WEAPON_KNIFE_T: {
-						weapon->m_iItemDefinitionIndex() = inv.getEquip(0, 2).iDefIdx;
-                        weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
-                        skin = inv.getEquip(0, 2);
-                        break;
-                    }
-                    case WEAPON_KNIFE: {
-                        weapon->m_iItemDefinitionIndex() = inv.getEquip(0, 3).iDefIdx;
-                        weapon->m_nModelIndex() = G::g_modelinfo->GetModelIndex(CInventory::FindKnifeModel((ItemDefinitionIndex)weapon->m_iItemDefinitionIndex()));
-                        skin = inv.getEquip(0, 3);
-
-                        break;
-                    }
-                    default: {
-
-                        break;
-                    }
-                    }
-                    weapon->m_nFallbackPaintKit() = (int)skin.flPaintKit;
-                    weapon->m_iEntityQuality() = (int)skin.iQuality;
-                    weapon->m_flFallbackWear() = skin.flWear;
-                    weapon->m_nFallbackSeed() = skin.iPattern;
-                    if (skin.bHasStattrack) {
-                        weapon->m_nFallbackStatTrak() = skin.flStattrack;
-                        weapon->m_iEntityQuality() = 2;
-                        if (skin.iRarity == 6) weapon->m_iEntityQuality() = 3;
-                    }
-                    weapon->m_iAccountID() = 
-                    weapon->m_iItemIDHigh() = -1;
-
-                }
-            }
             CPlayerResource* g_player_resource = GetPlayerResourcePointer();
 
             // V::netvars[hash::CompileTime(var)]
@@ -430,39 +435,49 @@ int RunLoop() {
 
     
     Setup(); // setup netvars / TODO: MOVE TO OTHER FILE
-    bool bSaveRequired = false;
-    for (auto medal : V::othermedals) {
-        CItem item;
+    {
+        bool bSaveRequired = false;
+        for (auto medal : V::othermedals) {
+            CItem item;
 
-        item.bHasStattrack = false;
-        item.flPaintKit = 0;
-        item.flStattrack = 0;
-        item.flWear = 0;
-        item.iDefIdx = medal;
-        item.iItemId = rand() % 10000;
-        item.iPattern = 0;
-        item.iFlag = 0;
-        item.iQuality = 4;
-        item.iRarity = 6;
-        V::items.push_back(item);
-        V::othermedals[medal] = NULL;
-        bSaveRequired = true;
-    }
-    for (auto it = V::items.begin(); it != V::items.end();) {
-        if (it->iDefIdx == 0) {
-            it = V::items.erase(it);
+            item.bHasStattrack = false;
+            item.flPaintKit = 0;
+            item.flStattrack = 0;
+            item.flWear = 0;
+            item.iDefIdx = medal;
+            item.iItemId = rand() % 10000;
+            item.iPattern = 0;
+            item.iFlag = 0;
+            item.iQuality = 4;
+            item.iRarity = 6;
+            V::items.push_back(item);
+            V::othermedals[medal] = NULL;
             bSaveRequired = true;
         }
-        else {
-            ++it;
+        for (auto it = V::items.begin(); it != V::items.end();) {
+            if (it->iDefIdx == 0) {
+                it = V::items.erase(it);
+                bSaveRequired = true;
+            }
+            else {
+                ++it;
+            }
         }
+        if (bSaveRequired) 
+            V::SaveConfig();
     }
-    if (bSaveRequired) V::SaveConfig();
 
+    V::MainInit = true;
     V::PENDING_UPDATE = true;
 
 
 
+    if (V::pendingEquipSlots.size() > 0) {
+		for (auto& equip : V::pendingEquipSlots) {
+			CInventory::EquipSlot(equip.item.iItemId, equip.teamId, equip.slotId);
+		}
+		V::pendingEquipSlots.clear();
+    }
 
     while (true) {
         if (V::PENDING_UPDATE) {

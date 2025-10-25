@@ -18,34 +18,38 @@ namespace V {
 		static const std::uint32_t offset = V::netvars[hash::CompileTime(var)]; \
 		return *reinterpret_cast<std::add_pointer_t<__VA_ARGS__>>(std::uint32_t(this) + offset); \
 	} 
-    float flXpMultipler = 2.f;
-    int iServiceMedalLevel = 0;
-    int iLevel = 1;
-    int iXP = 0;
-    std::vector<int> othermedals{ };
-    std::vector<CItem> items{ };
-    std::vector<CCrateOwned> cases{ };
-    int STEAM_ID = 0;
-    bool PENDING_UPDATE = false;
-    int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
+	inline float flXpMultipler = 2.f;
+	inline int iServiceMedalLevel = 0;
+	inline int iLevel = 1;
+	inline int iXP = 0;
+	inline std::vector<int> othermedals{ };
+	inline std::vector<CItem> items{ };
+	inline std::vector<CCrateOwned> cases{ };
+	inline int STEAM_ID = 0;
+	inline bool PENDING_UPDATE = false;
+
+	inline bool MainInit = false;
+	inline std::vector<CInventory::CRemoteEquip> pendingEquipSlots{};
+
+	inline int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
 	namespace Ranks::Wingman {
-		int iCurrentRank = 0;
-		int iWins = 8;
-		int iLosses = 2;
-		int iWinStreak = 2;
-		int iLossStreak = 0;
-		int iElo = 100; // iWinStreak/iLossStreak * 25
+		inline int iCurrentRank = 0;
+		inline int iWins = 8;
+		inline int iLosses = 2;
+		inline int iWinStreak = 2;
+		inline int iLossStreak = 0;
+		inline int iElo = 100; // iWinStreak/iLossStreak * 25
 	}
 	namespace Ranks::Competetive {
-		int iCurrentRank = 0;
-		int iWins = 8;
-		int iLosses = 2;
-		int iWinStreak = 2;
-		int iLossStreak = 0;
-		int iElo = 100;
+		inline int iCurrentRank = 0;
+		inline int iWins = 8;
+		inline int iLosses = 2;
+		inline int iWinStreak = 2;
+		inline int iLossStreak = 0;
+		inline int iElo = 100;
 
 	}
-	RecvVarProxyFn oViewModelProxy;
+	inline RecvVarProxyFn oViewModelProxy;
 
     void SaveConfig() {
 		system("mkdir C:\\CSGO_LOCAL");
