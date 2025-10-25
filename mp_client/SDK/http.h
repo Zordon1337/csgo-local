@@ -36,6 +36,89 @@ namespace http {
         WinHttpCloseHandle(hSession);
         return result;
     }
+    bool SendUserProfileToServer() {
+        // { userId: 1, mmrank : 0, wmrank : 0, mmwins : 0, wmwins : 0, lvl : 1, xp : 0, medals : [9174] },
+        nlohmann::json j;
+		j["userId"] = V::STEAM_ID;
+		j["mmrank"] = V::Ranks::Competetive::iCurrentRank;
+		j["wmrank"] = V::Ranks::Wingman::iCurrentRank;
+		j["mmwins"] = V::Ranks::Competetive::iWins;
+		j["wmwins"] = V::Ranks::Wingman::iWins;
+		j["lvl"] = V::iLevel;
+		j["xp"] = V::iXP;
+        std::vector<int> medals = {};
+        for (auto item : V::items) {
+            if (item.iDefIdx > 900) {
+				medals.push_back(item.iDefIdx);
+            }
+        }
+        j["medals"] = medals;
+		std::string jsonBody = j.dump();
+        HINTERNET hSession = WinHttpOpen(L"EquipClient/1.0",
+            WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
+            WINHTTP_NO_PROXY_NAME,
+            WINHTTP_NO_PROXY_BYPASS,
+            0);
+
+        if (!hSession) return false;
+
+        HINTERNET hConnect = WinHttpConnect(hSession, L"127.0.0.1", 3000, 0);
+        if (!hConnect) {
+            WinHttpCloseHandle(hSession);
+            return false;
+        }
+
+        HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"POST", L"/set_user_profile",
+            NULL, WINHTTP_NO_REFERER,
+            WINHTTP_DEFAULT_ACCEPT_TYPES,
+            0);
+
+        if (!hRequest) {
+            WinHttpCloseHandle(hConnect);
+            WinHttpCloseHandle(hSession);
+            return false;
+        }
+
+        BOOL bResults = WinHttpAddRequestHeaders(hRequest,
+            L"Content-Type: application/json\r\n",
+            -1L, WINHTTP_ADDREQ_FLAG_ADD);
+
+
+        bResults = WinHttpSendRequest(
+            hRequest,
+            WINHTTP_NO_ADDITIONAL_HEADERS,
+            0,
+            (LPVOID)jsonBody.c_str(),
+            (DWORD)jsonBody.size(),
+            (DWORD)jsonBody.size(),
+            0
+        );
+
+
+
+        if (bResults)
+            bResults = WinHttpReceiveResponse(hRequest, NULL);
+
+        if (bResults) {
+            DWORD dwSize = 0;
+            do {
+                WinHttpQueryDataAvailable(hRequest, &dwSize);
+                if (!dwSize) break;
+
+                std::string buffer(dwSize, 0);
+                DWORD dwDownloaded = 0;
+                WinHttpReadData(hRequest, &buffer[0], dwSize, &dwDownloaded);
+                std::cout << "[equip-server] " << buffer << "\n";
+
+            } while (dwSize > 0);
+        }
+
+        WinHttpCloseHandle(hRequest);
+        WinHttpCloseHandle(hConnect);
+        WinHttpCloseHandle(hSession);
+        return bResults;
+
+    }
     bool SendEquipToServer(long itemId, int teamId, int slotId, const CItem item) {
         nlohmann::json j;
         j["userId"] = V::STEAM_ID;
@@ -50,7 +133,6 @@ namespace http {
         j["quality"] = item.iQuality;
 
         std::string jsonBody = j.dump();
-        console::log(jsonBody.c_str());
         HINTERNET hSession = WinHttpOpen(L"EquipClient/1.0",
             WINHTTP_ACCESS_TYPE_DEFAULT_PROXY,
             WINHTTP_NO_PROXY_NAME,
@@ -142,4 +224,6 @@ namespace http {
 
 		return inventory;
     }
+
+
 }

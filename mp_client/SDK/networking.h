@@ -7,6 +7,7 @@
 #include "../globals.h"
 #include "../Logic/CInventory.h"
 #include "../console/console.h"
+#include "http.h"
 
 class CNetworking {
 private:
@@ -261,6 +262,71 @@ public:
                 case 9104: {
 
                     *pcubMsgSize = 0;
+                    break;
+                }
+                case 9128: {
+					CMsgGCCStrike15_v2_PlayersProfile request((void*)((DWORD)pubDest + 8), *pcubMsgSize - 8);
+                    int id = request.account_profiles().get(0).account_id().safeget();
+                    auto response = http::Get(L"127.0.0.1", L"/get_user_profile?userId=" + std::to_wstring(id));
+
+                    try {
+                        auto resJson = nlohmann::json::parse(response);
+
+                        CMsgGCCStrike15_v2_PlayersProfile responseMsg;
+                        MatchmakingGC2ClientHello responseProfile;
+                        responseProfile.account_id().set(id);
+                        responseProfile.player_level().set(resJson.value("lvl", 1));
+                        responseProfile.player_cur_xp().set(resJson.value("xp", 0));
+                        auto medals = resJson.value("medals", std::vector<int>{});
+                        PlayerMedalsInfo medalsInfo;
+                        for (auto medal : medals) {
+                            medalsInfo.display_items_defidx().add(medal);
+                        }
+                        responseProfile.medals().set(medalsInfo);
+                        PlayerCommendationInfo commendation;
+                        commendation.cmd_friendly().set(999);
+                        commendation.cmd_leader().set(999);
+                        commendation.cmd_teaching().set(999);
+                        responseProfile.commendation().set(commendation);
+                        MatchmakingGC2ClientHello::PlayerRankingInfo ranking;
+                        ranking.account_id().set(id);
+                        ranking.rank_id().set(resJson.value("wmrank", 0));
+                        ranking.wins().set(resJson.value("wmwins", 0));
+                        ranking.rank_type_id().set(7);
+                        responseProfile.ranking().add(ranking);
+                        MatchmakingGC2ClientHello::PlayerRankingInfo ranking2;
+                        ranking2.account_id().set(id);
+                        ranking2.rank_id().set(resJson.value("mmrank", 0));
+                        ranking2.wins().set(resJson.value("mmwins", 0));
+                        ranking2.rank_type_id().set(6);
+                        responseProfile.ranking().add(ranking2);
+                        responseMsg.account_profiles().add(responseProfile);
+                        auto packet = responseMsg.serialize();
+
+
+                        memcpy((void*)((DWORD)pubDest + 8), (void*)packet.data(), packet.size());
+                        *pcubMsgSize = packet.size() + 8;
+                    }
+                    catch (...) {
+                        CMsgGCCStrike15_v2_PlayersProfile responseMsg;
+                        MatchmakingGC2ClientHello responseProfile;
+                        responseProfile.account_id().set(id);
+                        responseProfile.player_level().set(1);
+                        responseProfile.player_cur_xp().set(0);
+                        PlayerMedalsInfo medalsInfo;
+                        responseProfile.medals().set(medalsInfo);
+                        PlayerCommendationInfo commendation;
+                        commendation.cmd_friendly().set(999);
+                        commendation.cmd_leader().set(999);
+                        commendation.cmd_teaching().set(999);
+                        responseProfile.commendation().set(commendation);
+                        responseMsg.account_profiles().add(responseProfile);
+                        auto packet = responseMsg.serialize();
+
+
+                        memcpy((void*)((DWORD)pubDest + 8), (void*)packet.data(), packet.size());
+                        *pcubMsgSize = packet.size() + 8;
+                    }
                     break;
                 }
                 case 4004: {

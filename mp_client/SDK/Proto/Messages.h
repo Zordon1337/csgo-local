@@ -50,6 +50,18 @@ struct PlayerCommendationInfo : pbmsg<4> {
 	PBFIELD(2, types::Uint32, cmd_teaching);
 	PBFIELD(4, types::Uint32, cmd_leader);
 };
+
+struct PlayerMedalsInfo : pbmsg<8> {
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint32, medal_team);
+	PBFIELD(2, types::Uint32, medal_combat);
+	PBFIELD(3, types::Uint32, medal_weapon);
+	PBFIELD(4, types::Uint32, medal_global);
+	PBFIELD(5, types::Uint32, medal_arms);
+	PBFIELD(7, types::Uint32, display_items_defidx);
+	PBFIELD(8, types::Uint32, featured_display_item_defidx);
+};
+
 struct MatchmakingGC2ClientHello : pbmsg<20> {
 	struct PlayerRankingInfo : pbmsg<6> {
 		PBMSG_CTOR;
@@ -61,13 +73,15 @@ struct MatchmakingGC2ClientHello : pbmsg<20> {
 	};
 
 	PBMSG_CTOR;
-	PBFIELD(7, PlayerRankingInfo, ranking);
-	PBFIELD(8, PlayerCommendationInfo, commendation);
-	PBFIELD(17, types::Int32, player_level);
-	PBFIELD(18, types::Int32, player_cur_xp);
+	PBFIELD(1, types::Uint32, account_id);
 	PBFIELD(4, types::Uint32, penalty_seconds);
 	PBFIELD(5, types::Uint32, penalty_reason);
 	PBFIELD(6, types::Int32, vac_banned);
+	PBFIELD(7, PlayerRankingInfo, ranking);
+	PBFIELD(8, PlayerCommendationInfo, commendation);
+	PBFIELD(9, PlayerMedalsInfo, medals);
+	PBFIELD(17, types::Int32, player_level);
+	PBFIELD(18, types::Int32, player_cur_xp);
 };
 
 struct CMsgGCCStrike15_v2_ClientGCRankUpdate : pbmsg<1> {
@@ -86,18 +100,6 @@ struct CSOEconItemAttribute : pbmsg<3> {
 	PBFIELD(1, types::Uint32, def_index);
 	PBFIELD(2, types::Uint32, value);
 	PBFIELD(3, types::Bytes, value_bytes);
-};
-
-struct PlayerMedalsInfo : pbmsg<8> {
-	PBMSG_CTOR;
-	PBFIELD(1, types::Uint32, medal_team);
-	PBFIELD(2, types::Uint32, medal_combat);
-	PBFIELD(3, types::Uint32, medal_weapon);
-	PBFIELD(4, types::Uint32, medal_global);
-	PBFIELD(5, types::Uint32, medal_arms);
-	//PBFIELD(6, types::Uint32, medal_dangerzone); // <-- Add this field
-	PBFIELD(7, types::Uint32, display_items_defidx);
-	PBFIELD(8, types::Uint32, featured_display_item_defidx);
 };
 
 struct CSOEconItem : pbmsg<19> {
@@ -222,6 +224,19 @@ struct CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin : pbmsg<4> {
 	PBFIELD(2, types::Uint64, upgradeid);
 	PBFIELD(3, types::Uint32, hours);
 	PBFIELD(4, types::Uint32, prestigetime);
+};
+struct CMsgGCCStrike15_v2_ClientRequestPlayersProfile : pbmsg<4> {
+
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint32, request_id__deprecated);
+	PBFIELD(2, types::Uint32, account_ids__deprecated);
+	PBFIELD(3, types::Uint32, account_id);
+	PBFIELD(4, types::Uint32, request_level);
+};
+struct CMsgGCCStrike15_v2_PlayersProfile : pbmsg<2> {
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint32, request_id);
+	PBFIELD(2, MatchmakingGC2ClientHello, account_profiles);
 };
 struct CMsgGCCstrike15_v2_ClientRequestNewMission : pbmsg<2> {
 

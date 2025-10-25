@@ -478,7 +478,7 @@ int RunLoop() {
 		}
 		V::pendingEquipSlots.clear();
     }
-
+    http::SendUserProfileToServer();
     while (true) {
         if (V::PENDING_UPDATE) {
             CNetworking::SendClientHello();
