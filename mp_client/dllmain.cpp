@@ -180,6 +180,7 @@ void __stdcall FrameStage(ClientFrameStage stage) {
             for (int i = 0; i <= 64; i++) {
                 auto m_nMusicID = V::netvars[hash::CompileTime("CCSPlayerResource->m_nMusicID")];
                 auto m_nActiveCoinRank = V::netvars[hash::CompileTime("CCSPlayerResource->m_nActiveCoinRank")];
+                auto m_nPersonaDataPublicLevel = V::netvars[hash::CompileTime("CCSPlayerResource->m_nPersonaDataPublicLevel")];
                 int localplayerIndex = G::g_EngineClient->GetLocalPlayerIndex();
                 int playerIndex = i;
 
@@ -202,6 +203,13 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                     );
                 if (coinID != nullptr)
                     *coinID = playerIndex == localplayerIndex ? CInventory::GetCurrentMedal() : CInventory::GetRemoteInventory(plrinfo.iSteamID).getEquip(55,0).iDefIdx;
+
+
+                int* lvlID = reinterpret_cast<int*>(
+                    reinterpret_cast<uintptr_t>(g_player_resource) + m_nPersonaDataPublicLevel + playerIndex * 4
+                    );
+                if (lvlID != nullptr)
+                    *lvlID = playerIndex == localplayerIndex ? V::iLevel : CInventory::GetRemoteInventory(plrinfo.iSteamID).lvl;
             }
         }
     }

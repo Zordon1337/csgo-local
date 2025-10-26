@@ -101,6 +101,8 @@ namespace CInventory {
 	class CRemoteInventory {
 		
 	public:
+		int lvl;
+		int xp;
 		int steamID;
 
 		std::vector<CRemoteEquip> equips;

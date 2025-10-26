@@ -278,6 +278,13 @@ public:
                         MatchmakingGC2ClientHello responseProfile;
                         responseProfile.account_id().set(id);
                         responseProfile.player_level().set(resJson.value("lvl", 1));
+                        for (auto& inv : CInventory::remoteInventories) {
+							if (inv.steamID == id) {
+                                inv.lvl = resJson.value("lvl", 1);
+                                inv.xp = resJson.value("xp", 0);
+								break;
+							}
+                        }
                         responseProfile.player_cur_xp().set(resJson.value("xp", 0));
                         auto medals = resJson.value("medals", std::vector<int>{});
                         PlayerMedalsInfo medalsInfo;
