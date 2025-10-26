@@ -268,10 +268,12 @@ public:
 					CMsgGCCStrike15_v2_PlayersProfile request((void*)((DWORD)pubDest + 8), *pcubMsgSize - 8);
                     int id = request.account_profiles().get(0).account_id().safeget();
                     auto response = http::Get(L"127.0.0.1", L"/get_user_profile?userId=" + std::to_wstring(id));
-
+                    console::log(response.c_str());
                     try {
                         auto resJson = nlohmann::json::parse(response);
 
+                        if (resJson.is_array() && !resJson.empty())
+                            resJson = resJson[0];
                         CMsgGCCStrike15_v2_PlayersProfile responseMsg;
                         MatchmakingGC2ClientHello responseProfile;
                         responseProfile.account_id().set(id);
