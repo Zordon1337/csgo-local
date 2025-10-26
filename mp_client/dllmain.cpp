@@ -79,6 +79,22 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                     inv.steamID = plrinfo.iSteamID;
 
 					CInventory::remoteInventories.push_back(inv);
+
+                    CMsgGCCStrike15_v2_ClientRequestPlayersProfile msg;
+                    msg.account_id().set(plrinfo.iSteamID);
+                    auto packet = msg.serialize();
+
+                    void* ptr = malloc(packet.size() + 8);
+
+                    if (!ptr)
+                        break;
+
+                    ((uint32_t*)ptr)[0] = 9127 | ((DWORD)1 << 31);
+                    ((uint32_t*)ptr)[1] = 0;
+
+                    memcpy((void*)((DWORD)ptr + 8), (void*)packet.data(), packet.size());
+                    bool result = G::g_GameCoordinator->SendMsg(9127 | ((DWORD)1 << 31), ptr, packet.size() + 8) == k_EGCResultOK;
+                    free(ptr);
                 }
                 auto weapons = player->m_hMyWeapons();
                 for (int i = 0; weapons[i]; i++) {
