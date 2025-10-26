@@ -54,9 +54,20 @@ public:
 			auto& it = CInventory::GetItemPtr(0, 54, CInventory::GetCurrentMusicKit());
 			auto userid = G::g_EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
 			auto idx = G::g_EngineClient->GetLocalPlayerIndex();
+
 			if (it.bHasStattrack && idx == userid) {
 				it.flStattrack++;
 				pEvent->SetInt("musickitmvps", it.flStattrack);
+			}
+			PlayerInfo plr;
+			if (G::g_EngineClient->GetPlayerInfo(userid, &plr)) {
+				if (plr.fakeplayer) return;
+				auto& remoteInv = CInventory::GetRemoteInventoryPtr(plr.iSteamID);
+				auto& musicKit = remoteInv.getEquipPtr(54, 0);
+				if (musicKit.bHasStattrack) {
+					musicKit.flStattrack++;
+					pEvent->SetInt("musickitmvps", musicKit.flStattrack);
+				}
 			}
 		}
 		else if (strcmp(txt, "round_end") == 0) {

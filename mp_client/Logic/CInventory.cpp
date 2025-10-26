@@ -179,3 +179,12 @@ CInventory::CRemoteInventory CInventory::GetRemoteInventory(int steamID) {
 	}
 	return {};
 }
+CInventory::CRemoteInventory& CInventory::GetRemoteInventoryPtr(int steamID) {
+	for (auto& inv : CInventory::remoteInventories) {
+		if (inv.steamID == steamID) {
+			return inv;
+		}
+	}
+	CInventory::CRemoteInventory it = {};
+	return it;
+}

@@ -114,6 +114,15 @@ namespace CInventory {
 			}
 			return {-1};
 		}
+		CItem& getEquipPtr(int slotId, int teamId) {
+			for (auto& equip : equips) {
+				if (equip.slotId == slotId && equip.teamId == teamId) {
+					return equip.item;
+				}
+			}
+			auto t = CItem{ -1 };
+			return t;
+		}
 		void setEquip(int slotId, int teamId, const CItem& item) {
 			for (auto& equip : equips) {
 				if (equip.slotId == slotId && equip.teamId == teamId) {
@@ -140,6 +149,8 @@ namespace CInventory {
 	ItemDefinitionIndex GetKnifeEquipped(int teamId);
 
 	CInventory::CRemoteInventory GetRemoteInventory(int steamID);
+
+	CInventory::CRemoteInventory& GetRemoteInventoryPtr(int steamID);
 
 	const std::unordered_map<ItemDefinitionIndex, const char*> knifeModels = {
 		{WEAPON_KNIFE_CSS,"models/weapons/v_knife_css.mdl"},
