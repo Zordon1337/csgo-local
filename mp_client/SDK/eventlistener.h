@@ -39,6 +39,8 @@ public:
 			assists = 0;
 			wonRounds = 0;
 			lostRounds = 0;
+
+			http::SendUserProfileToServer();
 		}
 		else if (strcmp(txt, "cs_win_panel_round") == 0) {
 
