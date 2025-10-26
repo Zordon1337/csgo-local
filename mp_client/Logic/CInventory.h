@@ -134,7 +134,10 @@ namespace CInventory {
 	CItem GetItemById(long itemId);
 	CItem& GetItemPtr(int teamId, int slotId, int idx);
 	int GetCurrentMusicKit();
+	int GetCurrentMedal();
 	ItemDefinitionIndex GetKnifeEquipped(int teamId);
+
+	CInventory::CRemoteInventory GetRemoteInventory(int steamID);
 
 	const std::unordered_map<ItemDefinitionIndex, const char*> knifeModels = {
 		{WEAPON_KNIFE_CSS,"models/weapons/v_knife_css.mdl"},

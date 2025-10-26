@@ -155,10 +155,27 @@ int CInventory::GetCurrentMusicKit() {
 	return 0;
 }
 
+int CInventory::GetCurrentMedal() {
+	auto itemId = CInventory::Equips[55][0];
+	for (const auto item : V::items) {
+		if (itemId == item.iItemId) return item.iDefIdx;
+	}
+	return 0;
+}
+
 ItemDefinitionIndex CInventory::GetKnifeEquipped(int teamId) {
 	auto itemId = CInventory::Equips[0][teamId];
 	for (const auto item : V::items) {
 		if (itemId == item.iItemId) return (ItemDefinitionIndex)item.iDefIdx;
 	}
 	return teamId == 2 ? ItemDefinitionIndex::WEAPON_KNIFE_T : ItemDefinitionIndex::WEAPON_KNIFE;
+}
+
+CInventory::CRemoteInventory CInventory::GetRemoteInventory(int steamID) {
+	for (const auto& inv : CInventory::remoteInventories) {
+		if (inv.steamID == steamID) {
+			return inv;
+		}
+	}
+	return {};
 }

@@ -177,15 +177,32 @@ void __stdcall FrameStage(ClientFrameStage stage) {
             CPlayerResource* g_player_resource = GetPlayerResourcePointer();
 
             // V::netvars[hash::CompileTime(var)]
-            auto offset = V::netvars[hash::CompileTime("CCSPlayerResource->m_nMusicID")];
-            int playerIndex = G::g_EngineClient->GetLocalPlayerIndex();
+            for (int i = 0; i <= 64; i++) {
+                auto m_nMusicID = V::netvars[hash::CompileTime("CCSPlayerResource->m_nMusicID")];
+                auto m_nActiveCoinRank = V::netvars[hash::CompileTime("CCSPlayerResource->m_nActiveCoinRank")];
+                int localplayerIndex = G::g_EngineClient->GetLocalPlayerIndex();
+                int playerIndex = i;
 
 
-            int* musicID = reinterpret_cast<int*>(
-                reinterpret_cast<uintptr_t>(g_player_resource) + offset + playerIndex * 4
-                );
-            if (musicID != nullptr)
-                *musicID = CInventory::GetCurrentMusicKit();
+                PlayerInfo plrinfo;
+				if (!G::g_EngineClient->GetPlayerInfo(playerIndex, &plrinfo)) continue;
+				if (plrinfo.fakeplayer) continue;
+
+
+                int* musicID = reinterpret_cast<int*>(
+                    reinterpret_cast<uintptr_t>(g_player_resource) + m_nMusicID + playerIndex * 4
+                    );
+
+                if (musicID != nullptr)
+                    *musicID = playerIndex == localplayerIndex ? CInventory::GetCurrentMusicKit() : CInventory::GetRemoteInventory(plrinfo.iSteamID).getEquip(54, 0).iDefIdx;
+
+
+                int* coinID = reinterpret_cast<int*>(
+                    reinterpret_cast<uintptr_t>(g_player_resource) + m_nActiveCoinRank + playerIndex * 4
+                    );
+                if (coinID != nullptr)
+                    *coinID = playerIndex == localplayerIndex ? CInventory::GetCurrentMedal() : CInventory::GetRemoteInventory(plrinfo.iSteamID).getEquip(55,0).iDefIdx;
+            }
         }
     }
     oFrameStage(stage);
