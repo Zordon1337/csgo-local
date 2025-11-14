@@ -103,6 +103,10 @@ namespace CInventory {
 	public:
 		int lvl;
 		int xp;
+		int wmwins;
+		int wmrank;
+		int mmwins;
+		int mmrank;
 		int steamID;
 
 		std::vector<CRemoteEquip> equips;

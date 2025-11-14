@@ -1,6 +1,8 @@
 #pragma once
 #include "../globals.h"
+#include "networking.h"
 #include "../console/console.h"
+#include "http.h"
 
 class EventListener;
 namespace E {
@@ -56,10 +58,14 @@ public:
 			auto& it = CInventory::GetItemPtr(0, 54, CInventory::GetCurrentMusicKit());
 			auto userid = G::g_EngineClient->GetPlayerForUserID(pEvent->GetInt("userid"));
 			auto idx = G::g_EngineClient->GetLocalPlayerIndex();
-
+			std::cout << "mvp for userid: " << userid << " local idx: " << idx << "mvp status: " << it.bHasStattrack << std::endl;
 			if (it.bHasStattrack && idx == userid) {
 				it.flStattrack++;
 				pEvent->SetInt("musickitmvps", it.flStattrack);
+				return;
+			}
+			else {
+				if (idx == userid) return;
 			}
 			PlayerInfo plr;
 			if (G::g_EngineClient->GetPlayerInfo(userid, &plr)) {
@@ -73,6 +79,8 @@ public:
 			}
 		}
 		else if (strcmp(txt, "round_end") == 0) {
+			auto it = CInventory::GetItemPtr(0, 54, CInventory::GetCurrentMusicKit());
+			http::SendEquipToServer(it.iItemId, 0, 54, it);
 			auto winner = pEvent->GetInt("winner");
 
 			if (winner == 3 || winner == 2) {
@@ -85,6 +93,56 @@ public:
 
 					lostRounds++;
 				}
+			}
+			std::vector<int> pendingUpdate = {};
+			for (int i = 0; i < CInventory::remoteInventories.size(); i++) {
+				pendingUpdate.push_back(CInventory::remoteInventories[i].steamID);
+			}
+			CInventory::remoteInventories.clear();
+			CInventory::CRemoteInventory inv;
+			for (auto u : pendingUpdate) {
+				inv = http::getRemoteInventory(u);
+				for (int i = 0; i < inv.equips.size(); i++) {
+					console::log(std::format("got remote equip: slotid {} teamid {} itemid {}", inv.equips[i].slotId, inv.equips[i].teamId, inv.equips[i].item.iItemId).c_str());
+				}
+				inv.steamID = u;
+
+				CInventory::remoteInventories.push_back(inv);
+
+				CMsgGCCStrike15_v2_ClientRequestPlayersProfile msg;
+				msg.account_id().set(u);
+				auto packet = msg.serialize();
+
+				void* ptr = malloc(packet.size() + 8);
+
+				if (!ptr)
+					break;
+
+				((uint32_t*)ptr)[0] = 9127 | ((DWORD)1 << 31);
+				((uint32_t*)ptr)[1] = 0;
+
+				memcpy((void*)((DWORD)ptr + 8), (void*)packet.data(), packet.size());
+				bool result = G::g_GameCoordinator->SendMsg(9127 | ((DWORD)1 << 31), ptr, packet.size() + 8) == k_EGCResultOK;
+				free(ptr);
+
+				auto response = http::Get(std::wstring(V::remoteAddr.begin(), V::remoteAddr.end()).c_str(), L"/get_user_profile?userId=" + std::to_wstring(u));
+				console::log(response.c_str());
+				auto resJson = nlohmann::json::parse(response);
+
+				if (resJson.is_array() && !resJson.empty())
+					resJson = resJson[0];
+				for (auto& inv : CInventory::remoteInventories) {
+					if (inv.steamID == u) {
+						inv.lvl = resJson.value("lvl", 1);
+						inv.xp = resJson.value("xp", 0);
+						inv.mmrank = resJson.value("mmrank", 0);
+						inv.mmwins = resJson.value("mmwins", 0);
+						inv.wmrank = resJson.value("wmrank", 0);
+						inv.wmwins = resJson.value("wmwins", 0);
+						break;
+					}
+				}
+
 			}
 		}
 		else {

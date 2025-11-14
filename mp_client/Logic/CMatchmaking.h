@@ -2,6 +2,7 @@
 #include "../SDK/proto/Messages.h"
 #include "memory.h"
 #include "../console/console.h"
+#include "../SDK/http.h"
 namespace CMatchmaking {
     float flUpdateTime = 0;
     bool bHasMessagePending = false;
@@ -309,9 +310,11 @@ namespace CMatchmaking {
 
         }
 
+
 		bHasMessagePending = false;
 		msgt.clear();
 
         V::PENDING_UPDATE = true;
+        http::SendUserProfileToServer();
     }
 }

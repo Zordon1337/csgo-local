@@ -84,6 +84,25 @@ struct MatchmakingGC2ClientHello : pbmsg<20> {
 	PBFIELD(18, types::Int32, player_cur_xp);
 };
 
+struct MatchmakingGC2ClientHello2 : pbmsg<16> {
+	struct PlayerRankingInfo2 : pbmsg<6> {
+		PBMSG_CTOR;
+		PBFIELD(1, types::Uint32, account_id);
+		PBFIELD(2, types::Uint32, rank_id);
+		PBFIELD(3, types::Uint32, wins);
+		PBFIELD(4, types::Float, rank_change);
+	};
+
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint32, account_id);
+	PBFIELD(4, types::Uint32, penalty_seconds);
+	PBFIELD(5, types::Uint32, penalty_reason);
+	PBFIELD(6, types::Int32, vac_banned);
+	PBFIELD(7, PlayerRankingInfo2, ranking);
+	PBFIELD(8, PlayerCommendationInfo, commendation);
+	PBFIELD(9, PlayerMedalsInfo, medals);
+};
+
 struct CMsgGCCStrike15_v2_ClientGCRankUpdate : pbmsg<1> {
 	PBMSG_CTOR;
 	PBFIELD(1, MatchmakingGC2ClientHello::PlayerRankingInfo, ranking);
@@ -174,8 +193,7 @@ struct CMsgGCCStrike15_v2_MatchmakingGC2ClientUpdate : pbmsg<17> {
 	PBFIELD(17, types::Uint32, launcher_mismatch_sessions);
 
 
-};
-struct CMsgClientWelcome : pbmsg<11> {
+}; struct CMsgClientWelcome : pbmsg<11> {
 
 	struct SubscribedType : pbmsg<2> {
 		PBMSG_CTOR;
@@ -217,6 +235,29 @@ struct CMsgClientWelcome : pbmsg<11> {
 	PBFIELD(11, types::String, txn_country_code);
 };
 
+struct CMsgClientWelcome2 : pbmsg<8> {
+
+
+	PBMSG_CTOR;
+	PBFIELD(1, types::Uint32, version);
+	PBFIELD(2, types::Bytes, game_data);
+	PBFIELD(3, CMsgClientWelcome::CMsgSOCacheSubscribed, outofdate_subscribed_caches);    // repeated
+	PBFIELD(4, CMsgClientWelcome::CMsgSOCacheSubscriptionCheck, uptodate_subscribed_caches); // repeated
+	PBFIELD(5, Location, location);
+	PBFIELD(6, types::Bytes, game_data2);
+	PBFIELD(7, types::Uint32, rtime32_gc_welcome_timestamp);
+	PBFIELD(8, types::Uint32, currency);
+};
+struct CMsgCStrike15Welcome : pbmsg<19> {
+	PBMSG_CTOR;
+	PBFIELD(5, types::Uint32, store_item_hash);
+	PBFIELD(6, types::Uint32, timeplayedconsecutively);
+	PBFIELD(10, types::Uint32, time_first_played);
+	PBFIELD(12, types::Uint32, last_time_played);
+	PBFIELD(13, types::Uint32, last_ip_address);
+	PBFIELD(18, types::Uint64, gscookieid);
+	PBFIELD(19, types::Uint64, uniqueid);
+};
 struct CMsgGCCStrike15_v2_Client2GCRequestPrestigeCoin : pbmsg<4> {
 
 	PBMSG_CTOR;

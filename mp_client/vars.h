@@ -34,7 +34,7 @@ namespace V {
 	inline int iCaseResult = 0; // temp solution , i need to find proper one ETA: ages
 	namespace Ranks::Wingman {
 		inline int iCurrentRank = 0;
-		inline int iWins = 8;
+		inline int iWins = 0;
 		inline int iLosses = 2;
 		inline int iWinStreak = 2;
 		inline int iLossStreak = 0;
@@ -49,6 +49,8 @@ namespace V {
 		inline int iElo = 100;
 
 	}
+	inline std::string remoteAddr = "";
+	inline int remotePort = 3000;
 	inline RecvVarProxyFn oViewModelProxy;
 
     void SaveConfig() {
@@ -60,6 +62,8 @@ namespace V {
 		j["iServiceMedalLevel"] = iServiceMedalLevel;
 		j["iLevel"] = iLevel;
 		j["iXP"] = iXP;
+		j["sRemoteAddr"] = remoteAddr;
+		j["iRemotePort"] = remotePort;
 		j["othermedals"] = othermedals;
 		j["V::Ranks::Wingman::iCurrentRank"] = V::Ranks::Wingman::iCurrentRank;
 		j["V::Ranks::Wingman::iElo"] = V::Ranks::Wingman::iElo;
@@ -125,6 +129,8 @@ namespace V {
 			iServiceMedalLevel = j.value("iServiceMedalLevel", 0);
 			iLevel = j.value("iLevel", 1);
 			iXP = j.value("iXP", 0);
+			remoteAddr = j.value("sRemoteAddr", "127.0.0.1");
+			remotePort = j.value("iRemotePort", 3000);
 			V::Ranks::Wingman::iCurrentRank = j.value("V::Ranks::Wingman::iCurrentRank", 0);
 			V::Ranks::Wingman::iElo = j.value("V::Ranks::Wingman::iElo", 0);
 			V::Ranks::Wingman::iLosses = j.value("V::Ranks::Wingman::iLosses", 0);
@@ -165,6 +171,7 @@ namespace V {
 						CInventory::EquipSlot(item2.iItemId, 0, 54);
 					}
 				}
+				std::cout << item2.iItemId << item.value("bHasStattrack", false) << std::endl;
 				items.push_back(item2);
 			}
 			cases.clear();

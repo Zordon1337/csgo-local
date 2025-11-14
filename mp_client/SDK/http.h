@@ -13,7 +13,7 @@ namespace http {
             WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
         if (!hSession) return result;
 
-        HINTERNET hConnect = WinHttpConnect(hSession, url.c_str(), 3000, 0);
+        HINTERNET hConnect = WinHttpConnect(hSession, url.c_str(), V::remotePort, 0);
         HINTERNET hRequest = WinHttpOpenRequest(hConnect, L"GET", path.c_str(), NULL,
             WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
 
@@ -62,7 +62,7 @@ namespace http {
 
         if (!hSession) return false;
 
-        HINTERNET hConnect = WinHttpConnect(hSession, L"127.0.0.1", 3000, 0);
+        HINTERNET hConnect = WinHttpConnect(hSession, std::wstring(V::remoteAddr.begin(), V::remoteAddr.end()).c_str(), V::remotePort, 0);
         if (!hConnect) {
             WinHttpCloseHandle(hSession);
             return false;
@@ -119,7 +119,7 @@ namespace http {
         return bResults;
 
     }
-    bool SendEquipToServer(long itemId, int teamId, int slotId, const CItem item) {
+    inline bool SendEquipToServer(long itemId, int teamId, int slotId, const CItem item) {
         nlohmann::json j;
         j["userId"] = V::STEAM_ID;
         j["defIdx"] = item.iDefIdx;
@@ -141,7 +141,7 @@ namespace http {
 
         if (!hSession) return false;
 
-        HINTERNET hConnect = WinHttpConnect(hSession, L"127.0.0.1", 3000, 0);
+        HINTERNET hConnect = WinHttpConnect(hSession, std::wstring(V::remoteAddr.begin(), V::remoteAddr.end()).c_str(), V::remotePort, 0);
         if (!hConnect) {
             WinHttpCloseHandle(hSession);
             return false;
@@ -200,7 +200,7 @@ namespace http {
 
     CInventory::CRemoteInventory getRemoteInventory(int SteamId) {
 		console::log(std::format("[equip-client] Fetching remote inventory for {}...", SteamId).c_str());
-        auto res = http::Get(L"127.0.0.1", L"/get_user_equips?userId=" + std::to_wstring(SteamId));
+        auto res = http::Get(std::wstring(V::remoteAddr.begin(), V::remoteAddr.end()).c_str(), L"/get_user_equips?userId=" + std::to_wstring(SteamId));
 		CInventory::CRemoteInventory inventory;
 		try {
 			auto json = nlohmann::json::parse(res);

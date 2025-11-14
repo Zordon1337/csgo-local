@@ -22,6 +22,7 @@
 #include "vars.h"
 #include "Logic/CCaseOpening.h"
 #include "SDK/http.h"
+#include "SDK/steamsdk/steam_api.h"
 enum ClientFrameStage {
     FRAME_UNDEFINED = -1,			// (haven't run any frames yet)
     FRAME_START,
@@ -197,6 +198,7 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 auto m_nMusicID = V::netvars[hash::CompileTime("CCSPlayerResource->m_nMusicID")];
                 auto m_nActiveCoinRank = V::netvars[hash::CompileTime("CCSPlayerResource->m_nActiveCoinRank")];
                 auto m_nPersonaDataPublicLevel = V::netvars[hash::CompileTime("CCSPlayerResource->m_nPersonaDataPublicLevel")];
+                auto m_iCompetitiveRanking = V::netvars[hash::CompileTime("CCSPlayerResource->m_iCompetitiveRanking")];
                 int localplayerIndex = G::g_EngineClient->GetLocalPlayerIndex();
                 int playerIndex = i;
 
@@ -206,26 +208,52 @@ void __stdcall FrameStage(ClientFrameStage stage) {
 				if (plrinfo.fakeplayer) continue;
 
 
-                int* musicID = reinterpret_cast<int*>(
-                    reinterpret_cast<uintptr_t>(g_player_resource) + m_nMusicID + playerIndex * 4
-                    );
+                if (m_nMusicID > 0) {
+                    int* musicID = reinterpret_cast<int*>(
+                        reinterpret_cast<uintptr_t>(g_player_resource) + m_nMusicID + playerIndex * 4
+                        );
 
-                if (musicID != nullptr)
-                    *musicID = playerIndex == localplayerIndex ? CInventory::GetCurrentMusicKit() : CInventory::GetRemoteInventory(plrinfo.iSteamID).getEquip(54, 0).iDefIdx;
+                    if (musicID != nullptr)
+                        *musicID = playerIndex == localplayerIndex ? CInventory::GetCurrentMusicKit() : CInventory::GetRemoteInventory(plrinfo.iSteamID).getEquip(54, 0).iDefIdx;
+                }
 
+                if (m_nActiveCoinRank > 0) {
+                    int* coinID = reinterpret_cast<int*>(
+                        reinterpret_cast<uintptr_t>(g_player_resource) + m_nActiveCoinRank + playerIndex * 4
+                        );
+                    if (coinID != nullptr)
+                        *coinID = playerIndex == localplayerIndex ? CInventory::GetCurrentMedal() : CInventory::GetRemoteInventory(plrinfo.iSteamID).getEquip(55, 0).iDefIdx;
+                }
 
-                int* coinID = reinterpret_cast<int*>(
-                    reinterpret_cast<uintptr_t>(g_player_resource) + m_nActiveCoinRank + playerIndex * 4
-                    );
-                if (coinID != nullptr)
-                    *coinID = playerIndex == localplayerIndex ? CInventory::GetCurrentMedal() : CInventory::GetRemoteInventory(plrinfo.iSteamID).getEquip(55,0).iDefIdx;
+                if (m_nPersonaDataPublicLevel > 0) {
+                    int* lvlID = reinterpret_cast<int*>(
+                        reinterpret_cast<uintptr_t>(g_player_resource) + m_nPersonaDataPublicLevel + playerIndex * 4
+                        );
+                    if (lvlID != nullptr)
+                        *lvlID = playerIndex == localplayerIndex ? V::iLevel : CInventory::GetRemoteInventory(plrinfo.iSteamID).lvl;
+                
+                }
+                // TODO: Move somewhere else
+                static auto GetGameMode = M::PatternScan(G::bIsPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? CC CC E8");
+                if (!GetGameMode) GetGameMode = M::PatternScan(G::bIsPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? F3 0F 10 05 ? ? ? ? 0F 2E 05 ? ? ? ? 8B 0D ? ? ? ? 9F F6 C4 ? 7A ? 39 0D ? ? ? ? 75 ? A1 ? ? ? ? 33 05 ? ? ? ? A9 ? ? ? ? 74 ? 8B 15 ? ? ? ? 85 D2 74 ? 8B 02 8B CA 68 ? ? ? ? FF 90 ? ? ? ? 8B 0D ? ? ? ? 81 F1 ? ? ? ? 8B C1 C3 8B 01 FF 60 ? E8");
+                static auto GetGameType = M::PatternScan(G::bIsPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? A1 ? ? ? ? ? ? ? ? ? ? ? ? ? ? ? CC CC 8B");
+                if (!GetGameType) GetGameType = M::PatternScan(G::bIsPanoramaDll ? "client_panorama.dll" : "client.dll", "8B 0D ? ? ? ? 81 F9 ? ? ? ? 75 ? F3 0F 10 05 ? ? ? ? 0F 2E 05 ? ? ? ? 8B 0D ? ? ? ? 9F F6 C4 ? 7A ? 39 0D ? ? ? ? 75 ? A1 ? ? ? ? 33 05 ? ? ? ? A9 ? ? ? ? 74 ? 8B 15 ? ? ? ? 85 D2 74 ? 8B 02 8B CA 68 ? ? ? ? FF 90 ? ? ? ? 8B 0D ? ? ? ? 81 F1 ? ? ? ? 8B C1 C3 8B 01 FF 60 ? 8B 0D ? ? ? ? 81 F9");
+                
+                if (m_iCompetitiveRanking > 0 && GetGameType && GetGameMode) {
+                    int* rankID = reinterpret_cast<int*>(
+                        reinterpret_cast<uintptr_t>(g_player_resource) + m_iCompetitiveRanking + playerIndex * 4
+                        );
 
+                    bool bIsMM = false;
+                    bool bIsRanked = false;
 
-                int* lvlID = reinterpret_cast<int*>(
-                    reinterpret_cast<uintptr_t>(g_player_resource) + m_nPersonaDataPublicLevel + playerIndex * 4
-                    );
-                if (lvlID != nullptr)
-                    *lvlID = playerIndex == localplayerIndex ? V::iLevel : CInventory::GetRemoteInventory(plrinfo.iSteamID).lvl;
+                    if (!reinterpret_cast<int(__thiscall*)(void*)>(GetGameType)(GetGameType)) bIsRanked = true;
+                    if (reinterpret_cast<int(__thiscall*)(void*)>(GetGameMode)(GetGameMode) == 1) bIsMM = true;
+
+                    if (rankID != nullptr && bIsRanked)
+                        *rankID = playerIndex == localplayerIndex ? (bIsMM ? V::Ranks::Competetive::iCurrentRank : V::Ranks::Wingman::iCurrentRank) : (bIsMM ? CInventory::GetRemoteInventory(plrinfo.iSteamID).mmrank : CInventory::GetRemoteInventory(plrinfo.iSteamID).wmrank);
+
+                }
             }
         }
     }
@@ -294,51 +322,19 @@ void Setup() noexcept
 }
 
 int RunLoop() {
+    MH_Initialize();
     console::init();
-
-    auto steamModule = (uintptr_t)GetModuleHandleA("steam_api.dll");
-    while (!steamModule) {
-        steamModule = (uintptr_t)GetModuleHandleA("steam_api.dll");
-    }
+    
     while(!(uintptr_t)GetModuleHandleA("serverbrowser.dll")) {}
+
     auto hSteamUser = ((HSteamUser(__cdecl*)(void))GetProcAddress(GetModuleHandle(L"steam_api.dll"), "SteamAPI_GetHSteamUser"))();
     auto hSteamPipe = ((HSteamPipe(__cdecl*)(void))GetProcAddress(GetModuleHandle(L"steam_api.dll"), "SteamAPI_GetHSteamPipe"))();
     G::g_SteamClient = ((ISteamClient * (__cdecl*)(void))GetProcAddress(GetModuleHandle(L"steam_api.dll"), "SteamClient"))();
-    if (!G::g_SteamClient) {
-        MessageBoxA(NULL, "Failed to get g_SteamClient\nInjected too quickly?", "Init Error", 1);
-        return -1;
-    }
     G::g_SteamHTTP = G::g_SteamClient->GetISteamHTTP(hSteamUser, hSteamPipe, "STEAMHTTP_INTERFACE_VERSION002");
-    if (!G::g_SteamHTTP) {
-        MessageBoxA(NULL, "Failed to get g_SteamHTTP\nInjected too quickly?", "Init Error", 1);
-        return -1;
-    }
     G::g_SteamUser = G::g_SteamClient->GetISteamUser(hSteamUser, hSteamPipe, "SteamUser019");
-    if (!G::g_SteamUser) {
-        MessageBoxA(NULL, "Failed to get g_SteamUser\nInjected too quickly?", "Init Error", 1);
-        return -1;
-    }
     G::g_SteamFriends = G::g_SteamClient->GetISteamFriends(hSteamUser, hSteamPipe, "SteamFriends015");
-    if (!G::g_SteamFriends) {
-        MessageBoxA(NULL, "Failed to get g_SteamFriends\nInjected too quickly?", "Init Error", 1);
-        return -1;
-    }
-    G::g_SteamInventory = G::g_SteamClient->GetISteamInventory(hSteamUser, hSteamPipe, "STEAMINVENTORY_INTERFACE_V002");
-    if (!G::g_SteamInventory) {
-        MessageBoxA(NULL, "Failed to get g_SteamInventory\nInjected too quickly?", "Init Error", 1);
-        return -1;
-    }
     G::g_GameCoordinator = (ISteamGameCoordinator*)G::g_SteamClient->GetISteamGenericInterface(hSteamUser, hSteamPipe, "SteamGameCoordinator001");
-    if (!G::g_GameCoordinator) {
-        MessageBoxA(NULL, "Failed to get g_GameCoordinator\nInjected too quickly?", "Init Error", 1);
-        return -1;
-    }
-    G::g_SteamMatchMaking = G::g_SteamClient->GetISteamMatchmaking(hSteamUser, hSteamPipe, STEAMMATCHMAKING_INTERFACE_VERSION);
-    if (!G::g_SteamMatchMaking) {
-        MessageBoxA(NULL, "Failed to get g_SteamMatchMaking\nInjected too quickly?", "Init Error", 1);
-        return -1;
-    }
-
+    
 
     auto offset = M::PatternScan("engine.dll", "68 ? ? ? ? FF D7 83 C4 ? FF 15 ? ? ? ? 8B F0");
 
@@ -346,7 +342,11 @@ int RunLoop() {
         offset = M::PatternScan("engine.dll", "68 ? ? ? ? FF D6 83 C4 ? 5E C3 CC CC CC 80 3D");
         if (!offset)
         {
-            //MessageBoxA(0,"Failed to get version string", "CSGO_LOCAL", 1);
+            G::versionString = "";
+        }
+        if (!offset) offset = M::PatternScan("engine.dll", "68 ? ? ? ? FF 15 ? ? ? ? 83 C4 ? C3 CC 80 3D ? ? ? ? ? 75");
+        if (!offset)
+        {
             G::versionString = "";
         }
     }
@@ -382,7 +382,13 @@ int RunLoop() {
         else {
             // not expected
             G::gameVer = 0;
+            
             MessageBoxA(NULL, "Your Version is unsupported\r\nIt might work but isn't officially supported", "CSGO-LOCAL", 0);
+            // version is unsupported, but still parse it
+
+            if (strstr(G::versionString, "2015")) G::gameVer = 2015;
+            if (strstr(G::versionString, "2014")) G::gameVer = 2014;
+            if (strstr(G::versionString, "2013")) G::gameVer = 2013;
         }
     }
     if (GetModuleHandleA("client.dll") != nullptr)
@@ -391,7 +397,6 @@ int RunLoop() {
         G::bIsPanoramaDll = true;
     else
         console::log("error occurred in initialization, SEE dllmain.cpp");
-    MH_Initialize();
 
     auto vt = *(void***)G::g_GameCoordinator;
 
@@ -447,18 +452,21 @@ int RunLoop() {
         G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient014", nullptr);
         if(!G::g_EngineClient)
             G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient013", nullptr);
+        if(!G::g_EngineClient)
+            G::g_EngineClient = (IVEngineClient*)EngineFactory("VEngineClient012", nullptr);
     }
     G::g_VClient = ClientFactory("VClient018", nullptr);
 
     while (!G::g_VClient) {
         G::g_VClient = ClientFactory("VClient018", nullptr);
         if(!G::g_VClient) G::g_VClient = ClientFactory("VClient017", nullptr);
+        if(!G::g_VClient) G::g_VClient = ClientFactory("VClient016", nullptr);
+        if (!G::g_VClient) G::g_VClient = ClientFactory("VClient015", nullptr);
     }
     G::g_GlobalVars = **reinterpret_cast<IGlobalVars***>((*reinterpret_cast<uintptr_t**>(G::g_VClient))[11] + 10);
 
     G::g_EntityList = (IClientEntityList*)ClientFactory("VClientEntityList003", nullptr);
     G::g_modelinfo = (IVModelInfoClient*)EngineFactory("VModelInfoClient004", nullptr);
-    G::g_MemAlloc = *(IMemAlloc**)(GetProcAddress(GetModuleHandleA("tier0.dll"), "g_pMemAlloc"));
 
     MH_CreateHook((*(void***)(G::g_VClient))[(G::gameVer > 2018 || (G::gameVer == 2018 && G::bIsPanoramaDll)) ? 37 : 36], &FrameStage, reinterpret_cast<void**>(&oFrameStage));
 
@@ -513,6 +521,8 @@ int RunLoop() {
 
 
 
+   
+
     if (V::pendingEquipSlots.size() > 0) {
 		for (auto& equip : V::pendingEquipSlots) {
 			CInventory::EquipSlot(equip.item.iItemId, equip.teamId, equip.slotId);
@@ -520,16 +530,14 @@ int RunLoop() {
 		V::pendingEquipSlots.clear();
     }
     http::SendUserProfileToServer();
+
     while (true) {
         if (V::PENDING_UPDATE) {
             CNetworking::SendClientHello();
             V::PENDING_UPDATE = false;
-
             
         }
-
         CMatchmaking::Refresh(G::g_GlobalVars->currentTime, G::bIsPanoramaDll, G::g_VClient, G::gameVer);
-        CNetworking::SyncGC();
         Sleep(1);
 
     }
