@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{fd53fa17-34b4-49ad-9c83-d58808604bc4}</ProjectGuid>
+    <ProjectGuid>{F3A353C2-02EC-46AE-BFD3-91F1E958C5B9}</ProjectGuid>
     <RootNamespace>test</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>GameCoordinator</ProjectName>
