@@ -28,7 +28,7 @@ namespace G {
     IMemAlloc* g_MemAlloc = nullptr;
     void* g_VClient = nullptr;
 
-#define MEDAL_BASE_ID 10000
+    #define MEDAL_BASE_ID 10000
 
     const char* versionString = "";
     int gameVer = 0;

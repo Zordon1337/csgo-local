@@ -74,9 +74,6 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                 }
                 if (!foundInventory) {
 					inv = http::getRemoteInventory(plrinfo.iSteamID);
-					for (int i = 0; i < inv.equips.size(); i++) {
-						console::log(std::format("got remote equip: slotid {} teamid {} itemid {}", inv.equips[i].slotId, inv.equips[i].teamId, inv.equips[i].item.iItemId).c_str());
-					}
                     inv.steamID = plrinfo.iSteamID;
 
 					CInventory::remoteInventories.push_back(inv);

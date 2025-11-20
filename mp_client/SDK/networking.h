@@ -317,7 +317,7 @@ public:
 
                 auto packet = response.serialize();
 
-                CNetworking::QueueMessage(9172, packet, 2000);
+                //CNetworking::QueueMessage(9172, packet, 2000);
 
                 if (G::gameVer > 2015 && G::gameVer < 2024)
                 {
@@ -352,11 +352,22 @@ public:
                         item.flPaintKit = 0;
                         item.flStattrack = 0;
                         item.flWear = 0;
-                        item.iItemId = rand() % 10000;
+
+                        std::random_device rd;
+                        std::mt19937 gen(rd());
+                        std::uniform_int_distribution<> dist(0, 10000);
+                        item.iItemId = dist(rd);
                         item.iPattern = 0;
                         item.iFlag = 0;
                         item.iQuality = 4;
                         item.iRarity = 6;
+                        time_t now = time(nullptr);
+                        tm t{};
+                        localtime_s(&t, &now);
+                        t.tm_year = G::gameVer - 1900;
+                        time_t custom = mktime(&t);
+
+                        item.vAttributes.push_back({ 222, (uint32_t)custom });
                         V::items.push_back(item);
 					}
                 }
@@ -628,7 +639,6 @@ public:
                                 cache.objects().set(object, i);
                             }
                             if (id == 1) {
-
                                 object.object_data().clear();
                                 for (auto item : V::items) {
 
@@ -657,6 +667,9 @@ public:
                                     item2.attribute().add(make_econ_item_attribute(6, item.flPaintKit));
                                     item2.attribute().add(make_econ_item_attribute(7, float(item.iPattern)));
                                     item2.attribute().add(make_econ_item_attribute(8, item.flWear));
+                                    for (const auto& attr : item.vAttributes) {
+                                        item2.attribute().add(make_econ_item_attribute(attr.iId, attr.iValue));
+                                    }
                                     if (item.iFlag == 5) {
                                         item2.attribute().add(make_econ_item_attribute(166, item.iDefIdx));
 

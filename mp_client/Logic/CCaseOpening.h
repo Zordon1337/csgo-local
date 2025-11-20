@@ -1,7 +1,17 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "../json/json.hpp"
 
+struct CAttribute {
+	int iId;
+	uint32_t iValue;
+};
+
+void from_json(const nlohmann::json& j, CAttribute& a) {
+	j.at("iId").get_to(a.iId);
+	j.at("iValue").get_to(a.iValue);
+}
 struct CItem {
 	int iDefIdx;
 	int iRarity;
@@ -13,6 +23,7 @@ struct CItem {
 	int iPattern;
 	int iQuality;
 	int iFlag;
+	std::vector<CAttribute> vAttributes;
 };
 struct CCrate {
 	std::string szCaseName;
