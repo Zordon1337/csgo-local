@@ -667,7 +667,9 @@ public:
                                     item2.attribute().add(make_econ_item_attribute(6, item.flPaintKit));
                                     item2.attribute().add(make_econ_item_attribute(7, float(item.iPattern)));
                                     item2.attribute().add(make_econ_item_attribute(8, item.flWear));
+                                    item2.attribute().add(make_econ_item_attribute(8, item.flWear));
                                     for (const auto& attr : item.vAttributes) {
+                                        console::log(std::format("{}: {}", attr.iId, attr.iValue).c_str());
                                         item2.attribute().add(make_econ_item_attribute(attr.iId, attr.iValue));
                                     }
                                     if (item.iFlag == 5) {

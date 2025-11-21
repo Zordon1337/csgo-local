@@ -3,6 +3,7 @@
 #include "networking.h"
 #include "../console/console.h"
 #include "http.h"
+#include "../Logic/CSeasonalOperation.h"
 
 class EventListener;
 namespace E {
@@ -36,12 +37,13 @@ public:
 				V::iLevel++;
 			}
 
-			V::SaveConfig();
+			CSeasonalOperation::OnWinPanel(wonRounds > lostRounds);
 			kills = 0;
 			assists = 0;
 			wonRounds = 0;
 			lostRounds = 0;
 
+			V::SaveConfig();
 			http::SendUserProfileToServer();
 		}
 		else if (strcmp(txt, "cs_win_panel_round") == 0) {
@@ -65,7 +67,12 @@ public:
 				return;
 			}
 			else {
-				if (idx == userid) return;
+				if (idx == userid)
+				{
+
+					CSeasonalOperation::OnMvp();
+					return;
+				}
 			}
 			PlayerInfo plr;
 			if (G::g_EngineClient->GetPlayerInfo(userid, &plr)) {
@@ -154,7 +161,8 @@ public:
 			if (userid != attacker && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(attacker)) {
 				kills++;
 				CEntity* local = G::g_EntityList->GetEntityFromIndex(idx);
-				if (!local || local->m_lifeState() != 0) {
+				CEntity* enemy = G::g_EntityList->GetEntityFromIndex(userid);
+				if (!local || local->m_lifeState() != 0 || enemy->m_iTeamNum() == local->m_iTeamNum()) {
 					return;
 				}
 
@@ -176,6 +184,7 @@ public:
 					weapon->OnDataChanged(0);
 					weapon->PostDataUpdate(0);
 				}
+				CSeasonalOperation::OnKill();
 				//console::log(std::format("added kill from {}", attacker).c_str());
 			}
 			else if (assister != userid && userid != idx && idx == G::g_EngineClient->GetPlayerForUserID(assister)) {

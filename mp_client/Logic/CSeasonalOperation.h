@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <string>
 // just to note here, im using DD/MM/YYYY for date
@@ -6,6 +7,7 @@ struct CSeason {
 	int beginDate[3];
 	int endDate[3];
 };
+struct CItem;
 namespace CSeasonalOperation {
 	inline std::vector<CSeason> vSeasons = {};
 	inline int iCurrSeason = -1;
@@ -13,4 +15,10 @@ namespace CSeasonalOperation {
 	void Init(int ver[3]);
 	void UpdateMedals();
 	std::string GetOperationName();
+	CItem& GetCurrentCoin();
+	void OnRoundEnd();
+	void OnKill();
+	void OnDeath();
+	void OnWinPanel(bool bWon);
+	void OnMvp();
 }

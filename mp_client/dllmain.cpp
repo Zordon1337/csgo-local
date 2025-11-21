@@ -524,6 +524,29 @@ int RunLoop() {
     
     console::log(std::format("Current operation: {}", CSeasonalOperation::GetOperationName()).c_str());
    
+    if (G::gameVer < 2018 || (G::gameVer == 2018 && G::buildMonth < 11)) {
+        bool bHasLoyalty = false;
+        for (auto& medal : V::items) {
+            if (medal.iDefIdx == 970) bHasLoyalty = true;
+        }
+        if (!bHasLoyalty) {
+
+            CItem item;
+
+            item.bHasStattrack = false;
+            item.flPaintKit = 0;
+            item.flStattrack = 0;
+            item.flWear = 0;
+            item.iDefIdx = 970;
+            item.iItemId = CInventory::GetNextItemId();
+            item.iPattern = 0;
+            item.iFlag = 0;
+            item.iQuality = 4;
+            item.iRarity = 6;
+            V::items.push_back(item);
+        
+        }
+    }
 
     if (V::pendingEquipSlots.size() > 0) {
 		for (auto& equip : V::pendingEquipSlots) {
@@ -531,6 +554,7 @@ int RunLoop() {
 		}
 		V::pendingEquipSlots.clear();
     }
+
     http::SendUserProfileToServer();
 
     while (true) {

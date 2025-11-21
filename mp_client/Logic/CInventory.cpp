@@ -165,9 +165,9 @@ int CInventory::GetCurrentMedal() {
 
 int CInventory::GetNextItemId()
 {
-	int highestId = -1;
+	int highestId = 1;
 	for (const auto& item : V::items) {
-		if (item.iItemId > highestId) highestId += item.iItemId;
+		if (item.iItemId > highestId) highestId = item.iItemId;
 	}
 	return highestId + 1;
 }

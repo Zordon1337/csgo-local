@@ -14,9 +14,7 @@ namespace CMatchmaking {
 	int handleEndGame(int kills, int assists, int wonrounds, int lostRounds, int steamid, float currTime) {
         _steamid = steamid;
         if (wonrounds < 1) wonrounds = 1;
-        // TODO: FIX RANDOM CRASH
         int addXp = kills * 6 + assists * 6 + 30 * wonrounds;
-        console::log(std::format("Kills: {}, Assists: {}\n OldXp: {}, OldLvl {}\n newXp: {}",kills, assists, V::iXP, V::iLevel, addXp).c_str());
         int oldXp = V::iXP;
         int oldLvl = V::iLevel;
 
@@ -216,9 +214,14 @@ namespace CMatchmaking {
 			return;
 
         using DispatchUserMessageFn = bool(__thiscall*)(void*, int msg_type, int32_t nPassthroughFlags, int size, const void* msg);
+        using DispatchUserMessageOldFn = bool(__thiscall*)(void*, int msg_type, int size, const void* msg);
         DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(reinterpret_cast<uintptr_t**>((*(void***)g_VClient)[(GameVer > 2018 || (GameVer == 2018 && bPanoramaDll)) ? 38 : 37]));
+        DispatchUserMessageOldFn DispatchUserMessage2 = reinterpret_cast<DispatchUserMessageOldFn>(reinterpret_cast<uintptr_t**>((*(void***)g_VClient)[(GameVer > 2018 || (GameVer == 2018 && bPanoramaDll)) ? 38 : 37]));
 
-        DispatchUserMessage(g_VClient, 65, 0, msgt.size(), msgt.c_str());
+        if(GameVer > 2018)
+            DispatchUserMessage(g_VClient, 65, 0, msgt.size(), msgt.c_str());
+        else
+            DispatchUserMessage2(g_VClient, 65, msgt.size(), msgt.c_str());
         if (bShouldDrop) {
             CCSUsrMsg_SendPlayerItemDrops drops;
             for (int i = 0; i < 5; i++) {
@@ -257,7 +260,11 @@ namespace CMatchmaking {
                 drops.entity_updates().add(item);
             }
             auto s = drops.serialize();
-            DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
+
+            if (GameVer > 2018)
+                DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
+            else
+                DispatchUserMessage2(g_VClient, 61, s.size(), s.c_str());
             bShouldDrop = false;
         }
         
@@ -304,8 +311,11 @@ namespace CMatchmaking {
                 }
                 rank.rank_update().set(rankupd);
                 auto pk = rank.serialize();
-                DispatchUserMessage(g_VClient, 52, 0, pk.size(), pk.c_str());
 
+                if (GameVer > 2018)
+                    DispatchUserMessage(g_VClient, 52, 0, pk.size(), pk.c_str());
+                else
+                    DispatchUserMessage2(g_VClient, 52, pk.size(), pk.c_str());
             }
                 
 
