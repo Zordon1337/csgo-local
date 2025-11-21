@@ -54,6 +54,7 @@ namespace CMatchmaking {
         if(oldXp + addXp >= 5000) {
             bShouldDrop = true;
         }
+        if (!V::bDropPerLevel) bShouldDrop = true;
         CCSUsrMsg_XpUpdate msg1;
 
         msg1.data().set(msg);

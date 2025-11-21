@@ -52,6 +52,7 @@ namespace V {
 	inline std::string remoteAddr = "";
 	inline int remotePort = 3000;
 	inline RecvVarProxyFn oViewModelProxy;
+	inline bool bDropPerLevel = true;
 
     void SaveConfig() {
 		system("mkdir C:\\CSGO_LOCAL");
@@ -60,6 +61,7 @@ namespace V {
 
 		nlohmann::json j;
 		j["iServiceMedalLevel"] = iServiceMedalLevel;
+		j["bDropPerLevel"] = bDropPerLevel;
 		j["iLevel"] = iLevel;
 		j["iXP"] = iXP;
 		j["sRemoteAddr"] = remoteAddr;
@@ -127,6 +129,7 @@ namespace V {
 			nlohmann::json j;
 			ifs >> j;
 			iServiceMedalLevel = j.value("iServiceMedalLevel", 0);
+			bDropPerLevel = j.value("bDropPerLevel", true);
 			iLevel = j.value("iLevel", 1);
 			iXP = j.value("iXP", 0);
 			remoteAddr = j.value("sRemoteAddr", "127.0.0.1");
