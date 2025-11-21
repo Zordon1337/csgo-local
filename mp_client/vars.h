@@ -187,7 +187,6 @@ namespace V {
 						CInventory::EquipSlot(item2.iItemId, 0, 54);
 					}
 				}
-				std::cout << item2.iItemId << item.value("bHasStattrack", false) << std::endl;
 				items.push_back(item2);
 			}
 			cases.clear();

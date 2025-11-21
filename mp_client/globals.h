@@ -32,6 +32,8 @@ namespace G {
 
     const char* versionString = "";
     int gameVer = 0;
+    int buildDay = 0;
+    int buildMonth = 0;
     bool bIsPanoramaDll = false;
     bool bignoreWelcome = true;
 

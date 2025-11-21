@@ -23,6 +23,8 @@
 #include "Logic/CCaseOpening.h"
 #include "SDK/http.h"
 #include "SDK/steamsdk/steam_api.h"
+
+
 enum ClientFrameStage {
     FRAME_UNDEFINED = -1,			// (haven't run any frames yet)
     FRAME_START,
@@ -320,7 +322,6 @@ void Setup() noexcept
 
 int RunLoop() {
     MH_Initialize();
-    console::init();
     
     while(!(uintptr_t)GetModuleHandleA("serverbrowser.dll")) {}
 
@@ -351,32 +352,32 @@ int RunLoop() {
         G::versionString = *(const char**)(offset + 1);
     }
     {
-        // shit code lol
-        if (strstr(G::versionString, "2019")) {
-            G::gameVer = 2019;
+        char* ver = _strdup(G::versionString);
+        auto dat = strtok(ver, " ");
+        int splitter = 0;
+        std::string months[13] = { "None", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        while (dat != NULL) {
+            splitter++;
+            dat = strtok(0, " ");
+            if (!dat) break;
+            if (splitter == 3) {
+                auto str = std::string(dat);
+                // parse month
+                for (int i = 1; i < 13; i++) {
+                    if (str == months[i]) {
+                        G::buildMonth = i;
+                    }
+                }
+            }
+            else if (splitter == 4) {
+                G::buildDay = std::stoi(dat);
+            } 
+            else if (splitter == 5) {
+                G::gameVer = std::stoi(dat);
+            } 
+
         }
-        else if (strstr(G::versionString, "2020")) {
-            G::gameVer = 2020;
-        }
-        else if (strstr(G::versionString, "2021")) {
-            G::gameVer = 2021;
-        }
-        else if (strstr(G::versionString, "2022")) {
-            G::gameVer = 2022;
-        }
-        else if (strstr(G::versionString, "2023")) {
-            G::gameVer = 2023;
-        }
-        else if (strstr(G::versionString, "2018")) {
-            G::gameVer = 2018;
-        }
-        else if (strstr(G::versionString, "2017")) {
-            G::gameVer = 2017;
-        }
-        else if (strstr(G::versionString, "2016")) {
-            G::gameVer = 2016;
-        }
-        else {
+        /*else {
             // not expected
             G::gameVer = 0;
             
@@ -386,8 +387,9 @@ int RunLoop() {
             if (strstr(G::versionString, "2015")) G::gameVer = 2015;
             if (strstr(G::versionString, "2014")) G::gameVer = 2014;
             if (strstr(G::versionString, "2013")) G::gameVer = 2013;
-        }
+        }*/
     }
+    console::init();
     if (GetModuleHandleA("client.dll") != nullptr)
         G::bIsPanoramaDll = false;
     else if (GetModuleHandleA("client_panorama.dll"))
@@ -475,7 +477,7 @@ int RunLoop() {
 
 
     console::log(std::format("Welcome back, {}", V::STEAM_ID).c_str());
-    console::log(std::format("Game Version: {}", G::gameVer).c_str());
+    console::log(std::format("Game Version: {}.{}.{}", G::buildMonth, G::buildDay, G::gameVer).c_str());
 
    
 
