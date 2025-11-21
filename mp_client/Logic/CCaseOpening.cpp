@@ -269,7 +269,7 @@ CItem CCaseOpening::GetRandomItem(int iCaseIdx)
 		vPossibleItems[iItemIdx].bHasStattrack = false;
 		vPossibleItems[iItemIdx].flStattrack = 0;
 	}
-	vPossibleItems[iItemIdx].iItemId = distId(gen);
+	vPossibleItems[iItemIdx].iItemId = CInventory::GetNextItemId();
 	vPossibleItems[iItemIdx].flWear = distWear(gen);
 	vPossibleItems[iItemIdx].iPattern = distPattern(gen);
 
@@ -373,7 +373,7 @@ CItem CCaseOpening::GetRandomItem2(int iCaseIdx)
 		vPossibleItems[iItemIdx].bHasStattrack = false;
 		vPossibleItems[iItemIdx].flStattrack = 0;
 	}
-	vPossibleItems[iItemIdx].iItemId = distId(gen);
+	vPossibleItems[iItemIdx].iItemId = CInventory::GetNextItemId();
 	vPossibleItems[iItemIdx].flWear = distWear(gen);
 	vPossibleItems[iItemIdx].iPattern = distPattern(gen);
 

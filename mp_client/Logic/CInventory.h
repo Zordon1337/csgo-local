@@ -150,6 +150,7 @@ namespace CInventory {
 	CItem& GetItemPtr(int teamId, int slotId, int idx);
 	int GetCurrentMusicKit();
 	int GetCurrentMedal();
+	int GetNextItemId();
 	ItemDefinitionIndex GetKnifeEquipped(int teamId);
 
 	CInventory::CRemoteInventory GetRemoteInventory(int steamID);

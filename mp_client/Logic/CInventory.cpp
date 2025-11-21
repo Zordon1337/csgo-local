@@ -163,6 +163,15 @@ int CInventory::GetCurrentMedal() {
 	return 0;
 }
 
+int CInventory::GetNextItemId()
+{
+	int highestId = -1;
+	for (const auto& item : V::items) {
+		if (item.iItemId > highestId) highestId += item.iItemId;
+	}
+	return highestId + 1;
+}
+
 ItemDefinitionIndex CInventory::GetKnifeEquipped(int teamId) {
 	auto itemId = CInventory::Equips[0][teamId];
 	for (const auto item : V::items) {

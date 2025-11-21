@@ -151,6 +151,7 @@
     <ClInclude Include="console\console.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="json\json.hpp" />
+    <ClInclude Include="Logic\CSeasonalOperation.h" />
     <ClInclude Include="memory.h" />
     <ClInclude Include="Minhook\MinHook.h" />
     <ClInclude Include="Minhook\Minhook\buffer.h" />
@@ -220,6 +221,7 @@
     <ClCompile Include="Logic\CInventory.cpp" />
     <ClCompile Include="console\console.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Logic\CSeasonalOperation.cpp" />
     <ClCompile Include="Minhook\Minhook\buffer.c" />
     <ClCompile Include="Minhook\Minhook\hde\hde32.c" />
     <ClCompile Include="Minhook\Minhook\hde\hde64.c" />

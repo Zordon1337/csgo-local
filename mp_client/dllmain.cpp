@@ -23,6 +23,7 @@
 #include "Logic/CCaseOpening.h"
 #include "SDK/http.h"
 #include "SDK/steamsdk/steam_api.h"
+#include "Logic/CSeasonalOperation.h"
 
 
 enum ClientFrameStage {
@@ -493,7 +494,7 @@ int RunLoop() {
             item.flStattrack = 0;
             item.flWear = 0;
             item.iDefIdx = medal;
-            item.iItemId = rand() % 10000;
+            item.iItemId = CInventory::GetNextItemId();
             item.iPattern = 0;
             item.iFlag = 0;
             item.iQuality = 4;
@@ -517,9 +518,11 @@ int RunLoop() {
 
     V::MainInit = true;
     V::PENDING_UPDATE = true;
+    CSeasonalOperation::Init(new int[3]{ G::buildDay, G::buildMonth, G::gameVer });
 
-
-
+    V::SaveConfig();
+    
+    console::log(std::format("Current operation: {}", CSeasonalOperation::GetOperationName()).c_str());
    
 
     if (V::pendingEquipSlots.size() > 0) {
