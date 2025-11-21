@@ -85,6 +85,13 @@ namespace V {
 			bool isCtEquipped = CInventory::isEquipped(item.iItemId, 3, CInventory::GetSlotID(item.iDefIdx));
 			bool isTEquipped = CInventory::isEquipped(item.iItemId, 2, CInventory::GetSlotID(item.iDefIdx));
 			bool is0Equipped = CInventory::isEquipped(item.iItemId, 0, item.iFlag == 4 ? 55 : 54);
+			auto attr = nlohmann::json::array();
+			for (const auto& attribute : item.vAttributes) {
+				nlohmann::json jAttr;
+				jAttr["iId"] = attribute.iId;
+				jAttr["iValue"] = attribute.iValue;
+				attr.push_back(jAttr);
+			}
             j["items"].push_back({
                 {"iDefIdx", item.iDefIdx},
                 {"iRarity", item.iRarity},
@@ -98,7 +105,8 @@ namespace V {
                 {"iFlag", item.iFlag},
 				{"bIs0Equipped", is0Equipped},
 				{"bIsTEquipped", isTEquipped},
-				{"bIsCtEquipped", isCtEquipped}
+				{"bIsCtEquipped", isCtEquipped},
+				{"attributes", attr}
                 });
         }
 		j["cases"] = nlohmann::json::array();
@@ -161,6 +169,11 @@ namespace V {
 					item.value("iQuality", 0),
 					item.value("iFlag", 0)
 				};
+				for (const auto& attr : item.value("attributes", std::vector<CAttribute>{})) {
+					auto id = attr.iId; auto val = attr.iValue;
+					if (id)
+						item2.vAttributes.push_back({ id, val });
+				}
 
 				bool isCtEquipped = item.value("bIsCtEquipped", false);
 				bool isTEquipped = item.value("bIsTEquipped", false);
