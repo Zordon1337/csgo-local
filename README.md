@@ -41,7 +41,7 @@ Current Features:
 Plans: 
 - Stickers
 - Nametags
-- Proper Rewrite to SourceMod & External Game Coordinator & Client working only as proxy
+- Proper Rewrite to SourceMod & External Game Coordinator & Client working only as proxy & Ban/Cooldown system
 - Gloves
 - POC Matchmaking
 
