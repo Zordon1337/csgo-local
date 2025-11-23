@@ -1,7 +1,10 @@
+> [!IMPORTANT]
+> This branch is no longer in development, as i switched to <a href="https://github.com/Zordon1337/csgo-local/tree/sync-test">other branch</a> please use it, if you want the best experience 
+
 # CSGO-LOCAL
 
 > [!CAUTION]
-> Technically the project is an cheat, and using it on VAC secured server might get you banned by VAC or Server side anti cheat
+> Technically the project is a cheat, and using it on VAC secured server might get you banned by VAC or Server side anti cheat
 
 <img width="1027" height="768" alt="image" src="https://github.com/user-attachments/assets/2512fbac-e5fd-44d8-af16-89ca79727a9f" />
 
