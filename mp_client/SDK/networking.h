@@ -809,7 +809,10 @@ public:
         if (!match) return;
         auto s_pCGCGameSpecificClientSystem = **reinterpret_cast<void***>(match + 1);
         if (!s_pCGCGameSpecificClientSystem) return;
-        void* clientgc = reinterpret_cast<char*>(s_pCGCGameSpecificClientSystem) + (G::bIsPanoramaDll ? 0x70 : 0x20); // 0x70 for panorama, 0x20 for scaleform, most likely as i checked only 2020, 2023, late 2018 and 2016, 2015, 2014
+        int gcOffset = 0x70;
+        if (G::gameVer >= 2016 && G::gameVer <= 2018 && !G::bIsPanoramaDll) gcOffset = 0x48; // wtf
+        if (G::gameVer < 2016) gcOffset = 0x20;
+        void* clientgc = reinterpret_cast<char*>(s_pCGCGameSpecificClientSystem) + gcOffset; // 0x70 for panorama, 0x20 for scaleform, most likely as i checked only 2020, 2023, late 2018 and 2016, 2015, 2014
 
         if (!clientgc) return;
 
