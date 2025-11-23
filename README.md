@@ -3,7 +3,9 @@
 > [!CAUTION]
 > Technically the project is a cheat, and using it on VAC secured server might get you banned by VAC or Server side anti cheat
 
-<b>[Outdated screenshot was removed]</b>
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/f9521899-e38b-41ba-a368-fa26a077e980" />
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/839716b3-1bfc-431a-aa9f-abd7d5c90206" />
+
 
 
 Mod That turns Bot Games into matchmaking games with separate inventory, level and ranks by intercepting GC communication.
