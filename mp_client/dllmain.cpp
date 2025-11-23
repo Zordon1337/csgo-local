@@ -98,7 +98,7 @@ void __stdcall FrameStage(ClientFrameStage stage) {
                     free(ptr);
                 }
                 auto weapons = player->m_hMyWeapons();
-                for (int i = 0; weapons[i]; i++) {
+                for (int i = 0; i < weapons.size() && weapons[i]; i++) {
 
                     CBaseAttributableItem* weapon = (CBaseAttributableItem*)G::g_EntityList->GetClientEntityFromHandle(weapons[i]);
                     if (!weapon) continue;

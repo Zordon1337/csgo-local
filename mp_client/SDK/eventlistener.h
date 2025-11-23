@@ -28,7 +28,6 @@ public:
 		static int lostRounds = 0;
 
 		const char* txt = pEvent->GetName();
-		console::log(txt);
 		if (strcmp(txt, "cs_win_panel_match") == 0) {
 			int newxp = CMatchmaking::handleEndGame(kills, assists, wonRounds, lostRounds, V::STEAM_ID, G::g_GlobalVars->currentTime);
 			V::iXP += newxp;
@@ -77,7 +76,9 @@ public:
 			PlayerInfo plr;
 			if (G::g_EngineClient->GetPlayerInfo(userid, &plr)) {
 				if (plr.fakeplayer) return;
+				if (plr.iSteamID < 0) return;
 				auto& remoteInv = CInventory::GetRemoteInventoryPtr(plr.iSteamID);
+				if (remoteInv.equips.size() <= 0) return;
 				auto& musicKit = remoteInv.getEquipPtr(54, 0);
 				if (musicKit.bHasStattrack) {
 					musicKit.flStattrack++;
@@ -109,6 +110,7 @@ public:
 			CInventory::CRemoteInventory inv;
 			for (auto u : pendingUpdate) {
 				inv = http::getRemoteInventory(u);
+				if (inv.equips.size() <= 0) continue;
 				for (int i = 0; i < inv.equips.size(); i++) {
 					console::log(std::format("got remote equip: slotid {} teamid {} itemid {}", inv.equips[i].slotId, inv.equips[i].teamId, inv.equips[i].item.iItemId).c_str());
 				}

@@ -120,7 +120,7 @@ void CSeasonalOperation::UpdateMedals()
 			CItem medal;
 			medal.iDefIdx = operation;
 			medal.iFlag = 0;
-			medal.iItemId = CInventory::GetNextItemId(); // i highly doubt that someone will actually reach this high id normally
+			medal.iItemId = CInventory::GetNextItemId();
 			medal.vAttributes.push_back({ 171, 0 }); // Missions done, unfortunately i am unable to implement the missions so this is just placeholder
 			std::tm currTime{};currTime.tm_year = currSeason.beginDate[2] - 1900;currTime.tm_mon = currSeason.beginDate[1] - 1;currTime.tm_mday = currSeason.beginDate[0];std::time_t currTimestamp = std::mktime(&currTime);
 			medal.vAttributes.push_back({ 180,  (uint32_t)currTimestamp }); // Deployment date (in timestamp)
