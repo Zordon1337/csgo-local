@@ -217,8 +217,8 @@ namespace CMatchmaking {
         using DispatchUserMessageOldFn = bool(__thiscall*)(void*, int msg_type, int size, const void* msg);
         DispatchUserMessageFn DispatchUserMessage = reinterpret_cast<DispatchUserMessageFn>(reinterpret_cast<uintptr_t**>((*(void***)g_VClient)[(GameVer > 2018 || (GameVer == 2018 && bPanoramaDll)) ? 38 : 37]));
         DispatchUserMessageOldFn DispatchUserMessage2 = reinterpret_cast<DispatchUserMessageOldFn>(reinterpret_cast<uintptr_t**>((*(void***)g_VClient)[(GameVer > 2018 || (GameVer == 2018 && bPanoramaDll)) ? 38 : 37]));
-
-        if(GameVer > 2018)
+        // TODO: Unable to check when exactly the function was updated
+        if(GameVer > 2017)
             DispatchUserMessage(g_VClient, 65, 0, msgt.size(), msgt.c_str());
         else
             DispatchUserMessage2(g_VClient, 65, msgt.size(), msgt.c_str());
@@ -261,7 +261,7 @@ namespace CMatchmaking {
             }
             auto s = drops.serialize();
 
-            if (GameVer > 2018)
+            if (GameVer > 2017)
                 DispatchUserMessage(g_VClient, 61, 0, s.size(), s.c_str());
             else
                 DispatchUserMessage2(g_VClient, 61, s.size(), s.c_str());
@@ -312,7 +312,7 @@ namespace CMatchmaking {
                 rank.rank_update().set(rankupd);
                 auto pk = rank.serialize();
 
-                if (GameVer > 2018)
+                if (GameVer > 2017)
                     DispatchUserMessage(g_VClient, 52, 0, pk.size(), pk.c_str());
                 else
                     DispatchUserMessage2(g_VClient, 52, pk.size(), pk.c_str());
