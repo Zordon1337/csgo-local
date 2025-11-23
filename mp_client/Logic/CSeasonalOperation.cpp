@@ -76,9 +76,11 @@ void CSeasonalOperation::UpdateMedals()
 		HydraGold,
 		HydraDiamond,
 	};
+
 	EOperationMedals operation = EOperationMedals::PaybackBronze;
 	auto operations = new EOperationMedals[]{ EOperationMedals::PaybackBronze, EOperationMedals::BravoBronze, EOperationMedals::PhoenixBronze, EOperationMedals::BreakoutBronze, EOperationMedals::VanguardBronze, EOperationMedals::BloodhoundBronze, EOperationMedals::WildfireBronze, EOperationMedals::HydraBronze, };
 	operation = operations[iCurrSeason];
+
 	if (operation > 1000) {
 		int maxCoinLevel = 3;
 		if (iCurrSeason > 6) // hydra was first operation with diamond coin
@@ -104,16 +106,13 @@ void CSeasonalOperation::UpdateMedals()
 			auto medalStage = medal.iDefIdx - operation;
 
 			if (medalStage == 0 && competetiveWins >= 10 && competetiveKills >= 100) {
-				medal.iDefIdx++;
+				medal.iDefIdx++; // Silver
 			}
 			else if (medalStage == 1 && competetiveWins >= 25 && competetiveKills >= 200) {
-				medal.iDefIdx++;
+				medal.iDefIdx++; // Gold
 			}
-			else if (medalStage == 2 && competetiveWins >= 40 && competetiveKills >= 300) {
-				medal.iDefIdx++;
-			}
-			else if ((medalStage == 3 && maxCoinLevel == 4) && competetiveWins >= 70 && competetiveKills >= 400) {
-				medal.iDefIdx++;
+			else if ((medalStage == 2 && maxCoinLevel == 4) && competetiveWins >= 40 && competetiveKills >= 300) {
+				medal.iDefIdx++; // Diamond
 			}
 		}
 		else {
